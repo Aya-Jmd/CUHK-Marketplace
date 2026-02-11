@@ -97,20 +97,7 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: cuhk_marketplace_production
-    username: cuhk_marketplace
-    password: <%= ENV["CUHK_MARKETPLACE_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: cuhk_marketplace_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: cuhk_marketplace_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: cuhk_marketplace_production_cable
-    migrations_paths: db/cable_migrate
+  <<: *default
+  # This tells Rails to use the URL provided by Heroku automatically
+  url: <%= ENV["DATABASE_URL"] %>
+  adapter: postgresql
