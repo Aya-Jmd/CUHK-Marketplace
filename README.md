@@ -1,9 +1,8 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Marketplace web application project for CUHK's CSCI3100 course. Designed for item transactions (buy, sell) within the CUHK community, including its different colleges.
 
-Things you may want to cover:
+Things to add:
 
 * Ruby version
 
