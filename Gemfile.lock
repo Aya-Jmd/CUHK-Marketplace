@@ -415,7 +415,7 @@ DEPENDENCIES
   brakeman
   bundler-audit
   capybara
-  cucumber-rails (~> 4.0)
+  cucumber-rails
   debug
   devise (~> 5.0)
   image_processing (~> 1.2)
