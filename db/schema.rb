@@ -10,15 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_053548) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_09_034309) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "colleges", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "listing_expiry_days"
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
+    t.string "category"
+    t.integer "college_id"
     t.datetime "created_at", null: false
     t.text "description"
+    t.boolean "is_global"
+    t.float "latitude"
+    t.float "longitude"
     t.decimal "price"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.integer "college_id"
+    t.datetime "created_at", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 end

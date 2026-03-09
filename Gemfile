@@ -65,4 +65,6 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "cucumber-rails", "~> 4.0", groups: [:development, :test]
+gem "cucumber-rails", require: false
+
+gem "devise", "~> 5.0"

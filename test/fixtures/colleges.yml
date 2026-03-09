@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  listing_expiry_days: 1
+
+two:
+  name: MyString
+  listing_expiry_days: 1
