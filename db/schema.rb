@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_081724) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_084653) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -41,7 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_081724) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "category"
+    t.bigint "category_id"
     t.integer "college_id"
     t.datetime "created_at", null: false
     t.text "description"
@@ -53,7 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_081724) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id"
-    t.index ["category"], name: "index_items_on_category_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["description"], name: "index_items_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["title"], name: "index_items_on_title_trgm", opclass: :gin_trgm_ops, using: :gin
   end
@@ -82,6 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_081724) do
   end
 
   add_foreign_key "conversations", "items"
+  add_foreign_key "items", "categories"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
 end

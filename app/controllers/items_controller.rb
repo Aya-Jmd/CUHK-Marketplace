@@ -30,16 +30,15 @@ class ItemsController < ApplicationController
 
   # POST /items or /items.json
   def create
-    # Old way of creating item, invalid. Item needs college and user association.
-    # @item = Item.new(item_params).
-
-    # creating an item associated with the current user directly
-    @item = current_user.items.build(item_params) 
-    @item.college_id = current_user.college_id # associating item to user's college.
+    @item = Item.new(item_params)
+    
+    # Securely assign the item to the currently logged-in user and their college
+    @item.user = current_user
+    @item.college = current_user.college 
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to @item, notice: "Item was successfully created." }
+        format.html { redirect_to item_url(@item), notice: "Item was successfully created." }
         format.json { render :show, status: :created, location: @item }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -79,6 +78,6 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.expect(item: [ :title, :price, :description ])
+      params.require(:item).permit(:title, :price, :description, :category_id, :is_global, :latitude, :longitude)
     end
 end

@@ -1,17 +1,15 @@
 class Item < ApplicationRecord
   belongs_to :user
   belongs_to :college
+  belongs_to :category
 
   # We can add validations later to make sure items always have a title and price!
-  
+  validates :title, :price, presence: true
+  validates :price, numericality: { greater_than: 0 }
+
   # Add this scope so Ben's controller knows how to find available items!
   scope :available, -> { where(status: "available") }
 
-  # Fake status method to prevent Ben's HTML from crashing 
-  # until he pushes his database migration!
-  def status
-    "available"
-  end
   # fuzzy search
   include PgSearch::Model
 
@@ -19,8 +17,10 @@ class Item < ApplicationRecord
   pg_search_scope :intelligent_search,
     against: {
       title: 'A',
-      category: 'B',
       description: 'C'
+    },
+    associated_against: {
+      category: :name
     },
     using: {
       tsearch: {

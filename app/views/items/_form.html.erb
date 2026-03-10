@@ -27,6 +27,26 @@
   </div>
 
   <div>
+    <%= form.label :category_id, "Select a Category", style: "display: block" %>
+    <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, prompt: "Choose a category..." %>
+  </div>
+
+  <div>
+    <%= form.label :is_global, "Make this item visible to all CUHK colleges? (Global)", style: "display: block" %>
+    <%= form.check_box :is_global %>
+  </div>
+
+  <div>
+    <%= form.label :latitude, style: "display: block" %>
+    <%= form.text_field :latitude, placeholder: "e.g. 22.4195" %>
+  </div>
+
+  <div>
+    <%= form.label :longitude, style: "display: block" %>
+    <%= form.text_field :longitude, placeholder: "e.g. 114.2067" %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

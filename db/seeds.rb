@@ -23,7 +23,7 @@ categories = [
   "Book",
   "Electronic",
   "Food",
-  "Clothe",
+  "Clothing",
   "Other"
 ]
 
