@@ -30,6 +30,14 @@
   </head>
 
   <body>
+    <%= form_with url: search_path, method: :get, local: true, class: "flex gap-2" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "Search items…", class: "form-control" %>
+      <%= select_tag :scope,
+            options_for_select([["All CUHK","all"], ["My College","college"]], selected: params[:scope]),
+            class: "form-select" %>
+      <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>
