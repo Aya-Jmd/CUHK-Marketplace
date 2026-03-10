@@ -68,3 +68,6 @@ end
 gem "cucumber-rails", require: false
 
 gem "devise", "~> 5.0"
+
+# fuzzy search
+gem 'pg_search', '~> 2.3'
