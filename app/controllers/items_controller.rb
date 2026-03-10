@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[ show edit update destroy ]
+  before_action :authorize_item_owner!, only: %i[ edit update destroy ]
 
   # GET /items or /items.json
   def index
@@ -79,5 +80,11 @@ class ItemsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def item_params
       params.require(:item).permit(:title, :price, :description, :category_id, :is_global, :latitude, :longitude)
+    end
+
+    def authorize_item_owner!
+      return if @item.user == current_user
+
+      redirect_to @item, alert: "You are not allowed to modify this item."
     end
 end
