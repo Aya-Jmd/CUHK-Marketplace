@@ -5,8 +5,8 @@ class ItemsController < ApplicationController
   def index
     # FILTERING PRODUCTS DEPENDING ON MIN / MAX PRICE (set by user)
     # CONSTANTS (global max and min prices, defaulting to values if DB is empty)
-    @PRICE_FLOOR = Item.minimum(:price).to_i
-    @PRICE_CEILING = Item.maximum(:price).to_i
+    @PRICE_FLOOR = Item.minimum(:price).to_i || 0
+    @PRICE_CEILING = Item.maximum(:price).to_i || 100000
 
     @min_price = params.fetch(:min_price, @PRICE_FLOOR)
     @max_price = params.fetch(:max_price, @PRICE_CEILING)

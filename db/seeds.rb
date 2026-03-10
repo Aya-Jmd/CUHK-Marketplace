@@ -16,4 +16,19 @@ colleges.each do |college_name|
   College.find_or_create_by!(name: college_name, listing_expiry_days: 30)
 end
 
+puts "Creating item categories..."
+
+categories = [
+  "Textbook",
+  "Book",
+  "Electronic",
+  "Food",
+  "Clothe",
+  "Other"
+]
+
+categories.each do |category_name|
+  Category.find_or_create_by!(name: category_name)
+end
+
 puts "Done! #{College.count} colleges are now in the database."

@@ -1,10 +1,19 @@
 <h1><%= @user.email %></h1>
 
 <p>College: <%= @user.college.name if @user.college %></p>
-<p>Items by this seller:</p>
+<p><%= (current_user == @user ? "My items:" : "Items by this seller:") %></p>
 <ul>
-  <% @user.items.each do |item| %>
-    <li><%= link_to item.title, item_path(item) %></li>
+<!-- ORDERING BY CREATION TIME, DESCENDING-->
+  <% @user.items.order(created_at: :desc).each do |item| %>
+    <li>
+      <%= link_to item.title, item_path(item) %>
+      <%= ",   #{item.created_at.strftime("%d/%m/%Y")}"%>
+    </li>
   <% end %>
 </ul>
+
+<br>
+
+<!-- BUTTON FORWARDING TO ITEM INDEX PAGE -->
+<%= link_to "Back to items", items_path %>
 

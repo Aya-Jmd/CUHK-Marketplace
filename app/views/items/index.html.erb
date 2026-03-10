@@ -1,7 +1,7 @@
 <p style="color: green"><%= notice %></p>
 
 <div style="text-align: left; margin-bottom: 8px;">
-  <p style= "color: green;">Signed in as <strong><%= current_user.email%></strong>. Welcome!</p> 
+  <p style= "color: green;">Signed in as <strong><%= link_to current_user.email, user_path(current_user)%></strong>. Welcome!</p> 
   <%= button_to "Sign out", destroy_user_session_path, method: :delete %>
 </div>
 
@@ -16,21 +16,21 @@
 </div>
 
 
-<!-- SLIDERS FOR MIN AND MAX PRICES -->
+<!-- PRICE SLIDER AND SEARCH BAR -->
+<%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
+  <!-- SEARCH BAR -->
+  <%= render "search_bar" %>
 
-<%= form_with url: items_path, method: :get, local: true do %>
-  <h3>Price</h3>
-  <p id="price-label"></p>
-
-  <div id="price-slider" style="margin: 24px 8px; width: 10%; min-width: 220px;"></div>
-
+  <!-- Hidden fields, used by both slider and search bar -->
   <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
   <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
 
-  <%= submit_tag "Apply" %>
-  <%= link_to "Reset price range", items_path %>
+  <!-- SLIDER -->
+  <%= render "price_slider" %>
+
 <% end %>
 
+<!-- SLIDER SCRIPT -->
 <script>
   document.addEventListener("turbo:load", function () {
     const slider = document.getElementById("price-slider");
@@ -65,7 +65,6 @@
     });
   });
 </script>
-
 <!-- END OF SLIDERS -->
 
 
