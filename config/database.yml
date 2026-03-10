@@ -25,7 +25,7 @@ development:
   database: cuhk_marketplace_development
   
   username: postgres
-  password: databasePassword555 
+  password: postgres 
   host: 127.0.0.1
 
   # Optional: Explicitly set the port (default is 5432)
@@ -65,7 +65,7 @@ test:
   <<: *default
   database: cuhk_marketplace_test
   username: postgres # Set your own username here !!!!!!!!!!!!
-  password: databasePassword555 # Set your own password here !!!!!!!!!!!!
+  password: postgres # Set your own password here !!!!!!!!!!!!
   host: 127.0.0.1
 
 # As with config/credentials.yml, you never want to store sensitive information,

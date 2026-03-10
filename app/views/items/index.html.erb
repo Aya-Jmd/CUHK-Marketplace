@@ -18,8 +18,7 @@
 
 <!-- PRICE SLIDER AND SEARCH BAR -->
 <%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
-  <!-- SEARCH BAR -->
-  <%= render "search_bar" %>
+ 
 
   <!-- Hidden fields, used by both slider and search bar -->
   <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>

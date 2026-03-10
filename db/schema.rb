@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_143419) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_000000) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
+  enable_extension "unaccent"
+
+  create_table "categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
+  end
 
   create_table "colleges", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -46,16 +55,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_143419) do
     t.index ["category"], name: "index_items_on_category_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_items_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["title"], name: "index_items_on_title_trgm", opclass: :gin_trgm_ops, using: :gin
-  end
-
-  create_table "messages", force: :cascade do |t|
-    t.text "content"
-    t.bigint "conversation_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
-    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
