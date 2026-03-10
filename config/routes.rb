@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "conversations/index"
+  get "conversations/show"
   devise_for :users
   resources :items
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -17,4 +19,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "items#index"
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
 end
