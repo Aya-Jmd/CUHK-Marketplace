@@ -1,0 +1,15 @@
+<h2>Chat about: <%= @conversation.item.title %></h2>
+
+<%= turbo_stream_from @conversation %>
+
+<div id="messages" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+  <%= render @messages %>
+</div>
+
+<%= form_with(model: [@conversation, @message], id: "new_message_form") do |form| %>
+  <div>
+    <%= form.text_area :content, placeholder: "Type a message...", required: true, rows: 2, style: "width: 100%;" %>
+    <br>
+    <%= form.submit "Send", style: "margin-top: 5px; padding: 5px 15px;" %>
+  </div>
+<% end %>

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   get "search/index"
+  get "conversations/index"
+  get "conversations/show"
   devise_for :users
   resources :items
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -20,4 +22,7 @@ Rails.application.routes.draw do
   root "items#index"
 
   get '/search', to: 'search#index', as: :search
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
 end
