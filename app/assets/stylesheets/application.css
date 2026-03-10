@@ -30,3 +30,14 @@
 
 /* SLIDER HANDLE CHILDREN (hidden) */
 #price-slider .noUi-handle::after, .noUi-handle::before {display: none;}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;   /* centers the search-bar */
+  margin: 24px 0;
+}
+
+#search-bar {
+  color:blueviolet;
+}
+

@@ -1,4 +1,10 @@
 <div id="<%= dom_id item %>">
+
+  <div>
+    <strong>Category:</strong>
+    <%= item.category&.name || "Uncategorized" %>
+  </div>
+
   <div>
     <strong>Title:</strong>
     <%= item.title %>

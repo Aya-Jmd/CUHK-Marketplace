@@ -1,7 +1,7 @@
 class Item < ApplicationRecord
   belongs_to :user
   belongs_to :college
-  belongs_to :category
+  belongs_to :category, optional: true
 
   # We can add validations later to make sure items always have a title and price!
   validates :title, :price, presence: true
