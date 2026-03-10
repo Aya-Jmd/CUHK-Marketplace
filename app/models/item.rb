@@ -3,7 +3,15 @@ class Item < ApplicationRecord
   belongs_to :college
 
   # We can add validations later to make sure items always have a title and price!
+  
+  # Add this scope so Ben's controller knows how to find available items!
+  scope :available, -> { where(status: "available") }
 
+  # Fake status method to prevent Ben's HTML from crashing 
+  # until he pushes his database migration!
+  def status
+    "available"
+  end
   # fuzzy search
   include PgSearch::Model
 
