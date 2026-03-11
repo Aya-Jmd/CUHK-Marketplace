@@ -2,7 +2,6 @@
 
 <div style="text-align: left; margin-bottom: 8px;">
   <p style= "color: green;">Signed in as <strong><%= link_to current_user.email, user_path(current_user)%></strong>. Welcome!</p> 
-  <%= button_to "Sign out", destroy_user_session_path, method: :delete %>
 </div>
 
 
@@ -18,6 +17,10 @@
 <!-- SEARCH BAR -->
 <%= render "search/search_bar" %>
 
+<div style="margin-top: 20px; text-align: left;">
+  <%= link_to "View price analytics", category_prices_dashboard_path %>
+</div>
+
 <!-- PRICE SLIDER -->
 <%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
  
@@ -30,6 +33,7 @@
   <%= render "price_slider" %>
 
 <% end %>
+
 
 <!-- SLIDER SCRIPT -->
 <script>
@@ -68,8 +72,7 @@
 </script>
 <!-- END OF SLIDERS -->
 
-
-<br>
+<br> <br>
 
 <div id="items">
   <% @items.each do |item| %>

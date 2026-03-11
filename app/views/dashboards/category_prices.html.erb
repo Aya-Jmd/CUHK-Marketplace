@@ -1,0 +1,386 @@
+<% content_for :title, "Price Dashboard" %>
+
+<section class="dashboard-shell" id="category-price-dashboard">
+
+  <div class="dashboard-card">
+  <%= link_to "Back to items", items_path %>
+
+    <div class="dashboard-header">
+      <div class="dashboard-heading">
+        <h1>Analytics Dashboard</h1>
+        <p class="dashboard-subtitle">
+          Price data for items from <strong><%= @selected_category_name || "your selected category"%></strong> items.
+        </p>
+      </div>
+
+      <%= form_with url: category_prices_dashboard_path, method: :get, local: true, class: "dashboard-filters" do %>
+        <label>
+          <span>Category</span>
+          <%= select_tag :category_id,
+            options_from_collection_for_select(@categories, :id, :name, @selected_category_id),
+            include_blank: false %>
+        </label>
+
+        <label>
+          <span>From</span>
+          <%= date_field_tag :start_date, @start_date %>
+        </label>
+
+        <label>
+          <span>To</span>
+          <%= date_field_tag :end_date, @end_date %>
+        </label>
+
+        <%= submit_tag "Refresh", class: "dashboard-submit" %>
+      <% end %>
+    </div>
+
+    <div class="dashboard-toolbar">
+      <div class="dashboard-mode-switch" role="group" aria-label="Chart mode">
+        <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
+        <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
+      </div>
+
+      <!-- p class="dashboard-caption" -->
+        <!-- X axis: day within the selected window. Y axis: price in HKD. -->
+      <!-- /p -->
+    </div>
+
+
+    <div class="dashboard-stage">
+      <div class="dashboard-chart-panel is-active" data-chart-panel="averages">
+        <canvas id="category-prices-averages-chart"></canvas>
+      </div>
+
+      <div class="dashboard-chart-panel" data-chart-panel="exact">
+        <canvas id="category-prices-exact-chart"></canvas>
+      </div>
+
+      <div class="dashboard-empty-state" id="dashboard-empty-averages" data-empty-mode="averages" hidden>
+        No posted or sold items were found for this category in the selected date range.
+      </div>
+
+      <div class="dashboard-empty-state" id="dashboard-empty-exact" data-empty-mode="exact" hidden>
+        No exact posted or sold offers were found for this category in the selected date range.
+      </div>
+    </div>
+  </div>
+</section>
+
+<%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chart.js" %>
+
+<script>
+  (function() {
+    var dashboard = document.getElementById("category-price-dashboard");
+    if (!dashboard) return;
+
+    function initializeDashboard() {
+      if (dashboard.dataset.initialized === "true") return;
+      if (typeof window.Chart === "undefined") {
+        window.setTimeout(initializeDashboard, 25);
+        return;
+      }
+
+      dashboard.dataset.initialized = "true";
+
+      var averagesCanvas = document.getElementById("category-prices-averages-chart");
+      var exactCanvas = document.getElementById("category-prices-exact-chart");
+      var averageEmptyState = document.getElementById("dashboard-empty-averages");
+      var exactEmptyState = document.getElementById("dashboard-empty-exact");
+      var labels = <%= raw @labels.map { |day| day.strftime("%Y-%m-%d") }.to_json %>;
+      var averagePosted = <%= raw @avg_posted.map(&:to_f).to_json %>;
+      var averageSold = <%= raw @avg_sold.map(&:to_f).to_json %>;
+      var exactPosted = <%= raw @posted_points.to_json %>;
+      var exactSold = <%= raw @sold_points.to_json %>;
+      var modeButtons = dashboard.querySelectorAll("[data-chart-mode]");
+      var panels = dashboard.querySelectorAll("[data-chart-panel]");
+      var currentMode = "averages";
+
+      function syncDashboardHeight() {
+        var header = document.querySelector(".main-header");
+        var headerHeight = header ? header.offsetHeight : 0;
+        var bodyStyles = window.getComputedStyle(document.body);
+        var bodyVerticalSpace =
+          parseFloat(bodyStyles.marginTop || 0) +
+          parseFloat(bodyStyles.marginBottom || 0) +
+          parseFloat(bodyStyles.paddingTop || 0) +
+          parseFloat(bodyStyles.paddingBottom || 0);
+        var availableHeight = Math.max(window.innerHeight - headerHeight - bodyVerticalSpace - 12, 480);
+        dashboard.style.setProperty("--dashboard-viewport-height", availableHeight + "px");
+      }
+
+      function handleResize() {
+        if (!document.body.contains(dashboard)) {
+          window.removeEventListener("resize", handleResize);
+          return;
+        }
+
+        syncDashboardHeight();
+      }
+
+      function hasAverageData() {
+        return averagePosted.some(function(value) { return value > 0; }) || averageSold.some(function(value) { return value > 0; });
+      }
+
+      function hasExactData() {
+        return exactPosted.length > 0 || exactSold.length > 0;
+      }
+
+      function baseOptions(titleText) {
+        return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        layout: {
+          padding: {
+            top: 4,
+            right: 8,
+            bottom: 4,
+            left: 4
+          }
+        },
+        plugins: {
+          legend: {
+            position: "top",
+            align: "end",
+            labels: {
+              color: "#30384a",
+              boxWidth: 12,
+              usePointStyle: true,
+              pointStyle: "circle"
+            }
+          },
+          tooltip: {
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            borderColor: "rgba(48, 56, 74, 0.18)",
+            borderWidth: 1,
+            titleColor: "#1a1a1a",
+            bodyColor: "#1a1a1a"
+          },
+          title: {
+            display: true,
+            text: titleText,
+            color: "#1f2430",
+            font: {
+              size: 18,
+              weight: "700"
+            },
+            padding: {
+              bottom: 12
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: "rgba(31, 36, 48, 0.08)",
+              drawBorder: false
+            },
+            ticks: {
+              color: "#4f5563"
+            },
+            title: {
+              display: true,
+              text: "Price (HKD)",
+              color: "#4f5563"
+            }
+          }
+        }
+        };
+      }
+
+      function destroyChart(canvas) {
+        var existing = Chart.getChart(canvas);
+        if (existing) existing.destroy();
+      }
+
+      function buildAverageChart() {
+        destroyChart(averagesCanvas);
+
+        if (!hasAverageData()) {
+          averageEmptyState.hidden = false;
+          averagesCanvas.parentElement.classList.add("is-empty");
+          return;
+        }
+
+        averageEmptyState.hidden = true;
+        averagesCanvas.parentElement.classList.remove("is-empty");
+
+        var options = baseOptions("Daily average posted vs sold prices");
+        options.scales.x = {
+        grid: {
+          color: "rgba(31, 36, 48, 0.08)",
+          drawBorder: false
+        },
+        ticks: {
+          color: "#4f5563",
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 6
+        },
+        title: {
+          display: true,
+          text: "Day",
+          color: "#4f5563"
+        }
+      };
+        options.interaction = {
+          mode: "nearest",
+          intersect: false
+        };
+        options.plugins.tooltip.callbacks = {
+        title: function(items) {
+          return labels[items[0].dataIndex];
+        },
+        label: function(context) {
+          return context.dataset.label + ": HKD " + context.parsed.y.toFixed(2);
+        }
+        };
+
+        new Chart(averagesCanvas, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Avg price POSTED (HKD)",
+              data: averagePosted,
+              backgroundColor: "#23d2ff",
+              borderRadius: 6,
+              maxBarThickness: 34,
+              categoryPercentage: 0.5,
+              barPercentage: 0.75
+            },
+            {
+              label: "Avg price SOLD (HKD)",
+              data: averageSold,
+              backgroundColor: "#f6c945",
+              borderRadius: 6,
+              maxBarThickness: 34,
+              categoryPercentage: 0.5,
+              barPercentage: 0.75
+            }
+          ]
+        },
+        options: options
+        });
+      }
+
+      function buildExactChart() {
+        destroyChart(exactCanvas);
+
+        if (!hasExactData()) {
+          exactEmptyState.hidden = false;
+          exactCanvas.parentElement.classList.add("is-empty");
+          return;
+        }
+
+        exactEmptyState.hidden = true;
+        exactCanvas.parentElement.classList.remove("is-empty");
+
+        var options = baseOptions("Exact posted and sold offer prices");
+        options.interaction = {
+        mode: "point",
+        intersect: true
+      };
+        options.scales.x = {
+        type: "linear",
+        min: -0.5,
+        max: Math.max(labels.length - 0.5, 0.5),
+        grid: {
+          color: "rgba(31, 36, 48, 0.08)",
+          drawBorder: false
+        },
+        ticks: {
+          color: "#4f5563",
+          callback: function(value) {
+            var rounded = Math.round(value);
+            return labels[rounded] || "";
+          },
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 6
+        },
+        title: {
+          display: true,
+          text: "Day",
+          color: "#4f5563"
+        }
+      };
+        options.plugins.tooltip.filter = function(item) {
+          return item.dataset.type === "scatter";
+        };
+        options.plugins.tooltip.callbacks = {
+        title: function(items) {
+          return items[0].raw.title + " - " + items[0].raw.day;
+        },
+        label: function(context) {
+          return context.dataset.label + ": HKD " + context.raw.y;
+        }
+        };
+
+        new Chart(exactCanvas, {
+        type: "scatter",
+        data: {
+          datasets: [
+            {
+              type: "scatter",
+              label: "Posted offers",
+              data: exactPosted,
+              backgroundColor: "#23d2ff",
+              borderColor: "#23d2ff",
+              showLine: false,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            },
+            {
+              type: "scatter",
+              label: "Sold offers",
+              data: exactSold,
+              backgroundColor: "#f6c945",
+              borderColor: "#f6c945",
+              showLine: false,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }
+          ]
+        },
+        options: options
+        });
+      }
+
+      function setMode(mode) {
+        currentMode = mode;
+
+        modeButtons.forEach(function(button) {
+          button.classList.toggle("is-active", button.dataset.chartMode === mode);
+        });
+
+        panels.forEach(function(panel) {
+          panel.classList.toggle("is-active", panel.dataset.chartPanel === mode);
+        });
+
+        dashboard.querySelectorAll("[data-empty-mode]").forEach(function(message) {
+          var shouldShow = message.dataset.emptyMode === mode && !message.hidden;
+          message.classList.toggle("is-active", shouldShow);
+        });
+      }
+
+      modeButtons.forEach(function(button) {
+        button.onclick = function() {
+          setMode(button.dataset.chartMode);
+        };
+      });
+
+      syncDashboardHeight();
+      buildAverageChart();
+      buildExactChart();
+      setMode(currentMode);
+
+      window.addEventListener("resize", handleResize);
+    }
+
+    initializeDashboard();
+  })();
+</script>
