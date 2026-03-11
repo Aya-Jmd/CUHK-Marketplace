@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_084653) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_050337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -40,6 +40,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_084653) do
     t.index ["item_id"], name: "index_conversations_on_item_id"
   end
 
+  create_table "currencies", force: :cascade do |t|
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.decimal "rate_from_hkd"
+    t.string "symbol"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.bigint "category_id"
     t.integer "college_id"
@@ -49,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_084653) do
     t.float "latitude"
     t.float "longitude"
     t.decimal "price"
+    t.datetime "sold_at"
     t.string "status", default: "available", null: false
     t.string "title"
     t.datetime "updated_at", null: false

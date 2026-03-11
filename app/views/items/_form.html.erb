@@ -17,8 +17,8 @@
   </div>
 
   <div>
-    <%= form.label :price, style: "display: block" %>
-    <%= form.text_field :price %>
+    <%= form.label :price, "Price (#{current_currency_code})", style: "display: block" %>
+    <%= form.text_field :price, value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil %>
   </div>
 
   <div>

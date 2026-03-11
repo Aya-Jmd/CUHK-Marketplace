@@ -32,10 +32,10 @@ class ItemsController < ApplicationController
   # POST /items or /items.json
   def create
     @item = Item.new(item_params)
-    
-    # Securely assign the item to the currently logged-in user and their college
+
     @item.user = current_user
-    @item.college = current_user.college 
+    @item.college = current_user.college
+    normalize_price_to_hkd(@item)
 
     respond_to do |format|
       if @item.save
@@ -50,8 +50,11 @@ class ItemsController < ApplicationController
 
   # PATCH/PUT /items/1 or /items/1.json
   def update
+    @item.assign_attributes(item_params)
+    normalize_price_to_hkd(@item)
+
     respond_to do |format|
-      if @item.update(item_params)
+      if @item.save
         format.html { redirect_to @item, notice: "Item was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @item }
       else
@@ -87,4 +90,15 @@ class ItemsController < ApplicationController
 
       redirect_to @item, alert: "You are not allowed to modify this item."
     end
+
+
+
+  # PRIVATE METHOD FOR PRICE NORMALIZATION
+  def normalize_price_to_hkd(item)
+    return if item.price.blank?
+
+    code = session[:currency_code] || Currency::BASE_CODE
+    item.price = Currency.convert_to_hkd(item.price.to_d, code)
+  end
+
 end

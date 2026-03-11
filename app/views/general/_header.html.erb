@@ -1,0 +1,30 @@
+<header class="main-header">
+  <nav class="header-nav">
+    <% if user_signed_in? %>
+      <!-- USER PROFILE -->
+      <%= link_to "Profile", user_path(current_user), class: "header-link" %>
+
+      <!-- CURRENCY SETTINGS -->
+      <%= form_with url: currency_path, method: :patch, local: true,
+                    class: "currency-form" do %>
+        <label for="currency-select">Currency:</label>
+        <%= select_tag :currency,
+          options_from_collection_for_select(
+            Currency.order(:code),
+            :code,
+            :code,
+            current_currency_code
+          ),
+          id: "currency-select",
+          onchange: "this.form.submit()" %>
+      <% end %>
+
+      <!-- SIGN OUT -->
+      <%= button_to "Sign out", destroy_user_session_path,
+                  method: :delete,
+                  class: "header-link" %>
+    <% else %>
+      <%= link_to "Sign in", new_user_session_path, class: "header-link" %>
+    <% end %>
+  </nav>
+</header>
