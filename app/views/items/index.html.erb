@@ -22,7 +22,7 @@
 <%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
  
 
-  <!-- Hidden fields, used by both slider and search bar -->
+  <!-- Hidden fields, used by both slider -->
   <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
   <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
 

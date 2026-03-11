@@ -1,7 +1,10 @@
 <%= render "search/search_bar" %>
 
-<h1>Search</h1>
 <!-- p>Find me in app/views/search/index.html.erb</p -->
+
+<h1>Search</h1>
+<!-- TODO: INTEGRATE PRICE SLIDER WITH SEARCH BARN-->
+
 
 <% if @query.present? %>
   <p>Showing results for: <strong><%= h(@query) %></strong> (<%= @scope.capitalize %>)</p>
