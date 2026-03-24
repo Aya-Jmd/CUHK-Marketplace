@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   # redirecting unsigned-in users to sign in page (except for devise's controlers)
   before_action :authenticate_user!, unless: :devise_controller? # Devise's controllers are accessible without authentication
   
+  helper_method :current_currency_code, :current_currency
+  
   
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
@@ -24,4 +26,26 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:college_id])
   end
   # --- DEVISE CONFIGURATION END ---
+
+  private
+
+  def current_currency_code
+    session[:currency_code] || Currency::BASE_CODE
+  end
+
+  def current_currency
+    @current_currency ||= Currency.for(current_currency_code)
+  end
+
+  def convert_price_from_hkd(amount_hkd)
+    return if amount_hkd.nil?
+
+    Currency.convert_from_hkd(amount_hkd.to_d, current_currency_code)
+  end
+
+  def convert_price_to_hkd(amount)
+    return if amount.nil?
+
+    Currency.convert_to_hkd(amount.to_d, current_currency_code)
+  end
 end

@@ -26,6 +26,7 @@
  
 
   <!-- Hidden fields, used by both slider -->
+  <%= hidden_field_tag :price_currency, current_currency_code, id: "price_currency" %>
   <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
   <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
 
@@ -44,19 +45,25 @@
     const minInput = document.getElementById("min_price");
     const maxInput = document.getElementById("max_price");
     const label    = document.getElementById("price-label");
+    const currencyCode = <%= raw current_currency_code.to_json %>;
+    const currencyFormatter = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: currencyCode,
+      maximumFractionDigits: 0
+    });
 
     // Destroy existing slider if Turbo re-rendered this section, then re-create
     if (slider.noUiSlider) {
       slider.noUiSlider.destroy();
     }
 
-    const startMin = Number(minInput.value) || <%= @PRICE_FLOOR %>;
-    const startMax = Number(maxInput.value) || <%= @PRICE_CEILING %>;
+    const startMin = Number(minInput.value) || <%= @price_floor %>;
+    const startMax = Number(maxInput.value) || <%= @price_ceiling %>;
 
     noUiSlider.create(slider, {
       start: [startMin, startMax],
       connect: true,
-      range: { min: <%= @PRICE_FLOOR %>, max: <%= @PRICE_CEILING %> },
+      range: { min: <%= @price_floor %>, max: <%= @price_ceiling %> },
       step: 1
     });
 
@@ -66,7 +73,7 @@
 
       minInput.value = min;
       maxInput.value = max;
-      label.textContent = min + "HKD - " + max + "HKD";
+      label.textContent = currencyFormatter.format(min) + " - " + currencyFormatter.format(max);
     });
   });
 </script>
