@@ -18,6 +18,7 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  password: databasePassword555 
 
 
 development:
@@ -25,7 +26,6 @@ development:
   database: cuhk_marketplace_development
   
   username: postgres
-  password: postgres 
   host: 127.0.0.1
 
   # Optional: Explicitly set the port (default is 5432)
@@ -65,7 +65,6 @@ test:
   <<: *default
   database: cuhk_marketplace_test
   username: postgres # Set your own username here !!!!!!!!!!!!
-  password: postgres # Set your own password here !!!!!!!!!!!!
   host: 127.0.0.1
 
 # As with config/credentials.yml, you never want to store sensitive information,

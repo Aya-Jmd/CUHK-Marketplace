@@ -1,8 +1,12 @@
 <p style="color: green"><%= notice %></p>
 
 <div>
-   Offer posted by <strong> <%= link_to  (current_user == @item.user ? "you" : @item.user.email), 
-   user_path(@item.user) %></strong>, on <%= @item.created_at.strftime("%B %d, %Y at %I:%M %p") %>.
+  <% if @item.user.present? %>
+    Offer posted by <strong> <%= link_to (current_user == @item.user ? "you" : @item.user.email),
+                user_path(@item.user) %></strong>, on <%= @item.created_at.strftime("%B %d, %Y at %I:%M %p") %>.
+  <% else %>
+    <em>Unknown user</em>
+  <% end %>   
 </div>
 
 <br>
@@ -20,4 +24,10 @@
 
 </div>
 
-
+<%# map (MapLibre GL JS) %>
+<div id="map"
+     data-controller="map"
+     data-map-lat-value="22.419"
+     data-map-lng-value="114.210"
+     style="height: 400px; width: 100%;">
+</div>
