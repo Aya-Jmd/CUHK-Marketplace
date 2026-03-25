@@ -1,51 +1,58 @@
 <% content_for :title, "Price Dashboard" %>
 
 <section class="dashboard-shell" id="category-price-dashboard">
-
   <div class="dashboard-card">
-  <%= link_to "Back to items", items_path %>
+    <%= link_to "Back to items", items_path, class: "dashboard-back-link" %>
 
     <div class="dashboard-header">
       <div class="dashboard-heading">
         <h1>Analytics Dashboard</h1>
         <p class="dashboard-subtitle">
-          Price data for items from <strong><%= @selected_category_name || "your selected category"%></strong> items.
+          Price data for selected categories: <strong><%= @selected_category_summary %></strong>.
         </p>
       </div>
 
-      <%= form_with url: category_prices_dashboard_path, method: :get, local: true, class: "dashboard-filters" do %>
-        <label>
-          <span>Category</span>
-          <%= select_tag :category_id,
-            options_from_collection_for_select(@categories, :id, :name, @selected_category_id),
-            include_blank: false %>
-        </label>
+      <div class="dashboard-side-controls">
+        <%= form_with url: category_prices_dashboard_path, method: :get, local: true, class: "dashboard-filters" do %>
+          <%= hidden_field_tag :chart_mode, @chart_mode, id: "dashboard-chart-mode-input" %>
 
-        <label>
-          <span>From</span>
-          <%= date_field_tag :start_date, @start_date %>
-        </label>
+          <fieldset class="dashboard-category-filter">
+            <legend>Categories</legend>
 
-        <label>
-          <span>To</span>
-          <%= date_field_tag :end_date, @end_date %>
-        </label>
+            <div class="dashboard-category-grid">
+              <% @categories.each do |category| %>
+                <% input_id = "dashboard-category-#{category.id}" %>
+                <label class="dashboard-category-option" for="<%= input_id %>" title="<%= category.name %>">
+                  <%= check_box_tag "category_ids[]", category.id, @selected_category_ids.include?(category.id),
+                    id: input_id,
+                    class: "dashboard-category-checkbox" %>
+                  <span><%= category.name %></span>
+                </label>
+              <% end %>
+            </div>
+          </fieldset>
 
-        <%= submit_tag "Refresh", class: "dashboard-submit" %>
-      <% end %>
+          <label>
+            <span>From</span>
+            <%= date_field_tag :start_date, @start_date %>
+          </label>
+
+          <label>
+            <span>To</span>
+            <%= date_field_tag :end_date, @end_date %>
+          </label>
+        <% end %>
+      </div>
     </div>
 
-    <div class="dashboard-toolbar">
-      <div class="dashboard-mode-switch" role="group" aria-label="Chart mode">
+    <div class="dashboard-toolbar dashboard-toolbar-compact">
+      <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
         <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
         <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
       </div>
-
-      <!-- p class="dashboard-caption" -->
-        <!-- X axis: day within the selected window. Y axis: price in HKD. -->
-      <!-- /p -->
     </div>
 
+    <div class="dashboard-legend" id="dashboard-chart-legend" aria-label="Chart legend"></div>
 
     <div class="dashboard-stage">
       <div class="dashboard-chart-panel is-active" data-chart-panel="averages">
@@ -56,45 +63,99 @@
         <canvas id="category-prices-exact-chart"></canvas>
       </div>
 
-      <div class="dashboard-empty-state" id="dashboard-empty-averages" data-empty-mode="averages" hidden>
-        No posted or sold items were found for this category in the selected date range.
+      <div class="dashboard-empty-state" data-empty-mode="averages" hidden>
+        No posted or sold items were found for the selected categories in the selected date range.
       </div>
 
-      <div class="dashboard-empty-state" id="dashboard-empty-exact" data-empty-mode="exact" hidden>
-        No exact posted or sold offers were found for this category in the selected date range.
+      <div class="dashboard-empty-state" data-empty-mode="exact" hidden>
+        No exact posted or sold offers were found for the selected categories in the selected date range.
       </div>
     </div>
   </div>
 </section>
 
+<script id="category-price-dashboard-data" type="application/json"><%= raw @chart_payload.to_json %></script>
 <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chart.js" %>
 
 <script>
   (function() {
     var dashboard = document.getElementById("category-price-dashboard");
-    if (!dashboard) return;
+    var payloadElement = document.getElementById("category-price-dashboard-data");
+
+    if (!dashboard || !payloadElement || dashboard.dataset.initialized === "true") return;
 
     function initializeDashboard() {
-      if (dashboard.dataset.initialized === "true") return;
       if (typeof window.Chart === "undefined") {
         window.setTimeout(initializeDashboard, 25);
         return;
       }
 
+      if (dashboard.dataset.initialized === "true") return;
       dashboard.dataset.initialized = "true";
 
-      var averagesCanvas = document.getElementById("category-prices-averages-chart");
-      var exactCanvas = document.getElementById("category-prices-exact-chart");
-      var averageEmptyState = document.getElementById("dashboard-empty-averages");
-      var exactEmptyState = document.getElementById("dashboard-empty-exact");
-      var labels = <%= raw @labels.map { |day| day.strftime("%Y-%m-%d") }.to_json %>;
-      var averagePosted = <%= raw @avg_posted.map(&:to_f).to_json %>;
-      var averageSold = <%= raw @avg_sold.map(&:to_f).to_json %>;
-      var exactPosted = <%= raw @posted_points.to_json %>;
-      var exactSold = <%= raw @sold_points.to_json %>;
-      var modeButtons = dashboard.querySelectorAll("[data-chart-mode]");
-      var panels = dashboard.querySelectorAll("[data-chart-panel]");
-      var currentMode = "averages";
+      var data = JSON.parse(payloadElement.textContent);
+      var filterForm = dashboard.querySelector(".dashboard-filters");
+      var chartModeInput = document.getElementById("dashboard-chart-mode-input");
+      var categoryInputs = Array.from(dashboard.querySelectorAll(".dashboard-category-checkbox"));
+      var dateInputs = Array.from(filterForm.querySelectorAll('input[type="date"]'));
+      var modeButtons = Array.from(dashboard.querySelectorAll("[data-chart-mode]"));
+      var chartPanels = {
+        averages: dashboard.querySelector('[data-chart-panel="averages"]'),
+        exact: dashboard.querySelector('[data-chart-panel="exact"]')
+      };
+      var legendContainer = document.getElementById("dashboard-chart-legend");
+      var emptyStates = {
+        averages: dashboard.querySelector('[data-empty-mode="averages"]'),
+        exact: dashboard.querySelector('[data-empty-mode="exact"]')
+      };
+      var canvases = {
+        averages: document.getElementById("category-prices-averages-chart"),
+        exact: document.getElementById("category-prices-exact-chart")
+      };
+      var chartInstances = {};
+      var currentMode = data.initial_mode || "averages";
+      var autoSubmitTimer = null;
+      var currencyFormatter = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: data.currency_code,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      function formatCurrency(value) {
+        return currencyFormatter.format(value);
+      }
+
+      function withAlpha(color, alpha) {
+        var match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+
+        if (!match) return color;
+
+        return "rgba(" + match[1] + ", " + match[2] + ", " + match[3] + ", " + alpha + ")";
+      }
+
+      function createAreaFill(color) {
+        return function(context) {
+          var chart = context.chart;
+          var chartArea = chart.chartArea;
+          var yScale = chart.scales.y;
+
+          if (!chartArea || !yScale) {
+            return withAlpha(color, 0.12);
+          }
+
+          var originY = Math.min(yScale.getPixelForValue(0), chartArea.bottom);
+          var gradientTop = Math.max(chartArea.top, originY - 180);
+          var gradient = chart.ctx.createLinearGradient(0, gradientTop, 0, originY);
+
+          gradient.addColorStop(0, withAlpha(color, 0.2));
+          gradient.addColorStop(0.45, withAlpha(color, 0.12));
+          gradient.addColorStop(0.8, withAlpha(color, 0.04));
+          gradient.addColorStop(1, withAlpha(color, 0));
+
+          return gradient;
+        };
+      }
 
       function syncDashboardHeight() {
         var header = document.querySelector(".main-header");
@@ -106,6 +167,7 @@
           parseFloat(bodyStyles.paddingTop || 0) +
           parseFloat(bodyStyles.paddingBottom || 0);
         var availableHeight = Math.max(window.innerHeight - headerHeight - bodyVerticalSpace - 12, 480);
+
         dashboard.style.setProperty("--dashboard-viewport-height", availableHeight + "px");
       }
 
@@ -118,264 +180,471 @@
         syncDashboardHeight();
       }
 
-      function hasAverageData() {
-        return averagePosted.some(function(value) { return value > 0; }) || averageSold.some(function(value) { return value > 0; });
+      function destroyChart(mode) {
+        var existing = chartInstances[mode] || Chart.getChart(canvases[mode]);
+
+        if (existing) {
+          existing.destroy();
+        }
+
+        chartInstances[mode] = null;
       }
 
-      function hasExactData() {
-        return exactPosted.length > 0 || exactSold.length > 0;
+      function toggleEmptyState(mode, isEmpty) {
+        emptyStates[mode].hidden = !isEmpty;
+        chartPanels[mode].classList.toggle("is-empty", isEmpty);
       }
 
-      function baseOptions(titleText) {
+      function createYAxis() {
         return {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        layout: {
-          padding: {
-            top: 4,
-            right: 8,
-            bottom: 4,
-            left: 4
-          }
-        },
-        plugins: {
-          legend: {
-            position: "top",
-            align: "end",
-            labels: {
-              color: "#30384a",
-              boxWidth: 12,
-              usePointStyle: true,
-              pointStyle: "circle"
-            }
+          beginAtZero: true,
+          grid: {
+            color: "rgba(31, 36, 48, 0.08)",
+            drawBorder: false
           },
-          tooltip: {
-            backgroundColor: "rgba(255, 255, 255, 0.98)",
-            borderColor: "rgba(48, 56, 74, 0.18)",
-            borderWidth: 1,
-            titleColor: "#1a1a1a",
-            bodyColor: "#1a1a1a"
+          ticks: {
+            color: "#4f5563",
+            callback: function(value) {
+              return formatCurrency(value);
+            }
           },
           title: {
             display: true,
-            text: titleText,
-            color: "#1f2430",
-            font: {
-              size: 18,
-              weight: "700"
-            },
-            padding: {
-              bottom: 12
-            }
+            text: "Price (" + data.currency_code + ")",
+            color: "#4f5563"
           }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
+        };
+      }
+
+      function createOptions(config) {
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          interaction: config.interaction,
+          layout: {
+            padding: {
+              top: 4,
+              right: 8,
+              bottom: 4,
+              left: 4
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.98)",
+              borderColor: "rgba(48, 56, 74, 0.18)",
+              borderWidth: 1,
+              titleColor: "#1a1a1a",
+              bodyColor: "#1a1a1a",
+              callbacks: config.tooltipCallbacks,
+              filter: config.tooltipFilter
+            },
+            title: {
+              display: true,
+              text: config.title,
+              color: "#1f2430",
+              font: {
+                size: 18,
+                weight: "700"
+              },
+              padding: {
+                bottom: 12
+              }
+            }
+          },
+          scales: {
+            x: config.xScale,
+            y: createYAxis()
+          }
+        };
+      }
+
+      function createLegendMarker(markerClass, color) {
+        var marker = document.createElement("span");
+        marker.className = "dashboard-legend-marker " + markerClass;
+        marker.style.setProperty("--legend-color", color);
+        return marker;
+      }
+
+      function createLegendEntry(dataset) {
+        var entry = document.createElement("div");
+        entry.className = "dashboard-legend-entry";
+
+        var markerClass = dataset.seriesKind === "sold" ? "is-triangle" : "is-circle";
+        var markerColor = dataset.legendColor || dataset.borderColor;
+        var text = document.createElement("span");
+        text.className = "dashboard-legend-text";
+        text.textContent = dataset.seriesLabel;
+
+        entry.appendChild(createLegendMarker(markerClass, markerColor));
+        entry.appendChild(text);
+
+        return entry;
+      }
+
+      function renderLegend(mode) {
+        if (!legendContainer) return;
+
+        legendContainer.innerHTML = "";
+
+        var chart = chartInstances[mode];
+        if (!chart) return;
+
+        var groups = new Map();
+
+        chart.data.datasets.forEach(function(dataset) {
+          if (!groups.has(dataset.categoryName)) {
+            groups.set(dataset.categoryName, []);
+          }
+
+          groups.get(dataset.categoryName).push(dataset);
+        });
+
+        groups.forEach(function(datasets, categoryName) {
+          var group = document.createElement("div");
+          group.className = "dashboard-legend-group";
+
+          var heading = document.createElement("div");
+          heading.className = "dashboard-legend-heading";
+          heading.textContent = categoryName;
+          group.appendChild(heading);
+
+          datasets.forEach(function(dataset) {
+            group.appendChild(createLegendEntry(dataset));
+          });
+
+          legendContainer.appendChild(group);
+        });
+      }
+
+      function buildAverageLineSeries(values) {
+        var lineValues = values.slice();
+        var anchorIndexes = [];
+        var index = 0;
+
+        while (index < values.length) {
+          while (index < values.length && values[index] === null) {
+            index += 1;
+          }
+
+          if (index >= values.length) break;
+
+          var segmentStart = index;
+
+          while (index < values.length && values[index] !== null) {
+            index += 1;
+          }
+
+          var segmentEnd = index - 1;
+
+          if (segmentStart > 0 && values[segmentStart - 1] === null) {
+            lineValues[segmentStart - 1] = 0;
+            anchorIndexes.push(segmentStart - 1);
+          }
+
+          if (segmentEnd < values.length - 1 && values[segmentEnd + 1] === null) {
+            lineValues[segmentEnd + 1] = 0;
+            anchorIndexes.push(segmentEnd + 1);
+          }
+        }
+
+        return {
+          data: lineValues,
+          anchorIndexes: anchorIndexes
+        };
+      }
+
+      function createAverageDatasets() {
+        return data.categories.flatMap(function(category) {
+          var postedSeries = buildAverageLineSeries(category.averages.posted);
+          var soldSeries = buildAverageLineSeries(category.averages.sold);
+
+          return [
+            {
+              type: "line",
+              label: category.name + " POSTED",
+              categoryName: category.name,
+              seriesKind: "posted",
+              seriesLabel: "Posted",
+              legendColor: category.colors.posted_border,
+              data: postedSeries.data,
+              anchorIndexes: postedSeries.anchorIndexes,
+              backgroundColor: createAreaFill(category.colors.posted),
+              borderColor: category.colors.posted,
+              borderWidth: 2,
+              fill: "origin",
+              tension: 0,
+              spanGaps: false,
+              pointBackgroundColor: category.colors.posted_border,
+              pointBorderColor: category.colors.posted_border,
+              pointHoverBackgroundColor: category.colors.posted_border,
+              pointHoverBorderColor: category.colors.posted_border,
+              pointRadius: function(context) {
+                return context.dataset.anchorIndexes.includes(context.dataIndex) ? 0 : 4;
+              },
+              pointHoverRadius: function(context) {
+                return context.dataset.anchorIndexes.includes(context.dataIndex) ? 0 : 6;
+              },
+              pointStyle: "circle"
+            },
+            {
+              type: "line",
+              label: category.name + " SOLD",
+              categoryName: category.name,
+              seriesKind: "sold",
+              seriesLabel: "Sold",
+              legendColor: category.colors.sold_border,
+              data: soldSeries.data,
+              anchorIndexes: soldSeries.anchorIndexes,
+              backgroundColor: createAreaFill(category.colors.sold),
+              borderColor: category.colors.sold,
+              borderWidth: 2,
+              fill: "origin",
+              tension: 0,
+              spanGaps: false,
+              pointBackgroundColor: category.colors.sold_border,
+              pointBorderColor: category.colors.sold_border,
+              pointHoverBackgroundColor: category.colors.sold_border,
+              pointHoverBorderColor: category.colors.sold_border,
+              pointRadius: function(context) {
+                return context.dataset.anchorIndexes.includes(context.dataIndex) ? 0 : 4;
+              },
+              pointHoverRadius: function(context) {
+                return context.dataset.anchorIndexes.includes(context.dataIndex) ? 0 : 6;
+              },
+              pointStyle: "triangle"
+            }
+          ];
+        });
+      }
+
+      function buildAverageChartConfig() {
+        var datasets = createAverageDatasets();
+        var hasData = datasets.some(function(dataset) {
+          return dataset.data.some(function(value, index) {
+            return value !== null && !dataset.anchorIndexes.includes(index);
+          });
+        });
+
+        return {
+          empty: !hasData,
+          type: "line",
+          title: "Average posted vs sold item prices per day",
+          interaction: {
+            mode: "nearest",
+            intersect: false
+          },
+          xScale: {
             grid: {
               color: "rgba(31, 36, 48, 0.08)",
               drawBorder: false
             },
             ticks: {
-              color: "#4f5563"
+              color: "#4f5563",
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 6
             },
             title: {
               display: true,
-              text: "Price (HKD)",
+              text: "Day",
               color: "#4f5563"
             }
-          }
-        }
-        };
-      }
-
-      function destroyChart(canvas) {
-        var existing = Chart.getChart(canvas);
-        if (existing) existing.destroy();
-      }
-
-      function buildAverageChart() {
-        destroyChart(averagesCanvas);
-
-        if (!hasAverageData()) {
-          averageEmptyState.hidden = false;
-          averagesCanvas.parentElement.classList.add("is-empty");
-          return;
-        }
-
-        averageEmptyState.hidden = true;
-        averagesCanvas.parentElement.classList.remove("is-empty");
-
-        var options = baseOptions("Daily average posted vs sold prices");
-        options.scales.x = {
-        grid: {
-          color: "rgba(31, 36, 48, 0.08)",
-          drawBorder: false
-        },
-        ticks: {
-          color: "#4f5563",
-          maxRotation: 0,
-          autoSkip: true,
-          maxTicksLimit: 6
-        },
-        title: {
-          display: true,
-          text: "Day",
-          color: "#4f5563"
-        }
-      };
-        options.interaction = {
-          mode: "nearest",
-          intersect: false
-        };
-        options.plugins.tooltip.callbacks = {
-        title: function(items) {
-          return labels[items[0].dataIndex];
-        },
-        label: function(context) {
-          return context.dataset.label + ": HKD " + context.parsed.y.toFixed(2);
-        }
-        };
-
-        new Chart(averagesCanvas, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Avg price POSTED (HKD)",
-              data: averagePosted,
-              backgroundColor: "#23d2ff",
-              borderRadius: 6,
-              maxBarThickness: 34,
-              categoryPercentage: 0.5,
-              barPercentage: 0.75
-            },
-            {
-              label: "Avg price SOLD (HKD)",
-              data: averageSold,
-              backgroundColor: "#f6c945",
-              borderRadius: 6,
-              maxBarThickness: 34,
-              categoryPercentage: 0.5,
-              barPercentage: 0.75
-            }
-          ]
-        },
-        options: options
-        });
-      }
-
-      function buildExactChart() {
-        destroyChart(exactCanvas);
-
-        if (!hasExactData()) {
-          exactEmptyState.hidden = false;
-          exactCanvas.parentElement.classList.add("is-empty");
-          return;
-        }
-
-        exactEmptyState.hidden = true;
-        exactCanvas.parentElement.classList.remove("is-empty");
-
-        var options = baseOptions("Exact posted and sold offer prices");
-        options.interaction = {
-        mode: "point",
-        intersect: true
-      };
-        options.scales.x = {
-        type: "linear",
-        min: -0.5,
-        max: Math.max(labels.length - 0.5, 0.5),
-        grid: {
-          color: "rgba(31, 36, 48, 0.08)",
-          drawBorder: false
-        },
-        ticks: {
-          color: "#4f5563",
-          callback: function(value) {
-            var rounded = Math.round(value);
-            return labels[rounded] || "";
           },
-          maxRotation: 0,
-          autoSkip: true,
-          maxTicksLimit: 6
-        },
-        title: {
-          display: true,
-          text: "Day",
-          color: "#4f5563"
-        }
-      };
-        options.plugins.tooltip.filter = function(item) {
-          return item.dataset.type === "scatter";
+          tooltipFilter: function(item) {
+            return !item.dataset.anchorIndexes.includes(item.dataIndex);
+          },
+          tooltipCallbacks: {
+            title: function(items) {
+              return data.labels[items[0].dataIndex];
+            },
+            label: function(context) {
+              if (context.dataset.anchorIndexes.includes(context.dataIndex)) return null;
+              return context.dataset.label + ": " + formatCurrency(context.parsed.y);
+            }
+          },
+          data: {
+            labels: data.labels,
+            datasets: datasets
+          }
         };
-        options.plugins.tooltip.callbacks = {
-        title: function(items) {
-          return items[0].raw.title + " - " + items[0].raw.day;
-        },
-        label: function(context) {
-          return context.dataset.label + ": HKD " + context.raw.y;
-        }
-        };
+      }
 
-        new Chart(exactCanvas, {
-        type: "scatter",
-        data: {
-          datasets: [
+      function createExactDatasets() {
+        return data.categories.flatMap(function(category) {
+          return [
             {
               type: "scatter",
-              label: "Posted offers",
-              data: exactPosted,
-              backgroundColor: "#23d2ff",
-              borderColor: "#23d2ff",
+              label: category.name + " POSTED",
+              categoryName: category.name,
+              seriesKind: "posted",
+              seriesLabel: "Posted",
+              legendColor: category.colors.posted_border,
+              data: category.exact.posted,
+              backgroundColor: category.colors.posted,
+              borderColor: category.colors.posted_border,
               showLine: false,
               pointRadius: 4,
-              pointHoverRadius: 6
+              pointHoverRadius: 6,
+              pointStyle: "circle"
             },
             {
               type: "scatter",
-              label: "Sold offers",
-              data: exactSold,
-              backgroundColor: "#f6c945",
-              borderColor: "#f6c945",
+              label: category.name + " SOLD",
+              categoryName: category.name,
+              seriesKind: "sold",
+              seriesLabel: "Sold",
+              legendColor: category.colors.sold_border,
+              data: category.exact.sold,
+              backgroundColor: category.colors.sold,
+              borderColor: category.colors.sold_border,
               showLine: false,
               pointRadius: 4,
-              pointHoverRadius: 6
+              pointHoverRadius: 6,
+              pointStyle: "triangle"
             }
-          ]
-        },
-        options: options
+          ];
         });
+      }
+
+      function buildExactChartConfig() {
+        var datasets = createExactDatasets();
+        var hasData = datasets.some(function(dataset) {
+          return dataset.data.length > 0;
+        });
+
+        return {
+          empty: !hasData,
+          type: "scatter",
+          title: "Exact posted and sold item prices",
+          interaction: {
+            mode: "point",
+            intersect: true
+          },
+          xScale: {
+            type: "linear",
+            min: -0.5,
+            max: Math.max(data.labels.length - 0.5, 0.5),
+            grid: {
+              color: "rgba(31, 36, 48, 0.08)",
+              drawBorder: false
+            },
+            ticks: {
+              color: "#4f5563",
+              callback: function(value) {
+                var rounded = Math.round(value);
+                return data.labels[rounded] || "";
+              },
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 6
+            },
+            title: {
+              display: true,
+              text: "Day",
+              color: "#4f5563"
+            }
+          },
+          tooltipFilter: function(item) {
+            return item.dataset.type === "scatter";
+          },
+          tooltipCallbacks: {
+            title: function(items) {
+              return items[0].raw.title + " - " + items[0].raw.day;
+            },
+            label: function(context) {
+              return context.dataset.label + ": " + formatCurrency(context.raw.y);
+            }
+          },
+          data: {
+            datasets: datasets
+          }
+        };
+      }
+
+      function renderChart(mode, buildConfig) {
+        var config = buildConfig();
+
+        destroyChart(mode);
+        toggleEmptyState(mode, config.empty);
+
+        if (config.empty) {
+          if (currentMode === mode) renderLegend(mode);
+          return;
+        }
+
+        chartInstances[mode] = new Chart(canvases[mode], {
+          type: config.type,
+          data: config.data,
+          options: createOptions(config)
+        });
+
+        if (currentMode === mode) renderLegend(mode);
       }
 
       function setMode(mode) {
         currentMode = mode;
+        if (chartModeInput) chartModeInput.value = mode;
 
         modeButtons.forEach(function(button) {
           button.classList.toggle("is-active", button.dataset.chartMode === mode);
         });
 
-        panels.forEach(function(panel) {
-          panel.classList.toggle("is-active", panel.dataset.chartPanel === mode);
+        Object.keys(chartPanels).forEach(function(panelMode) {
+          chartPanels[panelMode].classList.toggle("is-active", panelMode === mode);
         });
 
-        dashboard.querySelectorAll("[data-empty-mode]").forEach(function(message) {
-          var shouldShow = message.dataset.emptyMode === mode && !message.hidden;
-          message.classList.toggle("is-active", shouldShow);
+        Object.keys(emptyStates).forEach(function(emptyMode) {
+          var shouldShow = emptyMode === mode && !emptyStates[emptyMode].hidden;
+          emptyStates[emptyMode].classList.toggle("is-active", shouldShow);
         });
+
+        renderLegend(mode);
       }
 
+      function hasCategorySelection() {
+        return categoryInputs.some(function(input) { return input.checked; });
+      }
+
+      function submitFilters() {
+        if (!hasCategorySelection()) return;
+
+        filterForm.requestSubmit();
+      }
+
+      filterForm.addEventListener("submit", function(event) {
+        if (hasCategorySelection()) return;
+
+        event.preventDefault();
+        window.alert("Select at least one category.");
+      });
+
+      categoryInputs.forEach(function(input) {
+        input.addEventListener("change", function() {
+          submitFilters();
+        });
+      });
+
+      dateInputs.forEach(function(input) {
+        input.addEventListener("change", function() {
+          window.clearTimeout(autoSubmitTimer);
+          autoSubmitTimer = window.setTimeout(submitFilters, 120);
+        });
+      });
+
       modeButtons.forEach(function(button) {
-        button.onclick = function() {
+        button.addEventListener("click", function() {
           setMode(button.dataset.chartMode);
-        };
+        });
       });
 
       syncDashboardHeight();
-      buildAverageChart();
-      buildExactChart();
+      renderChart("averages", buildAverageChartConfig);
+      renderChart("exact", buildExactChartConfig);
       setMode(currentMode);
 
       window.addEventListener("resize", handleResize);

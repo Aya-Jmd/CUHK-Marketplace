@@ -1,89 +1,113 @@
-<p style="color: green"><%= notice %></p>
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
 
-<div style="text-align: left; margin-bottom: 8px;">
-  <p style= "color: green;">Signed in as <strong><%= link_to current_user.email, user_path(current_user)%></strong>. Welcome!</p> 
-</div>
+  <% content_for :title, "CUHK Marketplace" %>
 
-
-<% content_for :title, "CUHK Marketplace" %>
-
-<div style="text-align: center; margin-bottom: 30px; background-color: #f0f4f8; padding: 40px; border-radius: 8px; font-family: sans-serif;">
-  <h1 style="font-size: 2.5em; color: #2d3748; margin: 0;">Welcome to CUHK Marketplace</h1>
-  <p style="font-size: 1.1em; color: #718096; margin-top: 10px;">
-    The trusted platform for buying and selling second-hand items on campus.
-  </p>
-</div>
-
-<!-- SEARCH BAR -->
-<%= render "search/search_bar" %>
-
-<div style="margin-top: 20px; text-align: left;">
-  <%= link_to "View price analytics", category_prices_dashboard_path %>
-</div>
-
-<!-- PRICE SLIDER -->
-<%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
- 
-
-  <!-- Hidden fields, used by both slider -->
-  <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
-  <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
-
-  <!-- SLIDER -->
-  <%= render "price_slider" %>
-
-<% end %>
-
-
-<!-- SLIDER SCRIPT -->
-<script>
-  document.addEventListener("turbo:load", function () {
-    const slider = document.getElementById("price-slider");
-    if (!slider) return;
-
-    const minInput = document.getElementById("min_price");
-    const maxInput = document.getElementById("max_price");
-    const label    = document.getElementById("price-label");
-
-    // Destroy existing slider if Turbo re-rendered this section, then re-create
-    if (slider.noUiSlider) {
-      slider.noUiSlider.destroy();
-    }
-
-    const startMin = Number(minInput.value) || <%= @PRICE_FLOOR %>;
-    const startMax = Number(maxInput.value) || <%= @PRICE_CEILING %>;
-
-    noUiSlider.create(slider, {
-      start: [startMin, startMax],
-      connect: true,
-      range: { min: <%= @PRICE_FLOOR %>, max: <%= @PRICE_CEILING %> },
-      step: 1
-    });
-
-    slider.noUiSlider.on("update", function (values) {
-      const min = Math.round(values[0]);
-      const max = Math.round(values[1]);
-
-      minInput.value = min;
-      maxInput.value = max;
-      label.textContent = min + "HKD - " + max + "HKD";
-    });
-  });
-</script>
-<!-- END OF SLIDERS -->
-
-<br> <br>
-
-<div id="items">
-  <% @items.each do |item| %>
-    <%= render item %>
-    <p>
-      <%= link_to "Show this item", item %>
+  <div style="text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); padding: 50px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.15); color: white;">
+    <h1 style="font-size: 2.8em; margin: 0; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Welcome to CUHK Marketplace</h1>
+    <p style="font-size: 1.15em; margin-top: 15px; opacity: 0.9;">
+      The trusted platform for buying and selling second-hand items on campus.
     </p>
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-  <% end %>
-</div>
+  </div>
 
-<div style="margin-top: 20px; text-align: center;">
-  <%= link_to "New item", new_item_path, style: "background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;" %>
+  <div style="background-color: #fafbff; padding: 25px; border-radius: 16px; border: 1px solid #e1e8ed; border-top: 5px solid #00cec9; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.03);">
+    <div style="margin-bottom: 25px;">
+      <%= render "search/search_bar" %>
+    </div>
+
+    <%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
+      <%= hidden_field_tag :price_currency, current_currency_code, id: "price_currency" %>
+      <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
+      <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
+      
+      <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px dashed #b2bec3;">
+        <h4 style="margin-top: 0; color: #2d3436; margin-bottom: 15px; font-size: 1.1em;">💰 Filter by Price</h4>
+        <%= render "price_slider" %>
+      </div>
+    <% end %>
+  </div>
+
+  <script>
+    document.addEventListener("turbo:load", function () {
+      const slider = document.getElementById("price-slider");
+      if (!slider) return;
+
+      const minInput = document.getElementById("min_price");
+      const maxInput = document.getElementById("max_price");
+      const label    = document.getElementById("price-label");
+      const currencyCode = <%= raw current_currency_code.to_json %>;
+      const currencyFormatter = new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: currencyCode,
+        maximumFractionDigits: 0
+      });
+
+      if (slider.noUiSlider) {
+        slider.noUiSlider.destroy();
+      }
+
+      const startMin = Number(minInput.value) || <%= @price_floor %>;
+      const startMax = Number(maxInput.value) || <%= @price_ceiling %>;
+
+      noUiSlider.create(slider, {
+        start: [startMin, startMax],
+        connect: true,
+        range: { min: <%= @price_floor %>, max: <%= @price_ceiling %> },
+        step: 1
+      });
+
+      slider.noUiSlider.on("update", function (values) {
+        const min = Math.round(values[0]);
+        const max = Math.round(values[1]);
+
+        minInput.value = min;
+        maxInput.value = max;
+        label.textContent = currencyFormatter.format(min) + " - " + currencyFormatter.format(max);
+      });
+    });
+  </script>
+  <div id="items" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
+    <% @items.each do |item| %>
+      <div style="border: 1px solid #e1e8ed; border-radius: 12px; overflow: hidden; background: white; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.04);">
+        
+        <div style="width: 100%; height: 200px; background-color: #f1f2f6; display: flex; align-items: center; justify-content: center; color: #a4b0be; font-weight: bold; border-bottom: 1px solid #e1e8ed;">
+          <span>[📸 Image]</span>
+        </div>
+
+        <div style="padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <h3 style="margin: 0; font-size: 1.2em; color: #2f3542; line-height: 1.4;"><%= item.title %></h3>
+            <span style="font-weight: 800; color: #e15f41; font-size: 1.2em; margin-left: 10px;">
+              <% 
+                converted_price = item.price ? Currency.convert_from_hkd(item.price.to_d, current_currency_code) : 0 
+                symbol = case current_currency_code
+                        when 'USD' then 'US$'
+                        when 'EUR' then '€'
+                        else 'HK$'
+                        end
+              %>
+              <%= symbol %><%= converted_price.to_i %>
+            </span>
+          </div>
+          
+          <p style="color: #747d8c; font-size: 0.95em; margin-bottom: 20px; height: 42px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+            <%= item.description || "No description provided." %>
+          </p>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: #a4b0be; margin-bottom: 20px;">
+            <span style="background-color: #ffeaa7; padding: 4px 8px; border-radius: 4px; color: #d35400; font-weight: bold;">
+              📍 <%= item.college&.name || "CUHK Campus" %>
+            </span>
+            <span>🕒 <%= time_ago_in_words(item.created_at) %> ago</span>
+          </div>
+
+          <%= link_to "View Details & Offer", item_path(item), style: "display: block; text-align: center; background-color: #2ed573; color: white; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.05em;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="margin-top: 50px; text-align: center; padding-bottom: 40px;">
+    <%= link_to "➕ Post a New Item", new_item_path, style: "background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; display: inline-block; box-shadow: 0 6px 12px rgba(9, 132, 227, 0.3); transition: transform 0.2s;" %>
+  </div>
+
 </div>

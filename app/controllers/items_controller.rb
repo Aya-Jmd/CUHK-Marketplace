@@ -4,16 +4,22 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
-    # FILTERING PRODUCTS DEPENDING ON MIN / MAX PRICE (set by user)
-    # CONSTANTS (global max and min prices, defaulting to values if DB is empty)
-    @PRICE_FLOOR = Item.minimum(:price).to_i || 0
-    @PRICE_CEILING = Item.maximum(:price).to_i || 100000
+    price_floor_hkd = Item.minimum(:price)&.to_d || 0.to_d
+    price_ceiling_hkd = Item.maximum(:price)&.to_d || 100_000.to_d
 
-    @min_price = params.fetch(:min_price, @PRICE_FLOOR)
-    @max_price = params.fetch(:max_price, @PRICE_CEILING)
+    @price_floor = convert_price_from_hkd(price_floor_hkd).floor
+    @price_ceiling = convert_price_from_hkd(price_ceiling_hkd).ceil
 
-    @items = Item.where(price: @min_price..@max_price)
+    submitted_in_current_currency = params[:price_currency] == current_currency_code
+    requested_min = submitted_in_current_currency && params[:min_price].present? ? params[:min_price].to_d : nil
+    requested_max = submitted_in_current_currency && params[:max_price].present? ? params[:max_price].to_d : nil
 
+    @min_price, @max_price = [requested_min, requested_max].minmax
+    @min_price = [@min_price, @price_floor].max
+    @max_price = [@max_price, @price_ceiling].min
+
+    min_price_hkd, max_price_hkd = [convert_price_to_hkd(@min_price), convert_price_to_hkd(@max_price)].minmax
+    @items = Item.where(price: min_price_hkd..max_price_hkd)
   end
 
   # GET /items/1 or /items/1.json
@@ -26,7 +32,7 @@ class ItemsController < ApplicationController
       )
       @distance_text = distance_text(@distance)
     end
-    
+
     # Find nearby items (within 1.5km)
     if @item.has_location?
       @nearby_items = Item.where.not(id: @item.id)
@@ -117,10 +123,10 @@ class ItemsController < ApplicationController
     def normalize_price_to_hkd(item)
       return if item.price.blank?
 
-      code = session[:currency_code] || Currency::BASE_CODE
-      item.price = Currency.convert_to_hkd(item.price.to_d, code)
+      item.price = convert_price_to_hkd(item.price)
     end
 
+    # Location distance helper
     def distance_text(distance)
       if distance < 0.5
         "Very close - Easy walk"

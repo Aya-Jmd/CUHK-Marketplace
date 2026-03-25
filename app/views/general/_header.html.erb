@@ -1,29 +1,49 @@
-<header class="main-header">
-  <nav class="header-nav">
-    <% if user_signed_in? %>
-      <!-- USER PROFILE -->
-      <%= link_to "Profile", profile_path, class: "header-link" %>
-      <!-- CURRENCY SETTINGS -->
-      <%= form_with url: currency_path, method: :patch, local: true,
-                    class: "currency-form" do %>
-        <label for="currency-select">Currency:</label>
-        <%= select_tag :currency,
-          options_from_collection_for_select(
-            Currency.order(:code),
-            :code,
-            :code,
-            current_currency_code
-          ),
-          id: "currency-select",
-          onchange: "this.form.submit()" %>
+<% if notice %>
+  <div style="background-color: #d1e7dd; color: #0f5132; padding: 12px; text-align: center; margin-bottom: 20px;">
+    <%= notice %>
+  </div>
+<% end %>
+
+<% if user_signed_in? %>
+  <div style="max-width: 1200px; margin: 20px auto 30px auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+    
+    <div>
+      <%= link_to "📊 View Price Analytics", category_prices_dashboard_path, style: "background: #0984e3; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9em;" %>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+
+      <%= form_with url: currency_path, method: :patch, style: "margin: 0;" do %>
+        <div style="display: flex; align-items: center; background-color: #f1f2f6; border-radius: 20px; padding: 4px 12px;">
+          <span style="font-size: 0.9em; margin-right: 6px;">💱</span>
+          <%= select_tag :currency, options_for_select(['HKD', 'USD', 'EUR', 'CNY'], current_currency_code), onchange: "this.form.submit()", style: "background: transparent; border: none; padding: 6px; font-size: 0.9em; cursor: pointer;" %>
+        </div>
       <% end %>
 
-      <!-- SIGN OUT -->
-      <%= button_to "Sign out", destroy_user_session_path,
-                  method: :delete,
-                  class: "header-link" %>
-    <% else %>
-      <%= link_to "Sign in", new_user_session_path, class: "header-link" %>
-    <% end %>
-  </nav>
-</header>
+      <details style="position: relative;">
+        <summary style="list-style: none; cursor: pointer; color: #0984e3; font-weight: 500;">
+          👋 Welcome, <%= current_user.email.split('@').first.capitalize %>
+        </summary>
+
+        <div style="position: absolute; right: 0; top: 120%; background-color: white; border: 1px solid #dfe6e9; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 160px;">
+
+          <%= link_to profile_path, style: "display: block; padding: 10px 15px; color: #2d3436; text-decoration: none; font-size: 0.9em;" do %>
+            👤 My Profile
+          <% end %>
+
+          <%= link_to user_path(current_user), style: "display: block; padding: 10px 15px; color: #2d3436; text-decoration: none; font-size: 0.9em; border-top: 1px solid #f1f2f6;" do %>
+            🏠 My Items
+          <% end %>
+
+          <hr style="border: 0; border-top: 1px solid #f1f2f6; margin: 5px 0;">
+
+          <%= button_to destroy_user_session_path, method: :delete, form: { style: "margin: 0; display: block;" }, style: "width: 100%; text-align: left; background: none; border: none; padding: 10px 15px; cursor: pointer; color: #d63031; font-size: 0.9em;" do %>
+            <span style="font-size: 1.2em;">🚪</span> Sign Out
+          <% end %>
+
+        </div>
+      </details>
+
+    </div>
+  </div>
+<% end %>

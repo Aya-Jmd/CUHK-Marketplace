@@ -1,19 +1,82 @@
-<h1><%= @user.email %></h1>
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 100px;">
 
-<p>College: <%= @user.college.name if @user.college %></p>
-<p><%= (current_user == @user ? "My items:" : "Items by this seller:") %></p>
-<ul>
-<!-- ORDERING BY CREATION TIME, DESCENDING-->
-  <% @user.items.order(created_at: :desc).each do |item| %>
-    <li>
-      <%= link_to item.title, item_path(item) %>
-      <%= ",   #{item.created_at.strftime("%d/%m/%Y")}"%>
-    </li>
-  <% end %>
-</ul>
+  <div style="margin-bottom: 10px;">
+    <%= link_to root_path, style: "display: inline-flex; align-items: center; gap: 8px; background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;" do %>
+      <span style="font-size: 1.2em;">⬅️</span> Back to Home
+    <% end %>
+  </div>
 
-<br>
+  <div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
+      My Profile & Dashboard
+    </h1>
+    <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">
+      🎓 College: <strong><%= current_user.college&.name || "Not specified" %></strong><br>
+      <span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">
+        Manage your listings and track your offers.
+      </span>
+    </p>
+  </div>
 
-<!-- BUTTON FORWARDING TO ITEM INDEX PAGE -->
-<%= link_to "Back to items", items_path %>
+  <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+    
+    <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
+      <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
+        <span>📦</span> My Listings
+      </h2>
+      <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
 
+      <%= link_to "➕ Post a New Item", new_item_path, style: "display: block; text-align: center; background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); color: white; padding: 14px; text-decoration: none; border-radius: 10px; font-weight: bold; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);" %>
+
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <% if current_user.items.any? %>
+          <% current_user.items.order(created_at: :desc).each do |item| %>
+            <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background-color: #fafbff; transition: transform 0.2s;">
+              
+              <div style="flex: 1;">
+                <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #2d3436; text-decoration: none; font-size: 1.1em; display: block; margin-bottom: 4px;" %>
+                <div style="font-size: 0.8em; color: #a4b0be;">
+                  🕒 Posted on <%= item.created_at.strftime("%d/%m/%Y") %>
+                </div>
+              </div>
+
+              <span style="color: #27ae60; font-weight: bold; background: #e8f8f5; padding: 6px 12px; border-radius: 8px; font-size: 1.1em; margin-left: 15px;">
+                <% 
+                  converted_price = item.price ? Currency.convert_from_hkd(item.price.to_d, current_currency_code) : 0
+                  symbol = case current_currency_code when 'USD' then 'US$' when 'EUR' then '€' else 'HK$' end
+                %>
+                <%= symbol %><%= converted_price.to_i %>
+              </span>
+            </li>
+          <% end %>
+        <% else %>
+          <li style="color: #a4b0be; text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px;">
+            You haven't posted any items yet.
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
+      <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
+        <span>🛍️</span> Buyer Hub
+      </h2>
+      <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
+
+      <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Offers</h3>
+      <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
+      
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
+          <div style="margin-bottom: 8px; font-size: 1.05em;">
+            <span style="font-weight: 800; color: #e15f41;">Offered xxx</span> for iPhone 13 Pro (example)
+          </div>
+          <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
+            <span>⏳</span> Pending Approval
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
