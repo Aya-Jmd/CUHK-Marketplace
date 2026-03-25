@@ -10,6 +10,7 @@ A centralized, multi-tenant SaaS marketplace tailored specifically for the CUHK 
 | **Abdulrahman Mohammed** | 1155264624 | [@JotaroLivesAlone](https://github.com/JotaroLivesAlone) | 
 | **Abous Houssameddine**  | 1155256354 | [@housss77](https://github.com/housss77) |
 | **Jmoud Aya**            | 1155256382 | [@Aya-Jmd](https://github.com/Aya-Jmd) |
+| **Bingyan Wang**         | 1155191406 | [@VincentWang0719](https://github.com/VincentWang0719) |
 
 ##  Project Links
 * **Deployed Application:** [https://cuhk-marketplace-group-21-217132cb7477.herokuapp.com/]
