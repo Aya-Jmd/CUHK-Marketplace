@@ -2,8 +2,7 @@
   <nav class="header-nav">
     <% if user_signed_in? %>
       <!-- USER PROFILE -->
-      <%= link_to "Profile", user_path(current_user), class: "header-link" %>
-
+      <%= link_to "Profile", profile_path, class: "header-link" %>
       <!-- CURRENCY SETTINGS -->
       <%= form_with url: currency_path, method: :patch, local: true,
                     class: "currency-form" do %>

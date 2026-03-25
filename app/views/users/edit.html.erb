@@ -1,0 +1,35 @@
+<h2>Edit Your Profile</h2>
+
+<%= form_with model: @user, url: user_path(@user), method: :patch, local: true do |f| %>
+  <div class="field">
+    <%= f.label :college_id, "Your College" %><br />
+    <%= f.collection_select :college_id, College.all, :id, :name, prompt: "Select your college..." %>
+  </div>
+
+  <div class="field">
+    <%= f.label :default_location, "Your Location (click on map to set)", style: "display: block" %><br />
+    
+    <div data-controller="map-picker"
+         data-map-picker-initial-lat-value="<%= @user.latitude || 22.4172 %>"
+         data-map-picker-initial-lng-value="<%= @user.longitude || 114.2071 %>"
+         data-map-picker-zoom-value="15">
+      
+      <div data-map-picker-target="map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+      
+      <p class="location-hint" style="font-size: 12px; color: #666; margin-top: 5px;">
+        📍 Click on the map to set your default location. This helps calculate distances to items.
+      </p>
+      
+      <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
+      <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
+      <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 20px;">
+    <%= f.submit "Update Profile", style: "padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+  </div>
+<% end %>
+
+<br>
+<%= link_to "Back to Profile", user_path(@user) %>

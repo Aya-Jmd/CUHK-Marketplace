@@ -14,11 +14,13 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-
     <%# JS library for linear two sided slider %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css">
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
 
+    <%# Leaflet CSS and JS for maps %>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -27,10 +29,28 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <%# Custom map styling %>
+    <style>
+      .map-container {
+        margin: 15px 0;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+      }
+      .map-view {
+        height: 300px;
+        width: 100%;
+      }
+      .location-hint {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+    </style>
   </head>
 
   <body>
-
     <!-- TO RENDER HEADER EVERYWHERE BY DEFAULT -->
     <%= render "general/header" %>
     <%= yield %>

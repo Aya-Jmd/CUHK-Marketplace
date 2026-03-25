@@ -11,13 +11,35 @@ class ItemsController < ApplicationController
 
     @min_price = params.fetch(:min_price, @PRICE_FLOOR)
     @max_price = params.fetch(:max_price, @PRICE_CEILING)
-    
+
     @items = Item.where(price: @min_price..@max_price)
-  
+
   end
 
   # GET /items/1 or /items/1.json
   def show
+    # Calculate distance if user is signed in and has location
+    if user_signed_in? && current_user.has_location? && @item.has_location?
+      @distance = LocationService.calculate_distance(
+        current_user.latitude, current_user.longitude,
+        @item.latitude, @item.longitude
+      )
+      @distance_text = distance_text(@distance)
+    end
+    
+    # Find nearby items (within 1.5km)
+    if @item.has_location?
+      @nearby_items = Item.where.not(id: @item.id)
+                         .where.not(latitude: nil, longitude: nil)
+                         .select do |item|
+                           distance = LocationService.calculate_distance(
+                             @item.latitude, @item.longitude,
+                             item.latitude, item.longitude
+                           )
+                           distance <= 1.5
+                         end
+                         .first(5)
+    end
   end
 
   # GET /items/new
@@ -82,7 +104,7 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.require(:item).permit(:title, :price, :description, :category_id, :is_global, :latitude, :longitude)
+      params.require(:item).permit(:title, :price, :description, :category_id, :is_global, :latitude, :longitude, :location_name)
     end
 
     def authorize_item_owner!
@@ -91,14 +113,25 @@ class ItemsController < ApplicationController
       redirect_to @item, alert: "You are not allowed to modify this item."
     end
 
+    # PRIVATE METHOD FOR PRICE NORMALIZATION
+    def normalize_price_to_hkd(item)
+      return if item.price.blank?
 
+      code = session[:currency_code] || Currency::BASE_CODE
+      item.price = Currency.convert_to_hkd(item.price.to_d, code)
+    end
 
-  # PRIVATE METHOD FOR PRICE NORMALIZATION
-  def normalize_price_to_hkd(item)
-    return if item.price.blank?
-
-    code = session[:currency_code] || Currency::BASE_CODE
-    item.price = Currency.convert_to_hkd(item.price.to_d, code)
-  end
-
+    def distance_text(distance)
+      if distance < 0.5
+        "Very close - Easy walk"
+      elsif distance < 1.0
+        "Close - About 10-15 min walk"
+      elsif distance < 1.5
+        "Moderate distance - 20 min walk"
+      elsif distance < 2.5
+        "Bike recommended"
+      else
+        "Far - Transport recommended"
+      end
+    end
 end

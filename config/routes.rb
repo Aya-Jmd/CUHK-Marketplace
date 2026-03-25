@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # defines routes for user profiles, so user can view each other's profiles and edit their own.
   resources :users, only: [:show, :edit, :update]
 
+  get 'profile', to: 'users#edit', as: :profile
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -36,7 +37,13 @@ Rails.application.routes.draw do
   resources :conversations, only: [:index, :show, :create] do
     resources :messages, only: [:create]
   end
-
+  
+  # API for location lookup
+  namespace :api do
+    get 'locations/:key', to: 'locations#show'
+    get 'locations/closest', to: 'locations#closest'
+    get 'locations/all', to: 'locations#all'
+  end
 
   # Defines the root path route ("/")
   root "items#index"

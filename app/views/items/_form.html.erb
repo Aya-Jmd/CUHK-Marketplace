@@ -36,14 +36,24 @@
     <%= form.check_box :is_global %>
   </div>
 
-  <div>
-    <%= form.label :latitude, style: "display: block" %>
-    <%= form.text_field :latitude, placeholder: "e.g. 22.4195" %>
-  </div>
-
-  <div>
-    <%= form.label :longitude, style: "display: block" %>
-    <%= form.text_field :longitude, placeholder: "e.g. 114.2067" %>
+  <!-- Interactive Map for Location Picker -->
+  <div class="field">
+    <%= form.label :location, "Item Location (Click on map to set)", style: "display: block" %>
+    
+    <div data-controller="map-picker"
+         data-map-picker-initial-lat-value="22.4172"
+         data-map-picker-initial-lng-value="114.2071"
+         data-map-picker-zoom-value="16">
+      
+      <div data-map-picker-target="map" class="map-view" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+      
+      <p class="location-hint">📍 Click on the map or drag the marker to set your item's pickup location</p>
+      
+      <!-- Hidden fields to store coordinates -->
+      <%= form.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
+      <%= form.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
+      <%= form.hidden_field :location_name, data: { map_picker_target: "locationNameInput" } %>
+    </div>
   </div>
 
   <div>

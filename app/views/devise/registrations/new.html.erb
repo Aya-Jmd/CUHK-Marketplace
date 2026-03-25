@@ -26,6 +26,27 @@
     <%= f.collection_select :college_id, College.all, :id, :name, prompt: "Choose a college..." %>
   </div>
 
+  <!-- Add location map for user -->
+  <div class="field">
+    <%= f.label :default_location, "Your Location (click on map to set where you usually are)", style: "display: block" %><br />
+  
+    <div data-controller="map-picker"
+       data-map-picker-initial-lat-value="22.4172"
+       data-map-picker-initial-lng-value="114.2071"
+       data-map-picker-zoom-value="15">
+    
+      <div data-map-picker-target="map" style="height: 250px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+    
+      <p class="location-hint" style="font-size: 12px; color: #666; margin-top: 5px;">
+      📍 Click on the map to set your default pickup location
+      </p>
+    
+      <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
+      <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
+      <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
+     </div>
+    </div>
+
   <div class="actions">
     <%= f.submit "Sign up" %>
   </div>

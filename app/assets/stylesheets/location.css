@@ -1,0 +1,46 @@
+/* Distance Badge Styles */
+.distance-badge.distance-green {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.distance-badge.distance-light-green {
+  background-color: #dcedc8;
+  color: #558b2f;
+}
+
+.distance-badge.distance-yellow {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.distance-badge.distance-orange {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.distance-badge.distance-red {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+
+/* CUHK College Markers */
+.cuhk-marker {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
+.cuhk-marker:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s;
+}
+
+/* Boundary overlay */
+.leaflet-overlay-pane path {
+  stroke-dasharray: 5, 5;
+  stroke-width: 2;
+}

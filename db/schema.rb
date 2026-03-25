@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_050337) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_25_152914) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_050337) do
     t.text "description"
     t.boolean "is_global"
     t.float "latitude"
+    t.string "location_name"
     t.float "longitude"
     t.decimal "price"
     t.datetime "sold_at"
@@ -81,8 +82,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_050337) do
   create_table "users", force: :cascade do |t|
     t.integer "college_id"
     t.datetime "created_at", null: false
+    t.string "default_location"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.float "latitude"
+    t.float "longitude"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"

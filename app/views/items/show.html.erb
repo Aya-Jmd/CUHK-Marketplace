@@ -1,7 +1,7 @@
 <p style="color: green"><%= notice %></p>
 
 <div>
-   Offer posted by <strong> <%= link_to  (current_user == @item.user ? "you" : @item.user.email), 
+  Offer posted by <strong> <%= link_to  (current_user == @item.user ? "you" : @item.user.email),
    user_path(@item.user) %></strong>, on <%= @item.created_at.strftime("%B %d, %Y at %I:%M %p") %>.
 </div>
 
@@ -9,15 +9,69 @@
 
 <%= render @item %>
 
+<%# LOCATION MAP - Show item location if available %>
+<% if @item.latitude.present? && @item.longitude.present? %>
+  <div class="location-section" style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+    <h3>📍 Pickup Location</h3>
+    
+    <%# Show distance if user is signed in %>
+    <% if user_signed_in? && current_user.has_location? && @distance %>
+      <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        <strong>📏 Distance from your location:</strong>
+        <span style="font-size: 18px; font-weight: bold; color: #2e7d32;">
+          <%= @distance %> km
+        </span>
+        <span style="display: block; font-size: 14px; color: #666; margin-top: 5px;">
+          <%= @distance_text %>
+        </span>
+      </div>
+    <% elsif user_signed_in? && !current_user.has_location? %>
+      <div style="background: #fff3e0; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        📍 <a href="<%= edit_user_path(current_user) %>">Set your location</a> to see how far this item is from you!
+      </div>
+    <% end %>
+
+    <div data-controller="map-display"
+         data-map-display-lat-value="<%= @item.latitude %>"
+         data-map-display-lng-value="<%= @item.longitude %>"
+         data-map-display-location-name-value="<%= @item.location_name %>"
+         data-map-display-title-value="<%= @item.title %>"
+         style="height: 300px; width: 100%; border-radius: 8px; overflow: hidden;">
+    </div>
+
+    <p class="location-hint" style="margin-top: 8px; font-size: 14px;">
+      📍 Coordinates: <%= @item.latitude %>, <%= @item.longitude %>
+    </p>
+
+    <%# Nearby items %>
+    <% if @nearby_items.present? %>
+      <div style="margin-top: 20px;">
+        <h4>📍 Other items nearby (within 1.5km)</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+          <% @nearby_items.each do |nearby| %>
+            <div style="padding: 10px; border: 1px solid #eee; border-radius: 8px;">
+              <%= link_to nearby.title, nearby, style: "text-decoration: none; color: #333; font-weight: bold;" %>
+              <% if nearby.has_location? %>
+                <span style="font-size: 12px; color: #666; display: block;">
+                  📍 <%= (LocationService.calculate_distance(@item.latitude, @item.longitude, nearby.latitude, nearby.longitude)).round(2) %> km away
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p style="color: #999; margin: 20px 0;">📍 No location set for this item</p>
+<% end %>
+
 <div>
   <% if user_signed_in? && current_user == @item.user %>
-  <%= button_to "Edit this item", edit_item_path(@item), method: :get %>
-  <%= button_to "Destroy this item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-  <br>
+    <%= button_to "Edit this item", edit_item_path(@item), method: :get %>
+    <%= button_to "Destroy this item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
+    <br>
   <% end %>
 
   <%= link_to "Back to items", items_path %>
-
 </div>
-
-
