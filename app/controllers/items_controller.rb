@@ -14,11 +14,16 @@ class ItemsController < ApplicationController
     requested_min = submitted_in_current_currency && params[:min_price].present? ? params[:min_price].to_d : nil
     requested_max = submitted_in_current_currency && params[:max_price].present? ? params[:max_price].to_d : nil
 
-    @min_price, @max_price = [requested_min, requested_max].minmax
-    @min_price = [@min_price, @price_floor].max
-    @max_price = [@max_price, @price_ceiling].min
+    # Handle nil values - if requested_min is nil, use price_floor
+    @min_price = requested_min || @price_floor
+    @max_price = requested_max || @price_ceiling
+    
+    # Ensure min_price is not greater than max_price
+    @min_price = [@min_price, @max_price].min
+    @max_price = [@min_price, @max_price].max
 
-    min_price_hkd, max_price_hkd = [convert_price_to_hkd(@min_price), convert_price_to_hkd(@max_price)].minmax
+    min_price_hkd = convert_price_to_hkd(@min_price)
+    max_price_hkd = convert_price_to_hkd(@max_price)
     @items = Item.where(price: min_price_hkd..max_price_hkd)
   end
 
