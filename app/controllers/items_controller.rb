@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
+    @items = Item.available.order(created_at: :desc)
     price_floor_hkd = Item.minimum(:price)&.to_d || 0.to_d
     price_ceiling_hkd = Item.maximum(:price)&.to_d || 100_000.to_d
 
@@ -24,7 +25,8 @@ class ItemsController < ApplicationController
 
     min_price_hkd = convert_price_to_hkd(@min_price)
     max_price_hkd = convert_price_to_hkd(@max_price)
-    @items = Item.where(price: min_price_hkd..max_price_hkd)
+    # Change it to this:
+    @items = Item.available.where(price: min_price_hkd..max_price_hkd).order(created_at: :desc)
   end
 
   # GET /items/1 or /items/1.json

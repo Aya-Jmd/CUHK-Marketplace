@@ -3,9 +3,16 @@ Rails.application.routes.draw do
   get "conversations/index"
   get "conversations/show"
   devise_for :users
-  resources :items
+  resources :items do
+    resources :offers, only: [:create]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  # The main Control Room
+  get 'dashboard', to: 'dashboards#index', as: :dashboard
+  
+  # Allow sellers to accept/decline offers
+  resources :offers, only: [:update]
   
   # defines routes for user profiles, so user can view each other's profiles and edit their own.
   resources :users, only: [:show, :edit, :update]

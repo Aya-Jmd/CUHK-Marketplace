@@ -1,5 +1,21 @@
 class DashboardsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user! # Security first!
+
+  def index
+    # As a Buyer: Find all the offers I have sent
+    @my_offers = current_user.offers_made.order(created_at: :desc)
+
+    # As a Seller: Find all the offers people have sent me
+    @incoming_offers = current_user.offers_received.where(status: "pending").order(created_at: :desc)
+    
+    # As a Seller: Find my active transactions (accepted offers)
+    @active_sales = current_user.offers_received.where(status: "accepted").order(created_at: :desc)
+    # As a Seller: Find my past completed sales
+    @completed_sales = current_user.offers_received.where(status: "completed").order(updated_at: :desc)
+    
+    # Optional: Just a quick list of my items
+    @my_items = current_user.items.order(created_at: :desc)
+  end
 
   # colors for the category
   CATEGORY_COLORS = [
