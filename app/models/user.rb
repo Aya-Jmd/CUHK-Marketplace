@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :messages
   has_many :conversations_as_buyer, class_name: "Conversation", foreign_key: "buyer_id"
   has_many :conversations_as_seller, class_name: "Conversation", foreign_key: "seller_id"
+  has_many :offers_made, class_name: "Offer", foreign_key: "buyer_id"
+  has_many :offers_received, class_name: "Offer", foreign_key: "seller_id"
 
   # Location methods
   def has_location?

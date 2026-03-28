@@ -1,0 +1,119 @@
+<div id="dashboard-flashes" data-turbo-cache="false">
+  <% if alert %>
+    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+      <strong>Error:</strong> <%= alert %>
+    </div>
+  <% end %>
+</div>
+
+<h1 style="margin-bottom: 30px;">My Dashboard</h1>
+
+<div style="display: flex; gap: 40px;">
+  
+  <div style="flex: 1; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+    <h2>🛒 My Offers (Buying)</h2>
+    <hr>
+    
+    <% if @my_offers.empty? %>
+      <p style="color: gray;">You haven't made any offers yet.</p>
+    <% end %>
+
+    <% @my_offers.each do |offer| %>
+      <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <strong><%= link_to offer.item.title, offer.item %></strong>
+        <p style="margin: 5px 0;">Offered: <strong>HK$<%= offer.price %></strong></p>
+        
+        <% 
+          status_color = case offer.status
+                         when "accepted", "completed" then "green"
+                         when "declined", "failed" then "red"
+                         else "orange" # defaults to orange for "pending"
+                         end
+        %>
+        <p style="margin: 5px 0;">Status: 
+          <span style="color: <%= status_color %>; font-weight: bold;">
+            <%= offer.status.capitalize %>
+          </span>
+        </p>
+
+        <% if offer.status == "accepted" %>
+          <div style="margin-top: 10px; padding: 10px; background-color: #e8f5e9; border: 1px dashed #4caf50; border-radius: 4px;">
+            <strong>Secret Meetup PIN: <span style="font-size: 1.2em; letter-spacing: 2px;"><%= offer.meetup_code %></span></strong>
+            <p style="font-size: 0.85em; margin: 5px 0 0 0; color: #555;">Give this 4-digit code to the seller in person to receive your item.</p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="flex: 1; padding: 20px; background-color: #e3f2fd; border-radius: 8px;">
+    <h2>📦 My Sales (Selling)</h2>
+    <hr>
+
+    <h3>Pending Offers</h3>
+    <% if @incoming_offers.empty? %>
+      <p style="color: gray;">No new offers.</p>
+    <% end %>
+
+    <% @incoming_offers.each do |offer| %>
+      <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #ff9800;">
+        <strong><%= link_to offer.item.title, offer.item %></strong>
+        <p style="margin: 5px 0;">Buyer: <%= offer.buyer.email %></p>
+        <p style="margin: 5px 0;">Amount: <strong style="color: #1976d2;">HK$<%= offer.price %></strong></p>
+        
+        <div style="margin-top: 10px; display: flex; gap: 10px;">
+          <%= button_to "Accept Offer", offer_path(offer, status: "accepted"), method: :patch, style: "background: #4caf50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" %>
+          <%= button_to "Decline", offer_path(offer, status: "declined"), method: :patch, style: "background: #f44336; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" %>
+        </div>
+      </div>
+    <% end %>
+
+    <h3 style="margin-top: 30px;">Active Transactions (Awaiting Dropoff)</h3>
+    <% if @active_sales.empty? %>
+      <p style="color: gray;">No active handoffs right now.</p>
+    <% end %>
+
+    <% @active_sales.each do |offer| %>
+      <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #4caf50;">
+        <strong><%= link_to offer.item.title, offer.item %></strong>
+        <p style="margin: 5px 0;">Buyer: <%= offer.buyer.email %></p>
+        <p style="margin: 5px 0; color: green; font-weight: bold;">Accepted at HK$<%= offer.price %></p>
+        
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+        <p style="font-size: 0.85em; margin: 0 0 10px 0; color: #666;">Ask the buyer for their 4-digit PIN to complete the handover:</p>
+        
+        <%= form_with(url: offer_path(offer), method: :patch, class: "pin-form", data: { turbo: false }) do |f| %>
+          <%= f.hidden_field :status, value: "completed" %>
+          
+          <div style="display: flex; gap: 8px;">
+            <%= f.text_field :meetup_code, placeholder: "0000", maxlength: 4, required: true, style: "padding: 6px; width: 80px; text-align: center; font-size: 1.1em; letter-spacing: 2px; border: 1px solid #ccc; border-radius: 4px;" %>
+            <%= f.submit "Verify PIN", style: "background: #1976d2; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer;" %>
+          </div>
+        <% end %>
+
+        <div style="margin-top: 15px; text-align: right;">
+          <%= button_to "Cancel Dropoff (Relist Item)", offer_path(offer, status: "failed"), method: :patch, data: { turbo_confirm: "Are you sure? This will cancel the sale and make the item available to other buyers." }, style: "background: none; color: #d32f2f; border: none; text-decoration: underline; font-size: 0.85em; cursor: pointer;" %>
+        </div>
+
+      </div>
+    <% end %>
+    <h3 style="margin-top: 30px; color: #555;">Past Sales History</h3>
+    <% if @completed_sales.empty? %>
+      <p style="color: gray;">No completed sales yet.</p>
+    <% end %>
+
+    <% @completed_sales.each do |offer| %>
+      <div style="background: #f1f1f1; padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #9e9e9e;">
+        <strong><%= link_to offer.item.title, offer.item, style: "color: #333;" %></strong>
+        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-top: 5px; color: #666;">
+          <span>Sold to: <%= offer.buyer.email %></span>
+          <span style="font-weight: bold;">HK$<%= offer.price %></span>
+        </div>
+        <div style="font-size: 0.8em; margin-top: 5px; color: #888;">
+          Completed on: <%= offer.updated_at.strftime("%b %d, %Y") %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>

@@ -17,7 +17,26 @@
 
 <%= render @item %>
 
-<%# ===================== LOCATION SECTION ===================== %>
+<div style="margin-top: 30px; margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+  <% if user_signed_in? && current_user != @item.user %>
+    
+    <h3 style="margin-top: 0;">Make an Offer</h3>
+    
+    <%= form_with(model: [@item, Offer.new], local: true) do |form| %>
+      <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+        <strong>HK$</strong>
+        <%= form.number_field :price, step: 0.1, placeholder: "Enter amount...", required: true, style: "padding: 8px; border-radius: 4px; border: 1px solid #ccc;" %>
+        <%= form.submit "Send Offer", style: "padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+      </div>
+    <% end %>
+
+  <% elsif user_signed_in? && current_user == @item.user %>
+    <p style="margin: 0; color: #555;"><em>You own this item. Check your dashboard for incoming offers!</em></p>
+  <% else %>
+    <p style="margin: 0;"><%= link_to "Log in to make an offer", new_user_session_path %></p>
+  <% end %>
+</div>
+<%# LOCATION MAP - Show item location if available %>
 <% if @item.latitude.present? && @item.longitude.present? %>
   <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
 
@@ -25,7 +44,7 @@
 
     <% if user_signed_in? && current_user.has_location? && @distance.present? %>
       <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-        <strong>📏 Distance from your location:</strong>
+        <strong>🚶 Distance from your location:</strong>
         <span style="font-size: 18px; font-weight: bold; color: #2e7d32;">
           <%= @distance %> km
         </span>
@@ -74,13 +93,13 @@
   <p style="color: #999; margin: 20px 0;">📍 No location set for this item</p>
 <% end %>
 
-<div>
+<div style="margin-top: 30px;">
   <% if user_signed_in? && current_user == @item.user %>
-    <%= button_to "Edit this item", edit_item_path(@item), method: :get %>
-    <%= button_to "Destroy this item", @item, method: :delete,
-                  data: { turbo_confirm: "Are you sure?" } %>
-    <br>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <%= button_to "Edit this item", edit_item_path(@item), method: :get, style: "padding: 8px 16px; border-radius: 4px; background-color: #e0e0e0; border: none; cursor: pointer;" %>
+      <%= button_to "Destroy this item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, style: "padding: 8px 16px; border-radius: 4px; background-color: #dc3545; color: white; border: none; cursor: pointer;" %>
+    </div>
   <% end %>
 
-  <%= link_to "Back to items", items_path %>
+  <%= link_to "Back to items", items_path, style: "text-decoration: none; color: #007bff;" %>
 </div>
