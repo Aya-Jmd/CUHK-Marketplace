@@ -1,10 +1,11 @@
 class ApplicationController < ActionController::Base
   # redirecting unsigned-in users to sign in page (except for devise's controlers)
   before_action :authenticate_user!, unless: :devise_controller? # Devise's controllers are accessible without authentication
-  
   helper_method :current_currency_code, :current_currency
   
-  
+  rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
+
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -28,6 +29,18 @@ class ApplicationController < ActionController::Base
   # --- DEVISE CONFIGURATION END ---
 
   private
+
+  def rsrc_not_found(exception)
+    case controller_name
+      when 'users'
+        @error_msg = "The requested user does not exist."
+      when 'items'
+        @error_msg = "The requested item does not exist."
+      else
+        @error_msg  = "The requested data does not exist."
+      end
+      render "errors/not_found"
+    end
 
   def current_currency_code
     session[:currency_code] || Currency::BASE_CODE
