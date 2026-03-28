@@ -10,7 +10,7 @@
 <!-- PROFILE TITLE -->
   <div style="text-align: left; margin-bottom: 40px;">
     <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
-      <%= current_user == @user ? "My Profile & Dashboard" : "#{@user.email} profile" %>
+      <%= current_user == @user ? "My Profile & Dashboard" : "#{@user.email}'s profile" %>
     </h1>
     <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">
       🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong><br>
@@ -20,8 +20,7 @@
     </p>
   </div>
 
-
-  <!-- USER'S >
+  
   <div style="display: flex; flex-wrap: wrap; gap: 30px;">
     <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
       <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
@@ -69,27 +68,27 @@
 
     <!-- ONLY DISPLAY BUYER HUB FOR CURRENT USER (privacy reasons...) -->
     <% if current_user == @user %>
-    <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
-      <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
-        <span>🛍️</span> Buyer Hub
-      </h2>
-      <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
+      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
+        <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
+          <span>🛍️</span> Buyer Hub
+        </h2>
+        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
 
-      <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Offers</h3>
-      <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; 
-      margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
-      
-      <ul style="list-style: none; padding: 0; margin: 0;">
-        <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
-          <div style="margin-bottom: 8px; font-size: 1.05em;">
-            <span style="font-weight: 800; color: #e15f41;">Offered xxx</span> for iPhone 13 Pro (example)
-          </div>
-          <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
-            <span>⏳</span> Pending Approval
-          </div>
-        </li>
-      </ul>
-    </div>
+        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Offers</h3>
+        <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; 
+        margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
+        
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
+            <div style="margin-bottom: 8px; font-size: 1.05em;">
+              <span style="font-weight: 800; color: #e15f41;">Offered xxx</span> for iPhone 13 Pro (example)
+            </div>
+            <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
+              <span>⏳</span> Pending Approval
+            </div>
+          </li>
+        </ul>
+      </div>
     <%end%>
 
   </div>

@@ -1,0 +1,11 @@
+<% if user_signed_in? %>
+  <aside class="side-slider" aria-label="Quick links">
+    <div class="side-slider__handle" aria-hidden="true">
+      <span class="side-slider__triangle"></span>
+    </div>
+
+    <nav class="side-slider__panel" aria-label="Quick actions">
+      <%= link_to "Price Analytics", category_prices_dashboard_path, class: "side-slider__link" %>
+    </nav>
+  </aside>
+<% end %>

@@ -5,13 +5,19 @@
 <% end %>
 
 <% if user_signed_in? %>
-  <div style="max-width: 1200px; margin: 20px auto 30px auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+  <div class="site-header">
     
-    <div>
+    <div class="site-header__left">
       <%= link_to "📊 View Price Analytics", category_prices_dashboard_path, style: "background: #0984e3; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9em;" %>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 15px;">
+    <div class="site-header__center">
+      <%= link_to items_path, class: "site-header__logo", aria: { label: "Go to main menu" } do %>
+        <span>CUHK MRKT</span>
+      <% end %>
+    </div>
+
+    <div class="site-header__right">
 
       <%= form_with url: currency_path, method: :patch, style: "margin: 0;" do %>
         <div style="display: flex; align-items: center; background-color: #f1f2f6; border-radius: 20px; padding: 4px 12px;">
