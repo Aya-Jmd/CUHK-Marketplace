@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get "search/index"
   get "conversations/index"
   get "conversations/show"
-  devise_for :users
+  devise_for :users, controllers: { sessions: "users/sessions" }
   resources :items
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
