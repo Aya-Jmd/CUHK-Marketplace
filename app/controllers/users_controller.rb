@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    puts "I AM RENDERING PAGE OF USER #{params[:id]}!! NAME IS : #{User.find(params[:id]).email}"
   end
 
   def edit

@@ -16,7 +16,7 @@
       <%= form_with url: currency_path, method: :patch, style: "margin: 0;" do %>
         <div style="display: flex; align-items: center; background-color: #f1f2f6; border-radius: 20px; padding: 4px 12px;">
           <span style="font-size: 0.9em; margin-right: 6px;">💱</span>
-          <%= select_tag :currency, options_for_select(['HKD', 'USD', 'EUR', 'CNY'], current_currency_code), onchange: "this.form.submit()", style: "background: transparent; border: none; padding: 6px; font-size: 0.9em; cursor: pointer;" %>
+          <%= select_tag :currency, options_for_select(['HKD', 'USD', 'EUR'], current_currency_code), onchange: "this.form.submit()", style: "background: transparent; border: none; padding: 6px; font-size: 0.9em; cursor: pointer;" %>
         </div>
       <% end %>
 
