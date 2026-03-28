@@ -1,19 +1,21 @@
 <div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 100px;">
 
+<!-- BACK TO HOME BUTTON-->
   <div style="margin-bottom: 10px;">
     <%= link_to root_path, style: "display: inline-flex; align-items: center; gap: 8px; background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;" do %>
       <span style="font-size: 1.2em;">⬅️</span> Back to Home
     <% end %>
   </div>
 
-  <div style="text-align: center; margin-bottom: 40px;">
+<!-- PROFILE TITLE -->
+  <div style="text-align: left; margin-bottom: 40px;">
     <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
-      My Profile & Dashboard
+      <%= current_user == @user ? "My Profile & Dashboard" : "#{@user.email} profile" %>
     </h1>
     <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">
-      🎓 College: <strong><%= current_user.college&.name || "Not specified" %></strong><br>
+      🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong><br>
       <span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">
-        Manage your listings and track your offers.
+        <%= current_user == @user ? "Manage your listings and track your offers." : "Items posted by #{@user.email}." %>
       </span>
     </p>
   </div>
@@ -22,15 +24,22 @@
     
     <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
       <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
-        <span>📦</span> My Listings
+        <span>📦</span> <%= current_user == @user ? "My Listings" : "Posted items" %>
       </h2>
       <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
 
-      <%= link_to "➕ Post a New Item", new_item_path, style: "display: block; text-align: center; background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); color: white; padding: 14px; text-decoration: none; border-radius: 10px; font-weight: bold; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);" %>
-
+      <!-- ONLY POST NEW IF CURRENT USER == @USER. -->
+      <% if current_user == @user %>
+        <%= link_to "➕ Post a New Item", new_item_path, style: 
+        "display: block; text-align: center; background: 
+        linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); 
+        color: white; padding: 14px; text-decoration: none; 
+        border-radius: 10px; font-weight: bold; margin-bottom: 
+        30px; box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);" %>
+      <% end %>
       <ul style="list-style: none; padding: 0; margin: 0;">
-        <% if current_user.items.any? %>
-          <% current_user.items.order(created_at: :desc).each do |item| %>
+        <% if @user.items.any? %>
+          <% @user.items.order(created_at: :desc).each do |item| %>
             <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background-color: #fafbff; transition: transform 0.2s;">
               
               <div style="flex: 1;">
@@ -51,12 +60,14 @@
           <% end %>
         <% else %>
           <li style="color: #a4b0be; text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px;">
-            You haven't posted any items yet.
+            <%= current_user == @user ? "You haven't posted any items yet." : "This user has not posted any offer yet." %>
           </li>
         <% end %>
       </ul>
     </div>
 
+    <!-- ONLY DISPLAY BUYER HUB FOR CURRENT USER (privacy reasons...) -->
+    <% if current_user == @user %>
     <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
       <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
         <span>🛍️</span> Buyer Hub
@@ -64,7 +75,8 @@
       <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
 
       <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Offers</h3>
-      <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
+      <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; 
+      margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
       
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
@@ -77,6 +89,7 @@
         </li>
       </ul>
     </div>
+    <%end%>
 
   </div>
 </div>
