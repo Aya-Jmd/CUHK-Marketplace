@@ -1,0 +1,88 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["output"]
+  static values = {
+    sellerLat: Number,
+    sellerLng: Number
+  }
+
+  connect() {
+    console.log("✅ live-location controller connected")
+  }
+
+  start() {
+    if (!navigator.geolocation) {
+      this.outputTarget.textContent = "Geolocation not supported."
+      return
+    }
+
+    this.outputTarget.textContent = "📡 Tracking your location..."
+
+    this.watchId = navigator.geolocation.watchPosition(
+      (position) => this.updatePosition(position),
+      () => {
+        this.outputTarget.textContent = "❌ Location permission denied."
+      },
+      { enableHighAccuracy: true }
+    )
+  }
+
+  stop() {
+    if (this.watchId) {
+      navigator.geolocation.clearWatch(this.watchId)
+      this.watchId = null
+      this.outputTarget.textContent = "⏹ Tracking stopped."
+    }
+  }
+
+  updatePosition(position) {
+    const lat = position.coords.latitude
+    const lng = position.coords.longitude
+
+    // Safely query the map-display element to grab the Leaflet instance
+    const mapElement = this.element.querySelector('[data-controller="map-display"]')
+    if (!mapElement || !mapElement._leaflet_map) {
+      console.error("Leaflet map not found on the map-display element.")
+      return
+    }
+
+    const map = mapElement._leaflet_map
+
+    if (this.userMarker) {
+      this.userMarker.remove()
+    }
+
+    this.userMarker = L.circleMarker([lat, lng], {
+      radius: 8,
+      color: "blue",
+      fillColor: "#3f51b5",
+      fillOpacity: 0.8
+    }).addTo(map)
+
+    const distance = this.distance(
+      lat,
+      lng,
+      this.sellerLatValue,
+      this.sellerLngValue
+    )
+
+    this.outputTarget.textContent = `🚶 Live distance: ${distance.toFixed(2)} km`
+  }
+
+  distance(lat1, lon1, lat2, lon2) {
+    const R = 6371 // km
+    const toRad = (v) => v * Math.PI / 180
+
+    const dLat = toRad(lat2 - lat1)
+    const dLon = toRad(lon2 - lon1)
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) ** 2
+
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  }
+}

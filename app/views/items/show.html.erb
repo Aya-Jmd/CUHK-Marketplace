@@ -36,6 +36,7 @@
     <p style="margin: 0;"><%= link_to "Log in to make an offer", new_user_session_path %></p>
   <% end %>
 </div>
+
 <%# LOCATION MAP - Show item location if available %>
 <% if @item.latitude.present? && @item.longitude.present? %>
   <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
@@ -89,8 +90,11 @@
     </div>
 
   </div>
+
 <% else %>
-  <p style="color: #999; margin: 20px 0;">📍 No location set for this item</p>
+  <p style="color: #999; margin: 20px 0;">
+    📍 No location set for this item
+  </p>
 <% end %>
 
 <div style="margin-top: 30px;">
