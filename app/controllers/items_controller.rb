@@ -4,7 +4,10 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
-    @items = Item.available.order(created_at: :desc)
+    @scope = normalized_marketplace_scope(params[:scope])
+    @categories = Category.sorted_for_dropdown
+    base = apply_marketplace_scope(@scope, marketplace_listing_relation)
+
     price_floor_hkd = Item.minimum(:price)&.to_d || 0.to_d
     price_ceiling_hkd = Item.maximum(:price)&.to_d || 100_000.to_d
 
@@ -18,15 +21,15 @@ class ItemsController < ApplicationController
     # Handle nil values - if requested_min is nil, use price_floor
     @min_price = requested_min || @price_floor
     @max_price = requested_max || @price_ceiling
-    
+
     # Ensure min_price is not greater than max_price
     @min_price = [@min_price, @max_price].min
     @max_price = [@min_price, @max_price].max
+    @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
 
     min_price_hkd = convert_price_to_hkd(@min_price)
     max_price_hkd = convert_price_to_hkd(@max_price)
-    # Change it to this:
-    @items = Item.available.where(price: min_price_hkd..max_price_hkd).order(created_at: :desc)
+    @items = base.where(price: min_price_hkd..max_price_hkd).order(created_at: :desc)
   end
 
   # GET /items/1 or /items/1.json

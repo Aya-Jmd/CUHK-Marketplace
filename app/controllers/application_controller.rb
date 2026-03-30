@@ -61,4 +61,29 @@ class ApplicationController < ActionController::Base
 
     Currency.convert_to_hkd(amount.to_d, current_currency_code)
   end
+
+  def normalized_marketplace_scope(raw_scope)
+    raw_scope.to_s == "college" ? "college" : "all"
+  end
+
+  def marketplace_listing_relation
+    relation = Item.available.includes(:college, :category)
+    return relation unless current_user
+
+    relation.where.not(user_id: current_user.id)
+  end
+
+  def apply_marketplace_scope(scope, relation)
+    if normalized_marketplace_scope(scope) == "college"
+      return relation.none unless current_user&.college_id.present?
+
+      return relation.where(college_id: current_user.college_id)
+    end
+
+    return relation.where(is_global: true) unless current_user&.college_id.present?
+
+    relation.where("items.is_global = :global OR items.college_id = :college_id",
+      global: true,
+      college_id: current_user.college_id)
+  end
 end

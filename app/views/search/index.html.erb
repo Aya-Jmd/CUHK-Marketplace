@@ -1,27 +1,54 @@
-<%= render "search/search_bar" %>
+<% base_search_state = search_filter_state(
+    query: @query,
+    scope: @scope,
+    sort: @sort,
+    selected_category: @selected_category,
+    price_filter_active: @price_filter_active,
+    min_price: @min_price,
+    max_price: @max_price,
+    price_currency: current_currency_code
+  ) %>
 
-<!-- p>Find me in app/views/search/index.html.erb</p -->
+<div class="search-results-page">
+  <section class="search-results-page__hero" aria-hidden="true"></section>
 
-<h1>Search</h1>
-<!-- TODO: INTEGRATE PRICE SLIDER WITH SEARCH BARN-->
+  <div class="items-main search-results-page__shell">
+    <%= render "items/category_strip",
+        categories: @categories,
+        selected_category: @selected_category,
+        base_state: base_search_state %>
 
+    <div class="search-results-page__layout">
+      <%= render "search/filter_sidebar",
+          categories: @categories,
+          selected_category: @selected_category,
+          sort: @sort,
+          base_state: base_search_state,
+          min_price: @min_price,
+          max_price: @max_price,
+          price_floor: @price_floor,
+          price_ceiling: @price_ceiling,
+          price_currency: current_currency_code,
+          price_filter_active: @price_filter_active %>
 
-<% if @query.present? %>
-  <p>Showing results for: <strong><%= h(@query) %></strong> (<%= @scope.capitalize %>)</p>
-<% else %>
-  <p>Type something above to search.</p>
-<% end %>
+      <section class="search-results-page__content" aria-label="Search results">
+        <%= render "search/results_summary",
+            query: @query,
+            selected_category: @selected_category,
+            result_count: @results.size,
+            sort: @sort,
+            scope: @scope,
+            price_filter_active: @price_filter_active %>
 
-
-<% if @results.present? %>
-  <% @results.each do |item| %>
-    <%= render "items/item", item: item %>
-    <p><%= link_to "Show this item", item %></p>
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-  <%end%>
-
-<% elsif @query.present? %>
-  <p>No items found. Try broader terms or check spelling.</p>
-<% end %>
-
-<%= link_to "Back to items", items_path %>
+        <% if @results.present? %>
+          <%= render "items/market_grid", items: @results, grid_class: "search-results-page__grid" %>
+        <% else %>
+          <div class="search-results-page__empty">
+            <strong><%= search_result_heading(query: @query, selected_category: @selected_category, result_count: @results.size) %></strong>
+            <span>Try another keyword, switch category, or broaden the side filters.</span>
+          </div>
+        <% end %>
+      </section>
+    </div>
+  </div>
+</div>

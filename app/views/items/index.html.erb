@@ -1,116 +1,41 @@
-<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<% content_for :title, "CUHK Marketplace" %>
+<% browse_state = { scope: @scope } %>
+<% if @price_filter_active %>
+  <% browse_state[:price_currency] = current_currency_code %>
+  <% browse_state[:min_price] = @min_price %>
+  <% browse_state[:max_price] = @max_price %>
+<% end %>
 
-  <% content_for :title, "CUHK Marketplace" %>
+<div class="items-index <%= "items-index--floating-nav" if user_signed_in? %>">
 
-  <div style="text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); padding: 50px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.15); color: white;">
-    <h1 style="font-size: 2.8em; margin: 0; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Welcome to CUHK Marketplace</h1>
-    <p style="font-size: 1.15em; margin-top: 15px; opacity: 0.9;">
-      The trusted platform for buying and selling second-hand items on campus.
-    </p>
-  </div>
-
-  <div style="background-color: #fafbff; padding: 25px; border-radius: 16px; border: 1px solid #e1e8ed; border-top: 5px solid #00cec9; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.03);">
-    <div style="margin-bottom: 25px;">
-      <%= render "search/search_bar" %>
+  <section class="items-hero" aria-label="Welcome">
+    <div class="items-hero__inner">
+      <h1 class="items-hero__title">Welcome to CUHK Marketplace</h1>
+      <p class="items-hero__lede">
+        The trusted platform for buying and selling second-hand items on campus.
+      </p>
+      <%= link_to "Post a New Item", new_item_path, class: "items-hero__cta" %>
     </div>
+  </section>
 
-    <%= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do %>
-      <%= hidden_field_tag :price_currency, current_currency_code, id: "price_currency" %>
-      <%= hidden_field_tag :min_price, @min_price, id: "min_price" %>
-      <%= hidden_field_tag :max_price, @max_price, id: "max_price" %>
-      
-      <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px dashed #b2bec3;">
-        <h4 style="margin-top: 0; color: #2d3436; margin-bottom: 15px; font-size: 1.1em;">💰 Filter by Price</h4>
-        <%= render "price_slider" %>
-      </div>
-    <% end %>
+  <div class="items-main">
+    <p class="items-index-strip">What are you looking for ?</p>
+    <%= render "items/category_strip", categories: @categories, base_state: browse_state %>
+
+
+    <!-- div class="items-filters-card" -->
+      <!-- div class="items-search-wrap" -->
+        <!-- %= render "search/search_bar" % -->
+      <!-- /div -->
+      <!-- %= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do % -->
+        <!-- div class="items-price-panel" -->
+          <!-- h4 class="items-price-panel__title">Filter by price</h4 -->
+          <!-- %= render "price_slider" % -->
+        <!-- /div -->
+      <!-- % end % -->
+    <!-- /div --> 
+
+
+    <%= render "items/market_grid", items: @items, dom_id: "items" %>
   </div>
-
-  <script>
-    document.addEventListener("turbo:load", function () {
-      const slider = document.getElementById("price-slider");
-      if (!slider) return;
-
-      const minInput = document.getElementById("min_price");
-      const maxInput = document.getElementById("max_price");
-      const label    = document.getElementById("price-label");
-      const currencyCode = <%= raw current_currency_code.to_json %>;
-      const currencyFormatter = new Intl.NumberFormat(undefined, {
-        style: "currency",
-        currency: currencyCode,
-        maximumFractionDigits: 0
-      });
-
-      if (slider.noUiSlider) {
-        slider.noUiSlider.destroy();
-      }
-
-      const startMin = Number(minInput.value) || <%= @price_floor %>;
-      const startMax = Number(maxInput.value) || <%= @price_ceiling %>;
-
-      noUiSlider.create(slider, {
-        start: [startMin, startMax],
-        connect: true,
-        range: { min: <%= @price_floor %>, max: <%= @price_ceiling %> },
-        step: 1
-      });
-
-      slider.noUiSlider.on("update", function (values) {
-        const min = Math.round(values[0]);
-        const max = Math.round(values[1]);
-
-        minInput.value = min;
-        maxInput.value = max;
-        label.textContent = currencyFormatter.format(min) + " - " + currencyFormatter.format(max);
-      });
-    });
-  </script>
-
-  <!-- BUTTON TO POST NEW ITEMS -->
-  <div style="margin-top: 50px; text-align: left; padding-bottom: 40px;">
-    <%= link_to "➕ Post a New Item", new_item_path, style: "background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; display: inline-block; box-shadow: 0 6px 12px rgba(9, 132, 227, 0.3); transition: transform 0.2s;" %>
-  </div>
-
-  <div id="items" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
-    <% @items.each do |item| %>
-      <div style="border: 1px solid #e1e8ed; border-radius: 12px; overflow: hidden; background: white; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.04);">
-        
-        <div style="width: 100%; height: 200px; background-color: #f1f2f6; display: flex; align-items: center; justify-content: center; color: #a4b0be; font-weight: bold; border-bottom: 1px solid #e1e8ed;">
-          <span>[Image]</span>
-        </div>
-
-        <div style="padding: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-            <h3 style="margin: 0; font-size: 1.2em; color: #2f3542; line-height: 1.4;"><%= item.title %></h3>
-            <span style="font-weight: 800; color: #e15f41; font-size: 1.2em; margin-left: 10px;">
-              <% 
-                converted_price = item.price ? Currency.convert_from_hkd(item.price.to_d, current_currency_code) : 0 
-                symbol = case current_currency_code
-                        when 'USD' then 'US$'
-                        when 'EUR' then '€'
-                        else 'HK$'
-                        end
-              %>
-              <%= symbol %><%= converted_price.to_i %>
-            </span>
-          </div>
-          
-          <p style="color: #747d8c; font-size: 0.95em; margin-bottom: 20px; height: 42px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-            <%= item.description || "No description provided." %>
-          </p>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: #a4b0be; margin-bottom: 20px;">
-            <span style="background-color: #ffeaa7; padding: 4px 8px; border-radius: 4px; color: #d35400; font-weight: bold;">
-              📍 <%= item.college&.name || "CUHK Campus" %>
-            </span>
-            <span>🕒 <%= time_ago_in_words(item.created_at) %> ago</span>
-          </div>
-
-          <%= link_to "View Details & Offer", item_path(item), style: "display: block; text-align: center; background-color: #2ed573; color: white; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.05em;" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
-
 </div>

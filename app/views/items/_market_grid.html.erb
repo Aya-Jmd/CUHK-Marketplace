@@ -1,0 +1,6 @@
+<% dom_id = local_assigns[:dom_id] %>
+<% grid_class = local_assigns[:grid_class] %>
+
+<div<%= %( id="#{dom_id}") if dom_id.present? %> class="<%= class_names("items-grid", grid_class) %>" role="list">
+  <%= render partial: "items/market_card", collection: items, as: :item %>
+</div>

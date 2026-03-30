@@ -1,0 +1,21 @@
+<div class="search-results-page__summary-card">
+  <p class="search-results-page__eyebrow">Marketplace search</p>
+  <h1 class="search-results-page__title">
+    <%= search_result_heading(query: query, selected_category: selected_category, result_count: result_count) %>
+  </h1>
+  <p class="search-results-page__summary">
+    <%= search_result_subcopy(query: query, selected_category: selected_category, sort: sort) %>
+  </p>
+
+  <div class="search-results-page__meta">
+    <% if selected_category.present? %>
+      <span class="search-results-page__count"><%= selected_category.name %></span>
+    <% end %>
+
+    <span class="search-results-page__count"><%= search_scope_label(scope) %></span>
+
+    <% if search_active_filters?(selected_category: selected_category, sort: sort, price_filter_active: price_filter_active) %>
+      <%= link_to "Clear all", search_clear_path(query, scope), class: "search-results-page__clear" %>
+    <% end %>
+  </div>
+</div>

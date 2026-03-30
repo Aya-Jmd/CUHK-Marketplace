@@ -1,0 +1,36 @@
+<% hidden_fields = local_assigns.fetch(:hidden_fields, {}) %>
+<% wrapper_class = local_assigns[:wrapper_class] %>
+<% label_class = local_assigns[:label_class] %>
+<% slider_class = local_assigns[:slider_class] %>
+<% actions_class = local_assigns[:actions_class] %>
+<% apply_class = local_assigns[:apply_class] %>
+<% reset_class = local_assigns[:reset_class] %>
+<% reset_label = local_assigns[:reset_label] || "Reset price range" %>
+<% show_apply = local_assigns.fetch(:show_apply, false) %>
+<% auto_submit = local_assigns.fetch(:auto_submit, false) %>
+
+<div class="<%= class_names(wrapper_class) %>"
+     data-controller="range-slider"
+     data-range-slider-min-value="<%= price_floor %>"
+     data-range-slider-max-value="<%= price_ceiling %>"
+     data-range-slider-currency-value="<%= price_currency %>"
+     data-range-slider-auto-submit-value="<%= auto_submit %>">
+  <% hidden_fields.each do |name, value| %>
+    <% next if value.nil? %>
+    <%= hidden_field_tag name, value %>
+  <% end %>
+
+  <%= hidden_field_tag :min_price, min_price, data: { range_slider_target: "minInput" } %>
+  <%= hidden_field_tag :max_price, max_price, data: { range_slider_target: "maxInput" } %>
+
+  <p class="<%= class_names("items-price-label", label_class) %>" data-range-slider-target="label"></p>
+  <div class="<%= class_names("items-price-slider", slider_class) %>" data-range-slider-target="slider"></div>
+
+  <div class="<%= class_names("items-price-actions", actions_class) %>">
+    <% if show_apply %>
+      <%= submit_tag "Apply", name: "apply", class: class_names("items-price-apply", apply_class) %>
+    <% end %>
+
+    <%= link_to reset_label, reset_path, class: class_names("items-price-reset", reset_class) %>
+  </div>
+</div>

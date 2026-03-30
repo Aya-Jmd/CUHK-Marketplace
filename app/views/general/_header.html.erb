@@ -5,55 +5,97 @@
 <% end %>
 
 <% if user_signed_in? %>
-  <div class="site-header">
-    
+  <% floating_nav = (controller.action_name == "index" && %w[items search].include?(controller.controller_name)) %>
+  <% current_scope = marketplace_scope %>
+  <div class="site-header <%= "site-header--floating" if floating_nav %>"<% if floating_nav %> data-controller="glass-header"<% end %>>
     <div class="site-header__left">
-      <%= link_to "📊 View Price Analytics", category_prices_dashboard_path, style: "background: #0984e3; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9em;" %>
+      <%= form_with url: search_path, method: :get, local: true, class: "site-header__search-form", role: "search" do %>
+        <%= label_tag :q_header, "Search items", class: "site-header__search-label" %>
+        <%= text_field_tag :q, params[:q].to_s, id: "q_header", placeholder: "Search items...", autocomplete: "off", class: "site-header__search-input" %>
+        <%= hidden_field_tag :scope, current_scope, id: "header_scope" %>
+        <% if params[:category_id].present? %>
+          <%= hidden_field_tag :category_id, params[:category_id], id: "header_category_id" %>
+        <% end %>
+        <% if params[:sort].present? %>
+          <%= hidden_field_tag :sort, params[:sort], id: "header_sort" %>
+        <% end %>
+        <% if params[:price_currency].present? %>
+          <%= hidden_field_tag :price_currency, params[:price_currency], id: "header_price_currency" %>
+        <% end %>
+        <% if params[:min_price].present? %>
+          <%= hidden_field_tag :min_price, params[:min_price], id: "header_min_price" %>
+        <% end %>
+        <% if params[:max_price].present? %>
+          <%= hidden_field_tag :max_price, params[:max_price], id: "header_max_price" %>
+        <% end %>
+
+        <%= button_tag type: "submit",
+          class: ["site-header__search-submit", ("site-header__search-submit--hidden" if floating_nav)].compact.join(" "),
+          title: "Search",
+          aria: { label: "Search" } do %>
+          <span aria-hidden="true">&#128269;</span>
+          <span class="site-header__search-label">Search</span>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="site-header__center">
-      <%= link_to items_path, class: "site-header__logo", aria: { label: "Go to main menu" } do %>
+      <%= link_to items_path(scope: current_scope), class: "site-header__logo", aria: { label: "Go to main menu" } do %>
         <span>CUHK MRKT</span>
       <% end %>
     </div>
 
     <div class="site-header__right">
-
-      <%= form_with url: currency_path, method: :patch, style: "margin: 0;" do %>
-        <div style="display: flex; align-items: center; background-color: #f1f2f6; border-radius: 20px; padding: 4px 12px;">
-          <span style="font-size: 0.9em; margin-right: 6px;">💱</span>
-          <%= select_tag :currency, options_for_select(['HKD', 'USD', 'EUR'], 
-          current_currency_code), 
-          onchange: "this.form.submit()", 
-          style: "background: transparent; 
-          border: none; padding: 6px; font-size: 0.9em; cursor: pointer;" %>
-        </div>
+      <% if floating_nav %>
+        <nav class="site-header__scope-switch" aria-label="Marketplace scope">
+          <%= link_to "CUHK",
+              marketplace_scope_switch_path("all"),
+              class: class_names("site-header__scope-option", { "is-active" => current_scope == "all" }) %>
+          <%= link_to marketplace_college_label,
+              marketplace_scope_switch_path("college"),
+              class: class_names("site-header__scope-option", { "is-active" => current_scope == "college" }),
+              title: marketplace_college_label %>
+        </nav>
       <% end %>
 
-      <details style="position: relative;">
-        <summary style="list-style: none; cursor: pointer; color: #0984e3; font-weight: 500;">
-          👋 Welcome, <%= current_user.email.split('@').first.capitalize %>
+      <% currency_codes = %w[HKD USD EUR] %>
+      <%= form_with url: currency_path, method: :patch, class: "site-header__currency-form" do %>
+        <details class="site-header__currency-menu">
+          <summary class="site-header__currency">
+            <span class="site-header__currency-value"><%= current_currency_code %></span>
+            <span class="site-header__currency-chevron" aria-hidden="true"></span>
+          </summary>
+
+          <div class="site-header__currency-dropdown">
+            <% currency_codes.each do |currency_code| %>
+              <% option_classes = ["site-header__currency-option"] %>
+              <% option_classes << "site-header__currency-option--active" if currency_code == current_currency_code %>
+              <%= button_tag currency_code,
+                type: "submit",
+                name: "currency",
+                value: currency_code,
+                class: option_classes.join(" ") %>
+            <% end %>
+          </div>
+        </details>
+      <% end %>
+
+      <details class="site-header__menu">
+        <summary class="site-header__summary">
+          Welcome, <%= current_user.email.split("@").first.capitalize %>
         </summary>
 
-        <div style="position: absolute; right: 0; top: 120%; background-color: white; border: 1px solid #dfe6e9; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 160px;">
+        <div class="site-header__dropdown">
+          <%= link_to "My Profile", profile_path, class: "site-header__dropdown-link" %>
+          <%= link_to "My Items", user_path(current_user), class: "site-header__dropdown-link site-header__dropdown-link--border" %>
 
-          <%= link_to profile_path, style: "display: block; padding: 10px 15px; color: #2d3436; text-decoration: none; font-size: 0.9em;" do %>
-            👤 My Profile
-          <% end %>
+          <hr class="site-header__dropdown-rule">
 
-          <%= link_to user_path(current_user), style: "display: block; padding: 10px 15px; color: #2d3436; text-decoration: none; font-size: 0.9em; border-top: 1px solid #f1f2f6;" do %>
-            🏠 My Items
-          <% end %>
-
-          <hr style="border: 0; border-top: 1px solid #f1f2f6; margin: 5px 0;">
-
-          <%= button_to destroy_user_session_path, method: :delete, form: { style: "margin: 0; display: block;" }, style: "width: 100%; text-align: left; background: none; border: none; padding: 10px 15px; cursor: pointer; color: #d63031; font-size: 0.9em;" do %>
-            <span style="font-size: 1.2em;">🚪</span> Sign Out
-          <% end %>
-
+          <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+              form: { class: "site-header__signout-form" },
+              class: "site-header__signout" %>
         </div>
       </details>
-
     </div>
   </div>
 <% end %>

@@ -1,0 +1,19 @@
+<% categories = local_assigns.fetch(:categories, []) %>
+<% selected_category = local_assigns[:selected_category] %>
+<% base_state = local_assigns.fetch(:base_state, {}) %>
+<% all_categories_state = base_state.except(:category_id) %>
+
+<% if categories.present? %>
+  <section class="items-category-strip" aria-label="Browse categories">
+    <div class="items-category-strip__grid">
+      <% categories.each do |category| %>
+        <% is_selected = selected_category&.id == category.id %>
+        <% path_params = is_selected ? all_categories_state : all_categories_state.merge(category_id: category.id) %>
+
+        <%= link_to category.name,
+            search_path(path_params),
+            class: class_names("items-category-strip__item", { "is-active" => is_selected }) %>
+      <% end %>
+    </div>
+  </section>
+<% end %>

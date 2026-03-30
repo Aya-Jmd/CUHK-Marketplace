@@ -1,0 +1,18 @@
+<% hidden_fields = base_state.except(:min_price, :max_price).merge(price_currency: price_currency) %>
+
+<%= render "shared/price_range_filter",
+    min_price: min_price,
+    max_price: max_price,
+    price_floor: price_floor,
+    price_ceiling: price_ceiling,
+    price_currency: price_currency,
+    hidden_fields: hidden_fields,
+    reset_path: reset_path,
+    auto_submit: true,
+    show_apply: false,
+    wrapper_class: "search-results-page__price-form",
+    label_class: "search-results-page__price-label",
+    slider_class: "search-results-page__price-slider",
+    actions_class: "search-results-page__price-actions",
+    reset_class: "search-results-page__price-reset",
+    reset_label: "Reset price" %>

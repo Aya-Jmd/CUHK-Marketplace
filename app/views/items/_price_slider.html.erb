@@ -1,8 +1,10 @@
-<h3>Price</h3>
-  <p id="price-label"></p>
-  <div id="price-slider" style="margin: 24px 8px; width: 10%; min-width: 220px;"></div>
-
-  <div style="margin-top: 8px;">
-    <%= submit_tag "Apply", name: "apply" %>
-    <%= link_to "Reset price range", items_path %>
-  </div>
+<%= render "shared/price_range_filter",
+    min_price: @min_price,
+    max_price: @max_price,
+    price_floor: @price_floor,
+    price_ceiling: @price_ceiling,
+    price_currency: current_currency_code,
+    hidden_fields: { price_currency: current_currency_code, scope: @scope },
+    reset_path: items_path(scope: @scope),
+    auto_submit: false,
+    show_apply: true %>
