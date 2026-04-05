@@ -85,9 +85,15 @@
 <% end %>
 
 <div style="margin-top: 30px;">
-  <% if user_signed_in? && current_user == @item.user %>
+  <% if user_signed_in? && (current_user == @item.user || current_user.admin? || (current_user.college_admin? && current_user.college_id == @item.college_id)) %>
     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <%= button_to "Edit this item", edit_item_path(@item), method: :get, style: "padding: 8px 16px; border-radius: 4px; background-color: #e0e0e0; border: none; cursor: pointer;" %>
+
+      <%# Only let the actual owner edit the text/price %>
+      <% if current_user == @item.user %>
+        <%= button_to "Edit this item", edit_item_path(@item), method: :get, style: "padding: 8px 16px; border-radius: 4px; background-color: #e0e0e0; border: none; cursor: pointer;" %>
+      <% end %>
+
+      <%# Let Owners AND Admins delete the item %>
       <%= button_to "Destroy this item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, style: "padding: 8px 16px; border-radius: 4px; background-color: #dc3545; color: white; border: none; cursor: pointer;" %>
     </div>
   <% end %>

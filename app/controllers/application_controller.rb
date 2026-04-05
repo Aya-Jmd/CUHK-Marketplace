@@ -26,6 +26,23 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: [:college_id])
     devise_parameter_sanitizer.permit(:account_update, keys: [:college_id])
   end
+  # Devise looks for this method to know where to send a user after login
+  def after_sign_in_path_for(resource)
+    # Check if the user logging in is an admin (or college_admin)
+    if resource.admin? || resource.college_admin?
+      
+      # If they are an admin, check our setup flag
+      if resource.setup_completed?
+        root_path       # Setup is done, go to home page
+      else
+        admin_first_time_setup_path # Setup not done, trap them on the setup page!
+      end
+      
+    else
+      # If they are just a regular student, do the normal Devise behavior (go to homepage)
+      super 
+    end
+  end
   # --- DEVISE CONFIGURATION END ---
 
   private

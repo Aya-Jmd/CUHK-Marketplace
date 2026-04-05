@@ -3,6 +3,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  # Roles engine
+  enum :role, { student: 0, admin: 1, college_admin: 2 }
 
   belongs_to :college
   has_many :items

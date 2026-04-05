@@ -1,0 +1,132 @@
+<div class="max-w-6xl mx-auto p-8">
+  
+  <% if notice %>
+    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 shadow-sm rounded-r-lg">
+      <%= notice %>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 shadow-sm rounded-r-lg">
+      <%= alert %>
+    </div>
+  <% end %>
+
+  <div class="mb-8 flex justify-between items-end">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">
+        <%= current_user.admin? ? "Super Admin Dashboard" : "#{current_user.college.name} Admin Dashboard" %>
+      </h1>
+      <p class="text-gray-600">Logged in as <%= current_user.email %></p>
+    </div>
+    <div class="text-xs text-gray-400 font-mono bg-gray-100 px-2 py-1 rounded">
+      Role: <%= current_user.role.upcase %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+      <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wider">Total Users</h3>
+      <p class="text-3xl font-bold text-gray-800"><%= @total_users %></p>
+      <p class="text-xs text-gray-400 mt-1"><%= current_user.admin? ? "Across all colleges" : "Within your college" %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+      <h3 class="text-gray-500 text-sm font-semibold uppercase tracking-wider">Active Items</h3>
+      <p class="text-3xl font-bold text-gray-800"><%= @total_items %></p>
+      <p class="text-xs text-gray-400 mt-1">Live marketplace listings</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg shadow p-6 sticky top-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Invite a Moderator</h2>
+        <p class="text-gray-500 mb-6 text-sm">New admins must secure their account on first login.</p>
+
+        <%= form_with(model: @new_admin, url: admin_invite_admin_path, local: true, class: "space-y-4") do |f| %>
+          <div>
+            <%= f.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.email_field :email, required: true, placeholder: "email@cuhk.edu.hk", class: "w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" %>
+          </div>
+
+          <div>
+            <%= f.label :role, "System Role", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <select name="user[role]" id="user_role" class="w-full border-gray-300 rounded-md shadow-sm p-2 border bg-white">
+              <% if current_user.admin? %>
+                <option value="admin">Super Admin</option>
+              <% end %>
+              <option value="college_admin">College Admin</option>
+            </select>
+          </div>
+
+          <% if current_user.admin? %>
+            <div>
+              <%= f.label :college_id, "Assign to College", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= f.collection_select :college_id, @colleges, :id, :name, { prompt: "Select a College..." }, { class: "w-full border-gray-300 rounded-md shadow-sm p-2 border bg-white" } %>
+            </div>
+          <% end %>
+
+          <div class="pt-2">
+            <%= f.submit "Generate Credentials", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 cursor-pointer shadow-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-bold text-gray-800">User Management</h2>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @users.each do |user| %>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900"><%= user.email %></div>
+                    <div class="text-xs text-gray-400"><%= user.college&.name || "Global" %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% badge_class = case user.role
+                       when 'admin' then 'bg-purple-100 text-purple-700'
+                       when 'college_admin' then 'bg-blue-100 text-blue-700'
+                       else 'bg-gray-100 text-gray-600'
+                       end %>
+                    <span class="px-2.5 py-0.5 inline-flex text-xs font-bold rounded-full <%= badge_class %>">
+                      <%= user.role.titleize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if user.setup_completed? %>
+                      <span class="text-green-600 flex items-center text-xs font-medium">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active
+                      </span>
+                    <% else %>
+                      <span class="text-amber-500 flex items-center text-xs font-medium">
+                        <span class="w-2 h-2 bg-amber-400 rounded-full mr-2 animate-pulse"></span> Pending
+                      </span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= user.created_at.strftime("%b %d, %y") %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

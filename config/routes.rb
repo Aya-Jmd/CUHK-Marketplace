@@ -54,5 +54,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "items#index"
-
+  # config/routes.rb
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+    post 'dashboard/invite', to: 'dashboard#invite', as: :invite_admin
+    
+    get 'setup', to: 'setups#edit', as: :first_time_setup
+    patch 'setup', to: 'setups#update'
+  end
 end

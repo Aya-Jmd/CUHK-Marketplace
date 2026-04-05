@@ -124,8 +124,16 @@ class ItemsController < ApplicationController
     end
 
     def authorize_item_owner!
-      return if @item.user == current_user
+      # 1. The owner can always edit their own item
+      return if @item.user == current_user 
 
+      # 2. A Global Admin can edit/delete ANY item
+      return if current_user.admin? 
+
+      # 3. A College Admin can edit/delete items that belong to their specific college
+      return if current_user.college_admin? && @item.college_id == current_user.college_id
+
+      # If they fail all 3 checks, kick them out!
       redirect_to @item, alert: "You are not allowed to modify this item."
     end
 
