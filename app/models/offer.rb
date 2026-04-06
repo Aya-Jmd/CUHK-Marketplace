@@ -7,8 +7,20 @@ class Offer < ApplicationRecord
 
   # Automatically create the anti-scam code right before saving to the DB
   before_create :generate_meetup_code
+  after_create :notify_seller
 
   private
+  def notify_seller
+    # Don't notify if the user is somehow making an offer on their own item
+    return if buyer == seller
+
+    Notification.create(
+      recipient: seller,
+      actor: buyer,
+      action: "made an offer on",
+      notifiable: self
+    )
+  end
 
   def generate_meetup_code
     # Generates a random 4-digit string

@@ -70,26 +70,56 @@
     <% if current_user == @user %>
       <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
         <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
-          <span>🛍️</span> Buyer Hub
+          <span>🤝</span> Offers Dashboard
         </h2>
         <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
 
-        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Offers</h3>
-        <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; 
-        margin-bottom: 20px;"><em>* Waiting for seller response</em></p>
+        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">Offers Received on My Items</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; margin-bottom: 30px;">
+          <% if @user.offers_received.any? %>
+            <% @user.offers_received.order(created_at: :desc).each do |offer| %>
+              <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
+                <div style="margin-bottom: 8px; font-size: 1.05em;">
+                  <span style="font-weight: 800; color: #27ae60;">HK$<%= offer.price %></span> 
+                  from <strong><%= offer.buyer.email.split('@').first %></strong>
+                </div>
+                <div style="font-size: 0.9em; color: #2d3436; margin-bottom: 8px;">
+                  For: <%= link_to offer.item.title, item_path(offer.item), style: "color: #0984e3; text-decoration: none;" %>
+                </div>
+                <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
+                  <span>📌</span> Status: <%= offer.status.capitalize %> | Meetup Code: <strong><%= offer.meetup_code %></strong>
+                </div>
+              </li>
+            <% end %>
+          <% else %>
+            <li style="color: #a4b0be; font-size: 0.9em; font-style: italic;">No incoming offers yet.</li>
+          <% end %>
+        </ul>
+
+        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Bids</h3>
+        <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; margin-bottom: 15px;"><em>* Waiting for seller response</em></p>
         
         <ul style="list-style: none; padding: 0; margin: 0;">
-          <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
-            <div style="margin-bottom: 8px; font-size: 1.05em;">
-              <span style="font-weight: 800; color: #e15f41;">Offered xxx</span> for iPhone 13 Pro (example)
-            </div>
-            <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
-              <span>⏳</span> Pending Approval
-            </div>
-          </li>
+          <% if @user.offers_made.any? %>
+            <% @user.offers_made.order(created_at: :desc).each do |offer| %>
+              <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
+                <div style="margin-bottom: 8px; font-size: 1.05em;">
+                  <span style="font-weight: 800; color: #e15f41;">Offered HK$<%= offer.price %></span> 
+                  for <%= link_to offer.item.title, item_path(offer.item), style: "color: #0984e3; text-decoration: none;" %>
+                </div>
+                <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; justify-content: space-between;">
+                  <span><span>⏳</span> Status: <%= offer.status.capitalize %></span>
+                  <span>Meetup PIN: <strong><%= offer.meetup_code %></strong></span>
+                </div>
+              </li>
+            <% end %>
+          <% else %>
+            <li style="color: #a4b0be; font-size: 0.9em; font-style: italic;">You haven't made any offers yet.</li>
+          <% end %>
         </ul>
+
       </div>
-    <%end%>
+    <% end %>
 
   </div>
 </div>

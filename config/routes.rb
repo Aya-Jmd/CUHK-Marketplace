@@ -47,9 +47,12 @@ Rails.application.routes.draw do
   
   # API for location lookup
   namespace :api do
-    get 'locations/:key', to: 'locations#show'
-    get 'locations/closest', to: 'locations#closest'
+    # 1. Put static routes first
     get 'locations/all', to: 'locations#all'
+    get 'locations/closest', to: 'locations#closest'
+    
+    # 2. Put the dynamic ID/Key route LAST
+    get 'locations/:key', to: 'locations#show'
   end
 
   # Defines the root path route ("/")

@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :conversations_as_seller, class_name: "Conversation", foreign_key: "seller_id"
   has_many :offers_made, class_name: "Offer", foreign_key: "buyer_id"
   has_many :offers_received, class_name: "Offer", foreign_key: "seller_id"
+  has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
 
   # Location methods
   def has_location?
