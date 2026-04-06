@@ -55,7 +55,11 @@
       <%= form.hidden_field :location_name, data: { map_picker_target: "locationNameInput" } %>
     </div>
   </div>
-
+  <div style="margin-bottom: 20px; margin-top: 20px;">
+    <%= form.label :images, "Item Photos (You can select multiple)", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+    <%= form.file_field :images, multiple: true, accept: "image/png, image/jpeg, image/jpg, image/webp", style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
+    <p style="font-size: 0.8em; color: #666; margin-top: 4px;">Supported formats: JPG, PNG, WEBP</p>
+  </div>
   <div>
     <%= form.submit %>
   </div>

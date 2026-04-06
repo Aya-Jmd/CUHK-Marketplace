@@ -4,6 +4,8 @@ class Item < ApplicationRecord
   belongs_to :category, optional: true
   has_many :offers, dependent: :destroy
 
+  has_many_attached :images
+
   # We can add validations later to make sure items always have a title and price!
   validates :title, :price, presence: true
   validates :price, numericality: { greater_than: 0 }

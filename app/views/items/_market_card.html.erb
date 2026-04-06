@@ -1,7 +1,12 @@
-<article class="market-card" role="listitem"> <!-- item comes from _markt_grid.html.erb parent -->
+<article class="market-card" role="listitem"> 
   <%= link_to item_path(item), class: "market-card__link" do %>
     <div class="market-card__media">
-      <span class="market-card__placeholder" aria-hidden="true"></span>
+      
+      <% if item.images.attached? %>
+        <%= image_tag item.images.first.variant(resize_to_fill: [400, 300]), class: "market-card__image", style: "width: 100%; height: 200px; object-fit: cover;" %>
+      <% else %>
+        <span class="market-card__placeholder" aria-hidden="true" style="height: 200px; display: block; background-color: #f0f0f0;"></span>
+      <% end %>
       <span class="market-card__price"><%= market_card_price(item) %></span>
     </div>
     <div class="market-card__body">
