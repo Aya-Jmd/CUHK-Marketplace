@@ -1,75 +1,87 @@
 Rails.application.routes.draw do
-  get "search/index"
-  get "conversations/index"
-  get "conversations/show"
+  # Reveal health status on /up
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # -----------------------------------------------------------------------
+  # 1. AUTHENTICATION & PROFILES
+  # -----------------------------------------------------------------------
   devise_for :users, controllers: { sessions: "users/sessions" }
-  resources :items do
-    resources :offers, only: [ :create ]
+  
+  # Public user profiles (e.g., viewing a seller's rating/items)
+  resources :users, only: [:show]
+
+  # Private user dashboard (The logged-in user's management area)
+  resource :profile, only: [:show, :edit, :update] do
+    collection do
+      get :my_items   # Page to manage their active listings
+      get :my_offers  # Page to track offers they've made/received
+    end
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # The main Control Room
-  get "dashboard", to: "dashboards#index", as: :dashboard
+  # -----------------------------------------------------------------------
+  # 2. PUBLIC MARKETPLACE & TENANCY
+  # -----------------------------------------------------------------------
+  # Defines the root path route ("/")
+  root "items#index"
+  
+  get "/search", to: "search#index", as: :search
+  resource :currency, only: [:update]
 
-  # Transaction Flow Routes
-  resources :offers, only: [] do
+  get "analytics", to: "dashboards#category_prices", as: :analytics
+
+  # Items and the initial Offer creation are deeply nested.
+  # This ensures an offer is always tied to an item.
+  resources :items do
+    resources :offers, only: [:new, :create]
+  end
+
+  # -----------------------------------------------------------------------
+  # 3. TRANSACTION HUB (The Lifecycle)
+  # -----------------------------------------------------------------------
+  # Once an offer exists, we use "Shallow Routing" to manage its state.
+  # We don't need the item_id in the URL to accept/decline an offer.
+  resources :offers, only: [:index, :show] do
     member do
       patch :accept
       patch :decline
       patch :complete
-      patch :cancel  # NEW: For when the buyer ghosts!
+      patch :cancel # For when the buyer ghosts!
     end
   end
 
-  # defines routes for user profiles, so user can view each other's profiles and edit their own.
-  resources :users, only: [ :show, :edit, :update ]
-
-  get "profile", to: "users#edit", as: :profile
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
-
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-
-  # routes for price analytics dashboards
-  get "dashboard/category_prices",
-  to: "dashboards#category_prices",
-  # useful for links, eg : <%= link_to "Dashboard", category_prices_dashboard_path %>
-  as: :category_prices_dashboard
-
-
-  # routes for currency
-  resource :currency, only: [ :update ]
-
-
-  get "/search", to: "search#index", as: :search
-  resources :conversations, only: [ :index, :show, :create ] do
-    resources :messages, only: [ :create ]
+  # -----------------------------------------------------------------------
+  # 4. N-1 FEATURES (Communication & Alerts)
+  # -----------------------------------------------------------------------
+  resources :conversations, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
   end
 
-  # API for location lookup
+  # Preparing for the Real-Time Notification system from the proposal
+  resources :notifications, only: [:index] do
+    collection do
+      patch :mark_all_as_read
+    end
+  end
+
+  # -----------------------------------------------------------------------
+  # 5. ADMIN & ANALYTICS ZONE
+  # -----------------------------------------------------------------------
+  # Groups all admin features cleanly under the /admin/ path
+  namespace :admin do
+    root to: "dashboard#index" # Renders at /admin
+    
+    get "category_prices", to: "dashboard#category_prices", as: :category_prices
+    post "invite", to: "dashboard#invite", as: :invite
+    
+    resource :setup, only: [:edit, :update]
+  end
+
+  # -----------------------------------------------------------------------
+  # 6. INTERNAL APIs (AJAX & Maps)
+  # -----------------------------------------------------------------------
   namespace :api do
-    # 1. Put static routes first
     get "locations/all", to: "locations#all"
     get "locations/closest", to: "locations#closest"
-
-    # 2. Put the dynamic ID/Key route LAST
     get "locations/:key", to: "locations#show"
-  end
-
-  # Defines the root path route ("/")
-  root "items#index"
-  # config/routes.rb
-  namespace :admin do
-    get "dashboard", to: "dashboard#index"
-    post "dashboard/invite", to: "dashboard#invite", as: :invite_admin
-
-    get "setup", to: "setups#edit", as: :first_time_setup
-    patch "setup", to: "setups#update"
   end
 end
