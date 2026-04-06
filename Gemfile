@@ -77,3 +77,5 @@ gem 'pg_search', '~> 2.3'
 # For maps
 gem 'leaflet-rails'           # Lightweight mapping library
 gem 'geocoder'                # For distance calculations and geocoding
+
+gem "mini_magick"
