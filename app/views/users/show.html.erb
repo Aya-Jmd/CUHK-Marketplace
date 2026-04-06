@@ -1,125 +1,125 @@
 <div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 100px;">
 
-<!-- BACK TO HOME BUTTON-->
-  <div style="margin-bottom: 10px;">
-    <%= link_to root_path, style: "display: inline-flex; align-items: center; gap: 8px; background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s;" do %>
-      <span style="font-size: 1.2em;">⬅️</span> Back to Home
-    <% end %>
+  <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
+        <%= current_user == @user ? "My Dashboard" : "#{@user.email}'s Profile" %>
+      </h1>
+      <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong></p>
+    </div>
+    <%= link_to "⬅️ Back to Home", root_path, style: "background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1;" %>
   </div>
 
-<!-- PROFILE TITLE -->
-  <div style="text-align: left; margin-bottom: 40px;">
-    <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
-      <%= current_user == @user ? "My Profile & Dashboard" : "#{@user.email}'s profile" %>
-    </h1>
-    <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">
-      🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong><br>
-      <span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">
-        <%= current_user == @user ? "Manage your listings and track your offers." : "Items posted by #{@user.email}." %>
-      </span>
-    </p>
-  </div>
+  <% if current_user == @user %>
+    <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+      
+      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
+        <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; justify-content: space-between;">
+          <span>📦 Seller Hub</span>
+          <%= link_to "+ Post Item", new_item_path, style: "font-size: 0.6em; background: #6c5ce7; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none;" %>
+        </h2>
+        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 20px;">
 
-  
-  <div style="display: flex; flex-wrap: wrap; gap: 30px;">
-    <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
-      <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
-        <span>📦</span> <%= current_user == @user ? "My Listings" : "Posted items" %>
-      </h2>
-      <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
-
-      <!-- ONLY POST NEW IF CURRENT USER == @USER. -->
-      <% if current_user == @user %>
-        <%= link_to "➕ Post a New Item", new_item_path, style: 
-        "display: block; text-align: center; background: 
-        linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); 
-        color: white; padding: 14px; text-decoration: none; 
-        border-radius: 10px; font-weight: bold; margin-bottom: 
-        30px; box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);" %>
-      <% end %>
-      <ul style="list-style: none; padding: 0; margin: 0;">
-        <% if @user.items.any? %>
-          <% @user.items.order(created_at: :desc).each do |item| %>
-            <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; background-color: #fafbff; transition: transform 0.2s;">
-              
-              <div style="flex: 1;">
-                <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #2d3436; text-decoration: none; font-size: 1.1em; display: block; margin-bottom: 4px;" %>
-                <div style="font-size: 0.8em; color: #a4b0be;">
-                  🕒 Posted on <%= item.created_at.strftime("%d/%m/%Y") %>
-                </div>
+        <% active_items = @user.items.where(status: ['available', 'pending_dropoff']).order(created_at: :desc) %>
+        <% if active_items.any? %>
+          <% active_items.each do |item| %>
+            <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 15px; background-color: #fafbff;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #2d3436; text-decoration: none; font-size: 1.1em;" %>
+                <span style="color: <%= item.status == 'available' ? '#27ae60' : '#f39c12' %>; font-weight: bold; font-size: 0.9em;"><%= item.status.upcase %></span>
               </div>
 
-              <span style="color: #27ae60; font-weight: bold; background: #e8f8f5; padding: 6px 12px; border-radius: 8px; font-size: 1.1em; margin-left: 15px;">
-                <% 
-                  converted_price = item.price ? Currency.convert_from_hkd(item.price.to_d, current_currency_code) : 0
-                  symbol = case current_currency_code when 'USD' then 'US$' when 'EUR' then '€' else 'HK$' end
-                %>
-                <%= symbol %><%= converted_price.to_i %>
-              </span>
+              <% item.offers.where(status: ['pending', 'accepted']).each do |offer| %>
+                <div style="margin-top: 10px; padding: 12px; background: <%= offer.accepted? ? '#fff9db' : 'white' %>; border: 1px solid #ddd; border-radius: 8px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Offer: <strong>HK$<%= offer.price.to_i %></strong></span>
+                    <span style="color: #7f8c8d; font-size: 0.9em;"><%= offer.buyer.email.split('@').first %></span>
+                  </div>
+
+                  <% if offer.pending? %>
+                    <div style="display: flex; gap: 10px;">
+                      <%= button_to "Accept", accept_offer_path(offer), method: :patch, style: "background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; flex: 1;" %>
+                      <%= button_to "Decline", decline_offer_path(offer), method: :patch, style: "background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;" %>
+                    </div>
+                  <% elsif offer.accepted? %>
+                    <div style="border-top: 1px dashed #f39c12; padding-top: 10px; margin-top: 5px;">
+                      <p style="font-size: 0.85em; color: #e67e22; margin: 0 0 8px 0;"><strong>Reserved.</strong> Ask the buyer for their PIN:</p>
+                      <%= form_with url: complete_offer_path(offer), method: :patch, data: { controller: "pin-input" }, style: "margin-bottom: 15px;" do |f| %>
+                        
+                        <div style="display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
+                          <% 4.times do %>
+                            <input type="text" 
+                                  maxlength="1" 
+                                  inputmode="numeric" 
+                                  pattern="[0-9]*"
+                                  autocomplete="one-time-code"
+                                  data-pin-input-target="digit"
+                                  data-action="input->pin-input#handleInput keydown->pin-input#handleKeydown paste->pin-input#handlePaste"
+                                  style="width: 50px; height: 60px; font-size: 1.8em; text-align: center; border: 2px solid #cbd5e1; border-radius: 8px; font-weight: bold; color: #2c3e50; outline-color: #00cec9; flex: 1;">
+                          <% end %>
+                        </div>
+
+                        <%= f.hidden_field :meetup_code, data: { pin_input_target: "hidden" }, required: true %>
+
+                        <%= f.submit "Complete Sale", style: "width: 100%; background: #0984e3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background 0.2s;" %>
+
+                      <% end %>
+                      <%= button_to "Buyer didn't show? Cancel Transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, style: "background: none; border: none; color: #e74c3c; text-decoration: underline; font-size: 0.8em; cursor: pointer; padding: 0;" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <p style="color: #a4b0be; font-style: italic;">No active listings or offers.</p>
+        <% end %>
+      </div>
+
+      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
+        <h2 style="margin-top: 0; color: #2d3436;"><span>🛍️ Buyer Hub</span></h2>
+        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 20px;">
+
+        <% active_bids = @user.offers_made.where(status: ['pending', 'accepted']).order(created_at: :desc) %>
+        <% if active_bids.any? %>
+          <% active_bids.each do |offer| %>
+            <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid <%= offer.accepted? ? '#27ae60' : '#fab005' %>;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
+                <span style="font-weight: bold; color: <%= offer.accepted? ? '#27ae60' : '#f39c12' %>"><%= offer.status.upcase %></span>
+              </div>
+              <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong>HK$<%= offer.price.to_i %></strong></div>
+
+              <% if offer.accepted? %>
+                <div style="margin-top: 12px; padding: 15px; background: #e8f8f5; border-radius: 8px; text-align: center;">
+                  <span style="display: block; font-size: 0.8em; color: #16a085; font-weight: bold;">MEETUP PIN</span>
+                  <span style="font-size: 2em; font-weight: 900; letter-spacing: 5px; color: #2c3e50;"><%= offer.meetup_code %></span>
+                  <p style="font-size: 0.8em; color: #16a085; margin: 5px 0 0 0;">Show this to the seller to receive your item.</p>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <p style="color: #a4b0be; font-style: italic;">You have no active bids.</p>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+      <h2 style="margin-top: 0;">Items posted by <%= @user.email.split('@').first %></h2>
+      <ul style="list-style: none; padding: 0;">
+        <% public_items = @user.items.where(status: 'available').order(created_at: :desc) %>
+        <% if public_items.any? %>
+          <% public_items.each do |item| %>
+            <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 10px;">
+              <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #0984e3; text-decoration: none;" %>
+              <span style="float: right; font-weight: bold;">HK$<%= item.price.to_i %></span>
             </li>
           <% end %>
         <% else %>
-          <li style="color: #a4b0be; text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px;">
-            <%= current_user == @user ? "You haven't posted any items yet." : "This user has not posted any offer yet." %>
-          </li>
+          <p style="color: #a4b0be;">No available items right now.</p>
         <% end %>
       </ul>
     </div>
-
-    <!-- ONLY DISPLAY BUYER HUB FOR CURRENT USER (privacy reasons...) -->
-    <% if current_user == @user %>
-      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
-        <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; gap: 10px;">
-          <span>🤝</span> Offers Dashboard
-        </h2>
-        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 25px;">
-
-        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">Offers Received on My Items</h3>
-        <ul style="list-style: none; padding: 0; margin: 0; margin-bottom: 30px;">
-          <% if @user.offers_received.any? %>
-            <% @user.offers_received.order(created_at: :desc).each do |offer| %>
-              <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
-                <div style="margin-bottom: 8px; font-size: 1.05em;">
-                  <span style="font-weight: 800; color: #27ae60;">HK$<%= offer.price %></span> 
-                  from <strong><%= offer.buyer.email.split('@').first %></strong>
-                </div>
-                <div style="font-size: 0.9em; color: #2d3436; margin-bottom: 8px;">
-                  For: <%= link_to offer.item.title, item_path(offer.item), style: "color: #0984e3; text-decoration: none;" %>
-                </div>
-                <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; gap: 5px;">
-                  <span>📌</span> Status: <%= offer.status.capitalize %> | Meetup Code: <strong><%= offer.meetup_code %></strong>
-                </div>
-              </li>
-            <% end %>
-          <% else %>
-            <li style="color: #a4b0be; font-size: 0.9em; font-style: italic;">No incoming offers yet.</li>
-          <% end %>
-        </ul>
-
-        <h3 style="font-size: 1.1em; color: #747d8c; margin-bottom: 5px;">My Active Bids</h3>
-        <p style="font-size: 0.85em; color: #e74c3c; margin-top: 0; margin-bottom: 15px;"><em>* Waiting for seller response</em></p>
-        
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <% if @user.offers_made.any? %>
-            <% @user.offers_made.order(created_at: :desc).each do |offer| %>
-              <li style="padding: 15px; border: 1px dashed #b2bec3; border-radius: 10px; margin-bottom: 12px; background-color: #fdfbfb;">
-                <div style="margin-bottom: 8px; font-size: 1.05em;">
-                  <span style="font-weight: 800; color: #e15f41;">Offered HK$<%= offer.price %></span> 
-                  for <%= link_to offer.item.title, item_path(offer.item), style: "color: #0984e3; text-decoration: none;" %>
-                </div>
-                <div style="font-size: 0.85em; color: #a4b0be; display: flex; align-items: center; justify-content: space-between;">
-                  <span><span>⏳</span> Status: <%= offer.status.capitalize %></span>
-                  <span>Meetup PIN: <strong><%= offer.meetup_code %></strong></span>
-                </div>
-              </li>
-            <% end %>
-          <% else %>
-            <li style="color: #a4b0be; font-size: 0.9em; font-style: italic;">You haven't made any offers yet.</li>
-          <% end %>
-        </ul>
-
-      </div>
-    <% end %>
-
-  </div>
+  <% end %>
 </div>

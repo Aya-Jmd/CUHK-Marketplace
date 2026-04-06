@@ -11,8 +11,15 @@ Rails.application.routes.draw do
   # The main Control Room
   get 'dashboard', to: 'dashboards#index', as: :dashboard
   
-  # Allow sellers to accept/decline offers
-  resources :offers, only: [:update]
+  # Transaction Flow Routes
+  resources :offers, only: [] do
+    member do
+      patch :accept
+      patch :decline
+      patch :complete
+      patch :cancel  # NEW: For when the buyer ghosts!
+    end
+  end
   
   # defines routes for user profiles, so user can view each other's profiles and edit their own.
   resources :users, only: [:show, :edit, :update]

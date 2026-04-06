@@ -54,10 +54,24 @@
     
     <div data-notification-target="toast" 
          class="hidden fixed top-4 right-4 bg-blue-600 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300">
-      </div>
+    </div>
 
     <%= render "general/header" %>
     <%= render "general/side_slider" %>
+    
+    <div id="flash-messages" style="max-width: 1200px; margin: 15px auto 0; padding: 0 20px;">
+      <% if notice %>
+        <div style="background-color: #d4edda; color: #155724; padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; font-weight: bold;">
+          ✅ <%= notice %>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div style="background-color: #f8d7da; color: #721c24; padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; font-weight: bold;">
+          ⚠️ <%= alert %>
+        </div>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
 </html>
