@@ -113,12 +113,12 @@ end
 Given('there is an item {string} listed by {string} at map location {string}') do |title, email, location|
   user = User.find_by(email: email)
   # NOTE: Change 'location_name' to whatever column you actually use for locations in your DB!
-  Item.create!(title: title, price: 100, user: user, status: "available", location_name: location) 
+  Item.create!(title: title, price: 100, user: user, status: "available", location_name: location)
 end
 
 Then('I should see a campus map') do
   # Assumes your Leaflet map container has an ID or Class of 'map'
-  expect(page).to have_css('#map', visible: :all) 
+  expect(page).to have_css('#map', visible: :all)
 end
 
 Then('I should see a marker for {string}') do |title|
@@ -131,25 +131,25 @@ Then('I should see the location label {string}') do |label|
 end
 
 When('I enable my location') do
-  # HACK: Headless browsers don't have real GPS. We have to inject JavaScript 
+  # HACK: Headless browsers don't have real GPS. We have to inject JavaScript
   # to mock the HTML5 Geolocation API and pretend the test runner is standing in CUHK!
   page.execute_script("
     navigator.geolocation.getCurrentPosition = function(success) {
-      success({coords: {latitude: 22.4195, longitude: 114.2067}}); 
+      success({coords: {latitude: 22.4195, longitude: 114.2067}});
     };
   ")
-  
+
   # Trigger whatever button on your UI asks for the user's location
   # NOTE: Change "Find My Location" to match your actual button text
-  click_button 'Find My Location' 
+  click_button 'Find My Location'
 end
 
 Then('I should see my current location on the map') do
   # Assuming you give your user location marker a specific class in your Leaflet JS
-  expect(page).to have_css('.user-location-marker') 
+  expect(page).to have_css('.user-location-marker')
 end
 
 Then('I should see the distance from me to {string}') do |title|
   # Checks if the UI renders the distance calculation text
-  expect(page).to have_content('km away') 
+  expect(page).to have_content('km away')
 end

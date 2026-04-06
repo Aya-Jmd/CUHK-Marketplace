@@ -23,8 +23,8 @@ class ItemsController < ApplicationController
     @max_price = requested_max || @price_ceiling
 
     # Ensure min_price is not greater than max_price
-    @min_price = [@min_price, @max_price].min
-    @max_price = [@min_price, @max_price].max
+    @min_price = [ @min_price, @max_price ].min
+    @max_price = [ @min_price, @max_price ].max
     @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
 
     min_price_hkd = convert_price_to_hkd(@min_price)
@@ -125,10 +125,10 @@ class ItemsController < ApplicationController
 
     def authorize_item_owner!
       # 1. The owner can always edit their own item
-      return if @item.user == current_user 
+      return if @item.user == current_user
 
       # 2. A Global Admin can edit/delete ANY item
-      return if current_user.admin? 
+      return if current_user.admin?
 
       # 3. A College Admin can edit/delete items that belong to their specific college
       return if current_user.college_admin? && @item.college_id == current_user.college_id

@@ -20,12 +20,10 @@ class Currency < ApplicationRecord
     amount_hkd * to_currency.rate_from_hkd
   end
 
-  # amount is in other currency (eg : user puts offer while viewing in other currency)
+    # amount is in other currency (eg : user puts offer while viewing in other currency)
     def self.convert_to_hkd(amount, from_code)
         currency = Currency.for(from_code)
         return amount if currency.code == BASE_CODE
         amount / currency.rate_from_hkd
     end
-
-
 end

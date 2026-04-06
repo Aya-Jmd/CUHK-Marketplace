@@ -10,7 +10,7 @@ class Admin::DashboardController < Admin::BaseController
     elsif current_user.college_admin?
       @total_users = User.where(college_id: current_user.college_id).count
       @total_items = Item.joins(:user).where(users: { college_id: current_user.college_id }).count
-      
+
       # College Admin only sees people in their college
       @users = User.where(college_id: current_user.college_id).order(created_at: :desc)
     end
@@ -22,7 +22,7 @@ class Admin::DashboardController < Admin::BaseController
     role_to_invite = params[:user][:role]
 
     # Security: Prevent College Admins from creating Super Admins
-    if current_user.college_admin? && role_to_invite == 'admin'
+    if current_user.college_admin? && role_to_invite == "admin"
       redirect_to admin_dashboard_path, alert: "Unauthorized: You can only invite other College Admins."
       return
     end

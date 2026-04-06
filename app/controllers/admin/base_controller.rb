@@ -12,7 +12,7 @@ class Admin::BaseController < ApplicationController
   end
 
   def ensure_setup_completed!
-    if !current_user.setup_completed? && controller_name != 'setups'
+    if !current_user.setup_completed? && controller_name != "setups"
       redirect_to admin_first_time_setup_path, alert: "You must secure your account before continuing."
     end
   end

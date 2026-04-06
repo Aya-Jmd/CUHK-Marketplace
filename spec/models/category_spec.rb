@@ -26,6 +26,6 @@ RSpec.describe Category, type: :model do
     other = described_class.create!(name: "Other")
     textbook = described_class.create!(name: "Textbook")
 
-    expect(described_class.sorted_for_dropdown).to eq([book, textbook, other])
+    expect(described_class.sorted_for_dropdown).to eq([ book, textbook, other ])
   end
 end

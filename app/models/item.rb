@@ -16,11 +16,11 @@ class Item < ApplicationRecord
   # fuzzy search
   include PgSearch::Model
 
-  DICTIONARY = 'simple' 
+  DICTIONARY = "simple"
   pg_search_scope :intelligent_search,
     against: {
-      title: 'A',
-      description: 'C'
+      title: "A",
+      description: "C"
     },
     associated_against: {
       category: :name
@@ -39,7 +39,7 @@ class Item < ApplicationRecord
     ignoring: :accents
 
 
-    #Location feature
+    # Location feature
 
     def has_location?
     latitude.present? && longitude.present?
@@ -48,7 +48,7 @@ class Item < ApplicationRecord
   def location_display_name
     return "Location not specified" unless location_name.present?
     # Convert "shaw" to "Shaw College", "new_asia" to "New Asia College", etc.
-    location_name.split('_').map(&:capitalize).join(' ')
+    location_name.split("_").map(&:capitalize).join(" ")
   end
 
   def distance_from(user_location)

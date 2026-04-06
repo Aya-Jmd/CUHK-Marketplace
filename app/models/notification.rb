@@ -15,9 +15,9 @@ class Notification < ApplicationRecord
     # This sends data to the specific user's channel
     ActionCable.server.broadcast(
       "notifications_user_#{recipient_id}",
-      { 
+      {
         message: "#{actor.email} #{action} your item.",
-        count: recipient.notifications.unread.count 
+        count: recipient.notifications.unread.count
       }
     )
   end

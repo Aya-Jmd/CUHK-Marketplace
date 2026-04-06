@@ -1,21 +1,21 @@
 module DistanceHelper
   def distance_badge(distance)
     return unless distance
-    
+
     color_class, icon = case distance
     when 0..0.5
-      ["green", "🟢"]
+      [ "green", "🟢" ]
     when 0.5..1.0
-      ["light-green", "🚶"]
+      [ "light-green", "🚶" ]
     when 1.0..1.5
-      ["yellow", "🚶‍♂️"]
+      [ "yellow", "🚶‍♂️" ]
     when 1.5..2.5
-      ["orange", "🚲"]
+      [ "orange", "🚲" ]
     else
-      ["red", "🚗"]
+      [ "red", "🚗" ]
     end
-    
-    content_tag :span, 
+
+    content_tag :span,
                 "#{icon} #{distance} km",
                 class: "distance-badge distance-#{color_class}",
                 style: "display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #f0f0f0;"

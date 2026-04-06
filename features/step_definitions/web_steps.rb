@@ -78,5 +78,5 @@ end
 
 Then('I should see a confirmation that my account was created') do
   # This matches the standard Devise success flash message
-  expect(page).to have_content('Welcome! You have signed up successfully') 
+  expect(page).to have_content('Welcome! You have signed up successfully')
 end

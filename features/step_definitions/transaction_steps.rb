@@ -3,7 +3,7 @@
 Given('I am logged in as the seller {string}') do |email|
   # Create the user in the test database
   @seller = User.create!(email: email, password: 'password', password_confirmation: 'password')
-  
+
   # Tell Capybara (the fake browser) to log in
   visit new_user_session_path
   fill_in 'Email', with: email
@@ -28,7 +28,7 @@ When('I am on my dashboard') do
 end
 
 When('I fill in the {string} field with {string}') do |field, value|
-  # PRO TIP: Because we used Stimulus to make the beautiful 4-box PIN input, 
+  # PRO TIP: Because we used Stimulus to make the beautiful 4-box PIN input,
   # the actual form field is hidden. Capybara needs `visible: false` to type into it!
   find("input[name='#{field}']", visible: false).set(value)
 end

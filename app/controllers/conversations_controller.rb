@@ -8,7 +8,7 @@ class ConversationsController < ApplicationController
 
   def show
     @conversation = Conversation.find(params[:id])
-    
+
     # Security: Kick them out if they don't belong in this chat!
     unless current_user == @conversation.buyer || current_user == @conversation.seller
       redirect_to root_path, alert: "You are not authorized to view this chat."

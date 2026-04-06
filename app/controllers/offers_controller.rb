@@ -1,10 +1,10 @@
 class OffersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_offer, only: [:accept, :decline, :complete, :cancel]
+  before_action :set_offer, only: [ :accept, :decline, :complete, :cancel ]
 
   def create
     @item = Item.find(params[:item_id])
-    
+
     if @item.user == current_user
       redirect_to @item, alert: "You cannot make an offer on your own item."
       return
@@ -26,8 +26,8 @@ class OffersController < ApplicationController
     return unless current_user == @offer.seller
 
     if @offer.update(status: "accepted")
-      @offer.item.update(status: "pending_dropoff") 
-      
+      @offer.item.update(status: "pending_dropoff")
+
       Notification.create(recipient: @offer.buyer, actor: current_user, action: "accepted your offer for", notifiable: @offer)
       # CHANGED: Redirects to their dashboard
       redirect_to current_user, notice: "Offer accepted! Item reserved. Waiting for the buyer's PIN."
@@ -47,7 +47,7 @@ class OffersController < ApplicationController
     return unless current_user == @offer.seller
 
     @offer.update(status: "failed")
-    @offer.item.update(status: "available") 
+    @offer.item.update(status: "available")
 
     Notification.create(recipient: @offer.buyer, actor: current_user, action: "cancelled the transaction for", notifiable: @offer)
     # CHANGED: Redirects to their dashboard
@@ -61,7 +61,7 @@ class OffersController < ApplicationController
       @offer.update(status: "completed")
       @offer.item.update(status: "sold", sold_at: Time.current)
       @offer.item.offers.where(status: "pending").update_all(status: "declined")
-      
+
       Notification.create(recipient: @offer.buyer, actor: current_user, action: "confirmed the sale of", notifiable: @offer)
       # CHANGED: Redirects to their dashboard
       redirect_to current_user, notice: "Transaction Complete! Item officially sold.", status: :see_other

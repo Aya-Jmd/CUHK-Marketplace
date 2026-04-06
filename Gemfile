@@ -72,10 +72,10 @@ gem "cucumber-rails", require: false
 gem "devise", "~> 5.0"
 
 # fuzzy search
-gem 'pg_search', '~> 2.3'
+gem "pg_search", "~> 2.3"
 
 # For maps
-gem 'leaflet-rails'           # Lightweight mapping library
-gem 'geocoder'                # For distance calculations and geocoding
+gem "leaflet-rails"           # Lightweight mapping library
+gem "geocoder"                # For distance calculations and geocoding
 
 gem "mini_magick"

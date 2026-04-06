@@ -68,7 +68,7 @@ class CurrencyDisplayTest < ActionDispatch::IntegrationTest
 
   test "analytics dashboard serializes chart labels and values in the active currency" do
     get category_prices_dashboard_url, params: {
-      category_ids: [@category.id, @other_category.id],
+      category_ids: [ @category.id, @other_category.id ],
       chart_mode: "exact",
       start_date: Date.current - 1.day,
       end_date: Date.current + 1.day

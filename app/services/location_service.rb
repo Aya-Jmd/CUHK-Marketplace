@@ -19,7 +19,7 @@ class LocationService
 
   def self.calculate_distance(lat1, lon1, lat2, lon2)
     return 0 if lat1.nil? || lon1.nil? || lat2.nil? || lon2.nil?
-    
+
     # Haversine formula
     rad_per_deg = Math::PI / 180
     earth_radius_km = 6371
@@ -37,6 +37,6 @@ class LocationService
   end
 
   def self.location_options
-    CUHK_LOCATIONS.map { |key, value| [value[:name], key] }
+    CUHK_LOCATIONS.map { |key, value| [ value[:name], key ] }
   end
 end

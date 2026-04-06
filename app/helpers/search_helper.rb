@@ -1,9 +1,9 @@
 module SearchHelper
   SEARCH_SORT_OPTIONS = [
-    ["Newest first", "recent"],
-    ["Oldest first", "oldest"],
-    ["Price: Low to High", "price_low"],
-    ["Price: High to Low", "price_high"]
+    [ "Newest first", "recent" ],
+    [ "Oldest first", "oldest" ],
+    [ "Price: Low to High", "price_low" ],
+    [ "Price: High to Low", "price_high" ]
   ].freeze
 
   def search_sort_options

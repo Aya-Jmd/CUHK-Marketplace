@@ -26,10 +26,10 @@ class SearchController < ApplicationController
     @min_price = requested_min || @price_floor
     @max_price = requested_max || @price_ceiling
 
-    @min_price = [[@min_price, @price_floor].max, @price_ceiling].min
-    @max_price = [[@max_price, @price_floor].max, @price_ceiling].min
-    @min_price = [@min_price, @max_price].min
-    @max_price = [@min_price, @max_price].max
+    @min_price = [ [ @min_price, @price_floor ].max, @price_ceiling ].min
+    @max_price = [ [ @max_price, @price_floor ].max, @price_ceiling ].min
+    @min_price = [ @min_price, @max_price ].min
+    @max_price = [ @min_price, @max_price ].max
     @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
 
     min_price_hkd = convert_price_to_hkd(@min_price)

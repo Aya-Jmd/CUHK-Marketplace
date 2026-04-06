@@ -7,12 +7,12 @@ class DashboardsController < ApplicationController
 
     # As a Seller: Find all the offers people have sent me
     @incoming_offers = current_user.offers_received.where(status: "pending").order(created_at: :desc)
-    
+
     # As a Seller: Find my active transactions (accepted offers)
     @active_sales = current_user.offers_received.where(status: "accepted").order(created_at: :desc)
     # As a Seller: Find my past completed sales
     @completed_sales = current_user.offers_received.where(status: "completed").order(updated_at: :desc)
-    
+
     # Optional: Just a quick list of my items
     @my_items = current_user.items.order(created_at: :desc)
   end
@@ -33,7 +33,7 @@ class DashboardsController < ApplicationController
     "#84cc16",
     "#f97316",
     "#ec4899"
-  ].freeze 
+  ].freeze
   # freeze means the array can't be modified (for fixed colors)
 
   DATASET_OPACITY = 0.6
@@ -198,6 +198,6 @@ class DashboardsController < ApplicationController
 
   def hex_to_rgb(hex_color)
     hex = hex_color.delete("#")
-    [hex[0..1], hex[2..3], hex[4..5]].map { |component| component.to_i(16) }
+    [ hex[0..1], hex[2..3], hex[4..5] ].map { |component| component.to_i(16) }
   end
 end

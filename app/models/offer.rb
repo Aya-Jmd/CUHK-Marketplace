@@ -10,7 +10,7 @@ class Offer < ApplicationRecord
 
   # Automatically create the anti-scam code right before saving to the DB
   before_create :generate_meetup_code
-  
+
   # Trigger the notification AFTER saving to the DB
   after_create :notify_seller
 
@@ -18,7 +18,7 @@ class Offer < ApplicationRecord
 
   def generate_meetup_code
     # Generates a random 4-digit string
-    self.meetup_code = format('%04d', rand(10000))
+    self.meetup_code = format("%04d", rand(10000))
   end
 
   def notify_seller

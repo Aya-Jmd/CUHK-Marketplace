@@ -57,7 +57,7 @@ end
 Currency.find_or_create_by!(code: "USD") do |c|
   c.name  = "US Dollar"
   c.symbol = "US$"
-  c.rate_from_hkd = 0.127 
+  c.rate_from_hkd = 0.127
 end
 
 Currency.find_or_create_by!(code: "EUR") do |c|

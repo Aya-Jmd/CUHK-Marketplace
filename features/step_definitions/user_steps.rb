@@ -29,7 +29,7 @@ end
 Given('I am logged in as a {string} college student') do |college_name|
   college = College.find_or_create_by!(name: college_name)
   user = User.create!(email: "student@#{college_name.downcase}.cuhk.edu.hk", password: 'password', college: college)
-  
+
   visit new_user_session_path
   fill_in 'Email', with: user.email
   fill_in 'Password', with: 'password'

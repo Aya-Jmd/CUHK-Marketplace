@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
   def location_display_name
     return "Location not set" unless default_location.present?
-    default_location.split('_').map(&:capitalize).join(' ')
+    default_location.split("_").map(&:capitalize).join(" ")
   end
 
   def set_location(location_key)

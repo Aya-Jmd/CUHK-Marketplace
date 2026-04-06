@@ -2,45 +2,45 @@ class ApplicationController < ActionController::Base
   # redirecting unsigned-in users to sign in page (except for devise's controlers)
   before_action :authenticate_user!, unless: :devise_controller? # Devise's controllers are accessible without authentication
   helper_method :current_currency_code, :current_currency
-  
+
   rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
 
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  
+
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
-  
+
   # --- DEVISE CONFIGURATION START ---
   # Tells Devise to run this extra method before checking security
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
-  
+
   # Adds college_id to the allowed list for signing up and updating accounts
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:college_id])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:college_id])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :college_id ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :college_id ])
   end
   # Devise looks for this method to know where to send a user after login
   def after_sign_in_path_for(resource)
     # Check if the user logging in is an admin (or college_admin)
     if resource.admin? || resource.college_admin?
-      
+
       # If they are an admin, check our setup flag
       if resource.setup_completed?
         root_path       # Setup is done, go to home page
       else
         admin_first_time_setup_path # Setup not done, trap them on the setup page!
       end
-      
+
     else
       # If they are just a regular student, do the normal Devise behavior (go to homepage)
-      super 
+      super
     end
   end
   # --- DEVISE CONFIGURATION END ---
@@ -49,13 +49,13 @@ class ApplicationController < ActionController::Base
 
   def rsrc_not_found(exception)
     case controller_name
-      when 'users'
+    when "users"
         @error_msg = "The requested user does not exist."
-      when 'items'
+    when "items"
         @error_msg = "The requested item does not exist."
-      else
+    else
         @error_msg  = "The requested data does not exist."
-      end
+    end
       render "errors/not_found"
     end
 

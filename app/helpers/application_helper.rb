@@ -28,10 +28,10 @@ module ApplicationHelper
 
   def marketplace_scope_switch_path(target_scope)
     preserved_params =
-      case [controller.controller_name, controller.action_name]
-      when ["search", "index"]
+      case [ controller.controller_name, controller.action_name ]
+      when [ "search", "index" ]
         params.permit(:q, :category_id, :sort, :price_currency, :min_price, :max_price).to_h.symbolize_keys
-      when ["items", "index"]
+      when [ "items", "index" ]
         params.permit(:price_currency, :min_price, :max_price).to_h.symbolize_keys
       else
         {}
@@ -53,7 +53,6 @@ module ApplicationHelper
     slug = current_user&.college&.name.to_s.parameterize.delete_suffix("-college")
     return slug if %w[wu-yee-sun chung-chi].include?(slug)
 
-    "global" #default value
+    "global" # default value
   end
 end
-
