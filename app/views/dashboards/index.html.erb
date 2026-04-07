@@ -21,7 +21,7 @@
     <% @my_offers.each do |offer| %>
       <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
         <strong><%= link_to offer.item.title, offer.item %></strong>
-        <p style="margin: 5px 0;">Offered: <strong>HK$<%= offer.price %></strong></p>
+        <p style="margin: 5px 0;">Offered: <strong><%= display_price(offer.price) %></strong></p>
         
         <% 
           status_color = case offer.status
@@ -59,7 +59,7 @@
       <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #ff9800;">
         <strong><%= link_to offer.item.title, offer.item %></strong>
         <p style="margin: 5px 0;">Buyer: <%= offer.buyer.email %></p>
-        <p style="margin: 5px 0;">Amount: <strong style="color: #1976d2;">HK$<%= offer.price %></strong></p>
+        <p style="margin: 5px 0;">Amount: <strong style="color: #1976d2;"><%= display_price(offer.price) %></strong></p>
         
         <div style="margin-top: 10px; display: flex; gap: 10px;">
           <%= button_to "Accept Offer", offer_path(offer, status: "accepted"), method: :patch, style: "background: #4caf50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" %>
@@ -77,7 +77,7 @@
       <div style="background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #4caf50;">
         <strong><%= link_to offer.item.title, offer.item %></strong>
         <p style="margin: 5px 0;">Buyer: <%= offer.buyer.email %></p>
-        <p style="margin: 5px 0; color: green; font-weight: bold;">Accepted at HK$<%= offer.price %></p>
+        <p style="margin: 5px 0; color: green; font-weight: bold;">Accepted at <%= display_price(offer.price) %></p>
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
         <p style="font-size: 0.85em; margin: 0 0 10px 0; color: #666;">Ask the buyer for their 4-digit PIN to complete the handover:</p>
@@ -107,7 +107,7 @@
         <strong><%= link_to offer.item.title, offer.item, style: "color: #333;" %></strong>
         <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-top: 5px; color: #666;">
           <span>Sold to: <%= offer.buyer.email %></span>
-          <span style="font-weight: bold;">HK$<%= offer.price %></span>
+          <span style="font-weight: bold;"><%= display_price(offer.price) %></span>
         </div>
         <div style="font-size: 0.8em; margin-top: 5px; color: #888;">
           Completed on: <%= offer.updated_at.strftime("%b %d, %Y") %>

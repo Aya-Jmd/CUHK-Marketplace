@@ -1133,6 +1133,205 @@ body[data-theme="chung-chi"] {
   text-shadow: none;
 }
 
+/* Minimal header override: keep the shared/floating styles for later,
+   but render the current navbar as a plain functional bar. */
+.site-header.site-header--minimal {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.site-header.site-header--minimal .site-header__logo {
+  min-width: auto;
+  min-height: auto;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #fff;
+  color: #111827;
+  letter-spacing: 0.08em;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.site-header.site-header--minimal .site-header__scope-switch {
+  padding: 0;
+  gap: 0.4rem;
+}
+
+.site-header.site-header--minimal .site-header__scope-option {
+  min-height: auto;
+  max-width: none;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  color: #111827;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.site-header.site-header--minimal .site-header__scope-option.is-active {
+  box-shadow: none;
+  background: #f3f4f6;
+}
+
+.site-header__currency-select {
+  min-height: 2.2rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #fff;
+  color: #111827;
+  font: inherit;
+}
+
+.site-header.site-header--minimal .site-header__search-form {
+  flex: 1 1 18rem;
+  max-width: none;
+  gap: 0.5rem;
+}
+
+.site-header.site-header--minimal .site-header__search-input {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.site-header.site-header--minimal .site-header__search-submit {
+  width: auto;
+  min-width: 4.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #fff;
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+.site-header__icon-link,
+.site-header__sell-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #fff;
+  color: #111827;
+  text-decoration: none;
+}
+
+.site-header__sell-link {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.site-header__icon-image {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.site-header__user-shell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* FOR NOTIF HOVER :: START */
+
+.site-header__notification-shell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-header__notification-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 280px;
+  max-width: calc(100vw - 40px);
+  background: #fff;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.site-header__notification-shell:hover .site-header__notification-dropdown,
+.site-header__notification-shell:focus-within .site-header__notification-dropdown {
+  display: block;
+}
+
+.site-header__notification-item {
+  display: block;
+  padding: 10px 12px;
+  color: #2d3436;
+  text-decoration: none;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.site-header__notification-item:hover {
+  background: #f8f9fa;
+}
+
+.site-header__notification-preview {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.9em;
+}
+
+.site-header__notification-time {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78em;
+  color: #636e72;
+}
+
+.site-header__notification-footer {
+  display: block;
+  padding: 10px 12px;
+  text-align: center;
+  text-decoration: none;
+  color: #111827;
+  background: #fafafa;
+  font-size: 0.9em;
+}
+
+.site-header__notification-footer:hover {
+  background: #f3f4f6;
+}
+
+.site-header__notification-empty {
+  padding: 12px;
+  color: #636e72;
+  font-size: 0.9em;
+}
+
+/* FOR NOTIF HOVER :: END */
+
+
+.site-header.site-header--minimal .site-header__dropdown {
+  display: none;
+  top: calc(100% + 4px);
+}
+
+.site-header.site-header--minimal .site-header__user-shell:hover .site-header__dropdown,
+.site-header.site-header--minimal .site-header__user-shell:focus-within .site-header__dropdown {
+  display: block;
+}
+
 @media (max-width: 900px) {
   .site-header.site-header--floating {
     left: 0.75rem;
@@ -1154,6 +1353,14 @@ body[data-theme="chung-chi"] {
   .site-header__scope-option {
     max-width: none;
     flex: 1 1 0;
+  }
+
+  .site-header.site-header--minimal {
+    align-items: stretch;
+  }
+
+  .site-header.site-header--minimal .site-header__search-form {
+    flex-basis: 100%;
   }
 }
 

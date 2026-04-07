@@ -12,7 +12,7 @@ class Offer < ApplicationRecord
   before_create :generate_meetup_code
 
   # Trigger the notification AFTER saving to the DB
-  after_create :notify_seller
+  after_create_commit :notify_seller
 
   private
 
@@ -28,7 +28,7 @@ class Offer < ApplicationRecord
     Notification.create(
       recipient: seller,
       actor: buyer,
-      action: "made an offer on",
+      action: "offer_created",
       notifiable: self
     )
   end

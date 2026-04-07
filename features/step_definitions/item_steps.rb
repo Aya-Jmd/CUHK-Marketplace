@@ -83,7 +83,7 @@ Given('there are historical prices for category {string}') do |category|
 end
 
 When('I visit the price analytics dashboard') do
-  visit category_prices_dashboard_path
+  visit analytics_path
 end
 
 When('I select category {string}') do |category|

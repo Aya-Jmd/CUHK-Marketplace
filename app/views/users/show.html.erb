@@ -32,7 +32,7 @@
               <% item.offers.where(status: ['pending', 'accepted']).each do |offer| %>
                 <div style="margin-top: 10px; padding: 12px; background: <%= offer.accepted? ? '#fff9db' : 'white' %>; border: 1px solid #ddd; border-radius: 8px;">
                   <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>Offer: <strong>HK$<%= offer.price.to_i %></strong></span>
+                    <span>Offer: <strong><%= display_price(offer.price) %></strong></span>
                     <span style="color: #7f8c8d; font-size: 0.9em;"><%= offer.buyer.email.split('@').first %></span>
                   </div>
 
@@ -88,7 +88,7 @@
                 <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
                 <span style="font-weight: bold; color: <%= offer.accepted? ? '#27ae60' : '#f39c12' %>"><%= offer.status.upcase %></span>
               </div>
-              <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong>HK$<%= offer.price.to_i %></strong></div>
+              <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
 
               <% if offer.accepted? %>
                 <div style="margin-top: 12px; padding: 15px; background: #e8f8f5; border-radius: 8px; text-align: center;">
@@ -113,7 +113,7 @@
           <% public_items.each do |item| %>
             <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 10px;">
               <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #0984e3; text-decoration: none;" %>
-              <span style="float: right; font-weight: bold;">HK$<%= item.price.to_i %></span>
+              <span style="float: right; font-weight: bold;"><%= display_price(item.price) %></span>
             </li>
           <% end %>
         <% else %>

@@ -13,7 +13,7 @@
       </div>
 
       <div class="dashboard-side-controls">
-        <%= form_with url: category_prices_dashboard_path, method: :get, local: true, class: "dashboard-filters" do %>
+        <%= form_with url: analytics_path, method: :get, local: true, class: "dashboard-filters" do %>
           <%= hidden_field_tag :chart_mode, @chart_mode, id: "dashboard-chart-mode-input" %>
 
           <fieldset class="dashboard-category-filter">

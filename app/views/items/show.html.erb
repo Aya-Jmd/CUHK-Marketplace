@@ -41,7 +41,8 @@
     
     <%= form_with(model: [@item, Offer.new], local: true) do |form| %>
       <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
-        <strong>HK$</strong>
+        <strong><%= current_currency.symbol %></strong>
+        <%= hidden_field_tag :offer_currency, current_currency_code %>
         <%= form.number_field :price, step: 0.1, placeholder: "Enter amount...", required: true, style: "padding: 8px; border-radius: 4px; border: 1px solid #ccc;" %>
         <%= form.submit "Send Offer", style: "padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
       </div>
@@ -51,6 +52,26 @@
     <p style="margin: 0; color: #555;"><em>You own this item. Check your dashboard for incoming offers!</em></p>
   <% else %>
     <p style="margin: 0;"><%= link_to "Log in to make an offer", new_user_session_path %></p>
+  <% end %>
+</div>
+
+<div style="margin-top: 30px; margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+  <% if user_signed_in? && current_user != @item.user %>
+    <h3 style="margin-top: 0;">Start the discussion with the seller</h3>
+
+    <%= form_with url: conversations_path, method: :post, local: true do %>
+      <%= hidden_field_tag :item_id, @item.id %>
+      <%= text_area_tag "message[content]", nil,
+          rows: 3,
+          required: true,
+          placeholder: "Write your first message...",
+          style: "width: 100%; margin-bottom: 10px; padding: 8px;" %>
+      <%= submit_tag "Send message", style: "padding: 8px 16px; cursor: pointer;" %>
+    <% end %>
+  <% elsif user_signed_in? && current_user == @item.user %>
+    <p style="margin: 0; color: #555;"><em>You are the seller for this item.</em></p>
+  <% else %>
+    <p style="margin: 0;"><%= link_to "Log in to message the seller", new_user_session_path %></p>
   <% end %>
 </div>
 <%# LOCATION MAP - Show item location if available %>
@@ -71,7 +92,7 @@
       </div>
     <% elsif user_signed_in? && !current_user.has_location? %>
       <div style="background: #fff3e0; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-        📍 <a href="<%= edit_user_path(current_user) %>">Set your location</a> to see how far this item is from you!
+        📍 <a href="<%= edit_profile_path %>">Set your location</a> to see how far this item is from you!
       </div>
     <% end %>
 

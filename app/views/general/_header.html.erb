@@ -1,95 +1,105 @@
 <% if user_signed_in? %>
-  <% floating_nav = (controller.action_name == "index" && %w[items search].include?(controller.controller_name)) %>
   <% current_scope = marketplace_scope %>
-  <div class="site-header <%= "site-header--floating" if floating_nav %>"<% if floating_nav %> data-controller="glass-header"<% end %>>
-    <div class="site-header__left">
-      <%= form_with url: search_path, method: :get, local: true, class: "site-header__search-form", role: "search" do %>
-        <%= label_tag :q_header, "Search items", class: "site-header__search-label" %>
-        <%= text_field_tag :q, params[:q].to_s, id: "q_header", placeholder: "Search items...", autocomplete: "off", class: "site-header__search-input" %>
-        <%= hidden_field_tag :scope, current_scope, id: "header_scope" %>
-        <% if params[:category_id].present? %>
-          <%= hidden_field_tag :category_id, params[:category_id], id: "header_category_id" %>
-        <% end %>
-        <% if params[:sort].present? %>
-          <%= hidden_field_tag :sort, params[:sort], id: "header_sort" %>
-        <% end %>
-        <% if params[:price_currency].present? %>
-          <%= hidden_field_tag :price_currency, params[:price_currency], id: "header_price_currency" %>
-        <% end %>
-        <% if params[:min_price].present? %>
-          <%= hidden_field_tag :min_price, params[:min_price], id: "header_min_price" %>
-        <% end %>
-        <% if params[:max_price].present? %>
-          <%= hidden_field_tag :max_price, params[:max_price], id: "header_max_price" %>
-        <% end %>
 
-        <%= button_tag type: "submit",
-          class: ["site-header__search-submit", ("site-header__search-submit--hidden" if floating_nav)].compact.join(" "),
-          title: "Search",
-          aria: { label: "Search" } do %>
-          <span aria-hidden="true">&#128269;</span>
-          <span class="site-header__search-label">Search</span>
-        <% end %>
+  <!-- variable to store top 3 most recent non read notifications for hover display -->
+  <% recent_notifications = current_user.notifications.includes(:actor, :notifiable).order(created_at: :desc).where(read_at: nil).limit(3) %>
+
+
+  <div class="site-header site-header--minimal">
+    <%= link_to items_path(scope: current_scope), class: "site-header__logo", aria: { label: "Go to homepage" } do %>
+      <span>CUHK</span>
+    <% end %>
+
+    <nav class="site-header__scope-switch" aria-label="Marketplace scope">
+      <%= link_to "CUHK",
+          marketplace_scope_switch_path("all"),
+          class: class_names("site-header__scope-option", { "is-active" => current_scope == "all" }) %>
+      <%= link_to marketplace_college_label,
+          marketplace_scope_switch_path("college"),
+          class: class_names("site-header__scope-option", { "is-active" => current_scope == "college" }),
+          title: marketplace_college_label %>
+    </nav>
+
+    <% currency_codes = %w[HKD USD EUR] %>
+    <%= form_with url: currency_path, method: :patch, local: true, class: "site-header__currency-form" do %>
+      <%= select_tag :currency,
+          options_for_select(currency_codes, current_currency_code),
+          class: "site-header__currency-select",
+          onchange: "this.form.requestSubmit()" %>
+    <% end %>
+
+    <%= form_with url: search_path, method: :get, local: true, class: "site-header__search-form", role: "search" do %>
+      <%= label_tag :q_header, "Search items", class: "site-header__search-label" %>
+      <%= text_field_tag :q, params[:q].to_s, id: "q_header", placeholder: "Search items...", autocomplete: "off", class: "site-header__search-input" %>
+      <%= hidden_field_tag :scope, current_scope, id: "header_scope" %>
+      <% if params[:category_id].present? %>
+        <%= hidden_field_tag :category_id, params[:category_id], id: "header_category_id" %>
       <% end %>
-    </div>
-
-    <div class="site-header__center">
-      <%= link_to items_path(scope: current_scope), class: "site-header__logo", aria: { label: "Go to main menu" } do %>
-        <span>CUHK MRKT</span>
+      <% if params[:sort].present? %>
+        <%= hidden_field_tag :sort, params[:sort], id: "header_sort" %>
       <% end %>
-    </div>
-
-    <div class="site-header__right">
-      <% if floating_nav %>
-        <nav class="site-header__scope-switch" aria-label="Marketplace scope">
-          <%= link_to "CUHK",
-              marketplace_scope_switch_path("all"),
-              class: class_names("site-header__scope-option", { "is-active" => current_scope == "all" }) %>
-          <%= link_to marketplace_college_label,
-              marketplace_scope_switch_path("college"),
-              class: class_names("site-header__scope-option", { "is-active" => current_scope == "college" }),
-              title: marketplace_college_label %>
-        </nav>
+      <% if params[:price_currency].present? %>
+        <%= hidden_field_tag :price_currency, params[:price_currency], id: "header_price_currency" %>
+      <% end %>
+      <% if params[:min_price].present? %>
+        <%= hidden_field_tag :min_price, params[:min_price], id: "header_min_price" %>
+      <% end %>
+      <% if params[:max_price].present? %>
+        <%= hidden_field_tag :max_price, params[:max_price], id: "header_max_price" %>
       <% end %>
 
-      <% currency_codes = %w[HKD USD EUR] %>
-      <%= form_with url: currency_path, method: :patch, class: "site-header__currency-form" do %>
-        <details class="site-header__currency-menu">
-          <summary class="site-header__currency">
-            <span class="site-header__currency-value"><%= current_currency_code %></span>
-            <span class="site-header__currency-chevron" aria-hidden="true"></span>
-          </summary>
+      <%= button_tag type: "submit", class: "site-header__search-submit", aria: { label: "Search" } do %>
+        <%= image_tag "search-icon.png", alt: "", class: "site-header__icon-image" %>
+      <% end %>
 
-          <div class="site-header__currency-dropdown">
-            <% currency_codes.each do |currency_code| %>
-              <% option_classes = ["site-header__currency-option"] %>
-              <% option_classes << "site-header__currency-option--active" if currency_code == current_currency_code %>
-              <%= button_tag currency_code,
-                type: "submit",
-                name: "currency",
-                value: currency_code,
-                class: option_classes.join(" ") %>
+      <!-- %= button_tag "Search", type: "submit", class: "site-header__search-submit", aria: { label: "Search" } % -->
+    <% end %>
+
+
+    <div class="site-header__notification-shell">
+      <%= link_to notifications_path, class: "site-header__icon-link", aria: { label: "Notifications" } do %>
+        <%= image_tag "nav_bell.svg", alt: "NOTIFICATIONS", class: "site-header__icon-image" %>
+      <% end %>
+
+      <!-- FOR HOVER MECHANISM (DISPLAYS 3 MOST RECENTS NOTIFS WHEN HOVERING ON BELL) -->
+      <div class="site-header__notification-dropdown">
+        <% if recent_notifications.any? %> <!-- IF recent_notifications variable isn't empty -->
+          <% recent_notifications.each do |notification| %>
+            <!-- each notification goes to notifications page for now -->
+            <%= link_to notifications_path, class: "site-header__notification-item", style: "background: #EDF0F8;"  do %>
+              <span class="site-header__notification-preview"><%= notification_message(notification) %></span>
+              <span class="site-header__notification-time"><%= notification.created_at.strftime("%b %d, %H:%M") %></span>
             <% end %>
-          </div>
-        </details>
+          <% end %>
+
+          <%= link_to "See all notifications", notifications_path, class: "site-header__notification-footer" %>
+        <% else %>
+          <div class="site-header__notification-empty">No new notifications yet.</div>
+        <% end %>
+      </div>
+
+    </div>
+
+
+    <%= link_to "SELL", new_item_path, class: "site-header__sell-link" %>
+
+    <%= link_to conversations_path, class: "site-header__icon-link", aria: { label: "Chat" } do %>
+      <%= image_tag "nav_mail.svg", alt: "", class: "site-header__icon-image" %>
+    <% end %>
+
+    <div class="site-header__user-shell">
+      <%= link_to profile_path, class: "site-header__icon-link", aria: { label: "Profile" } do %>
+        <%= image_tag "nav_user.svg", alt: "", class: "site-header__icon-image" %>
       <% end %>
 
-      <details class="site-header__menu">
-        <summary class="site-header__summary">
-          Welcome, <%= current_user.email.split("@").first.capitalize %>
-        </summary>
-
-        <div class="site-header__dropdown">
-          <%= link_to "My Profile", profile_path, class: "site-header__dropdown-link" %>
-          <%= link_to "My Items", user_path(current_user), class: "site-header__dropdown-link site-header__dropdown-link--border" %>
-
-          <hr class="site-header__dropdown-rule">
-
-          <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
-              form: { class: "site-header__signout-form" },
-              class: "site-header__signout" %>
-        </div>
-      </details>
+      <div class="site-header__dropdown">
+        <%= link_to "My Profile", edit_profile_path, class: "site-header__dropdown-link" %>
+        <%= link_to "My Items", profile_path, class: "site-header__dropdown-link site-header__dropdown-link--border" %>
+        <hr class="site-header__dropdown-rule">
+        <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+            form: { class: "site-header__signout-form" },
+            class: "site-header__signout" %>
+      </div>
     </div>
   </div>
 <% end %>

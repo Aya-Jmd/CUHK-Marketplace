@@ -12,13 +12,26 @@ class Notification < ApplicationRecord
   private
 
   def broadcast_to_recipient
-    # This sends data to the specific user's channel
     ActionCable.server.broadcast(
       "notifications_user_#{recipient_id}",
-      {
-        message: "#{actor.email} #{action} your item.",
-        count: recipient.notifications.unread.count
-      }
+      notification_payload.merge(count: recipient.notifications.unread.count)
     )
+  end
+
+  def notification_payload
+    {
+      action: action,
+      actor_name: actor.display_name,
+      item_name: item_name,
+      offer_price_hkd: offer_record&.price
+    }
+  end
+
+  def offer_record
+    notifiable if notifiable.is_a?(Offer)
+  end
+
+  def item_name
+    offer_record&.item&.title || "your item"
   end
 end

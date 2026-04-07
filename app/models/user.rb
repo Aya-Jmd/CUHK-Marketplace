@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_many :offers_received, class_name: "Offer", foreign_key: "seller_id"
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
 
+  def display_name
+    email.to_s.split("@").first
+  end
+
   # Location methods
   def has_location?
     latitude.present? && longitude.present?

@@ -6,12 +6,12 @@ Rails.application.routes.draw do
   # 1. AUTHENTICATION & PROFILES
   # -----------------------------------------------------------------------
   devise_for :users, controllers: { sessions: "users/sessions" }
-  
+
   # Public user profiles (e.g., viewing a seller's rating/items)
-  resources :users, only: [:show]
+  resources :users, only: [ :show ]
 
   # Private user dashboard (The logged-in user's management area)
-  resource :profile, only: [:show, :edit, :update] do
+  resource :profile, only: [ :show, :edit, :update ] do
     collection do
       get :my_items   # Page to manage their active listings
       get :my_offers  # Page to track offers they've made/received
@@ -23,16 +23,16 @@ Rails.application.routes.draw do
   # -----------------------------------------------------------------------
   # Defines the root path route ("/")
   root "items#index"
-  
+
   get "/search", to: "search#index", as: :search
-  resource :currency, only: [:update]
+  resource :currency, only: [ :update ]
 
   get "analytics", to: "dashboards#category_prices", as: :analytics
 
   # Items and the initial Offer creation are deeply nested.
   # This ensures an offer is always tied to an item.
   resources :items do
-    resources :offers, only: [:new, :create]
+    resources :offers, only: [ :new, :create ]
   end
 
   # -----------------------------------------------------------------------
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   # -----------------------------------------------------------------------
   # Once an offer exists, we use "Shallow Routing" to manage its state.
   # We don't need the item_id in the URL to accept/decline an offer.
-  resources :offers, only: [:index, :show] do
+  resources :offers, only: [ :index, :show ] do
     member do
       patch :accept
       patch :decline
@@ -52,14 +52,21 @@ Rails.application.routes.draw do
   # -----------------------------------------------------------------------
   # 4. N-1 FEATURES (Communication & Alerts)
   # -----------------------------------------------------------------------
-  resources :conversations, only: [:index, :show, :create] do
-    resources :messages, only: [:create]
+  resources :conversations, only: [ :index, :show, :create ] do
+    resources :messages, only: [ :create ]
   end
 
   # Preparing for the Real-Time Notification system from the proposal
-  resources :notifications, only: [:index] do
+  resources :notifications, only: [ :index ] do
+    # for a specific item in notification table
+    member do 
+      patch :mark_as_read
+    end
+
+    # for all items in notifications table
     collection do
       patch :mark_all_as_read
+      get :all # view all notifications in a separate page (all VS unread notifications)
     end
   end
 
@@ -69,11 +76,11 @@ Rails.application.routes.draw do
   # Groups all admin features cleanly under the /admin/ path
   namespace :admin do
     root to: "dashboard#index" # Renders at /admin
-    
+
     get "category_prices", to: "dashboard#category_prices", as: :category_prices
     post "invite", to: "dashboard#invite", as: :invite
-    
-    resource :setup, only: [:edit, :update]
+
+    resource :setup, only: [ :edit, :update ]
   end
 
   # -----------------------------------------------------------------------

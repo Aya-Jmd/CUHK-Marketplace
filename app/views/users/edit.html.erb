@@ -1,6 +1,6 @@
 <h2>Edit Your Profile</h2>
 
-<%= form_with model: @user, url: user_path(@user), method: :patch, local: true do |f| %>
+<%= form_with model: @user, url: profile_path, method: :patch, local: true do |f| %>
   <div class="field">
     <%= f.label :college_id, "Your College" %><br />
     <%= f.collection_select :college_id, College.all, :id, :name, prompt: "Select your college..." %>
@@ -32,4 +32,4 @@
 <% end %>
 
 <br>
-<%= link_to "Back to Profile", user_path(@user) %>
+<%= link_to "Back to Profile", profile_path %>

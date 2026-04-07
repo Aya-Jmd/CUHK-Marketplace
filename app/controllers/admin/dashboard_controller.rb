@@ -23,7 +23,7 @@ class Admin::DashboardController < Admin::BaseController
 
     # Security: Prevent College Admins from creating Super Admins
     if current_user.college_admin? && role_to_invite == "admin"
-      redirect_to admin_dashboard_path, alert: "Unauthorized: You can only invite other College Admins."
+      redirect_to admin_root_path, alert: "Unauthorized: You can only invite other College Admins."
       return
     end
 
@@ -45,9 +45,9 @@ class Admin::DashboardController < Admin::BaseController
     if @new_admin.save
       # In production, you would send an email here using ActionMailer.
       # For now, we will print the temporary password on the screen so you can test it.
-      redirect_to admin_dashboard_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
+      redirect_toadmin_root_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
     else
-      redirect_to admin_dashboard_path, alert: "Error sending invite: #{@new_admin.errors.full_messages.join(', ')}"
+      redirect_to admin_root_path, alert: "Error sending invite: #{@new_admin.errors.full_messages.join(', ')}"
     end
   end
 end

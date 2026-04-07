@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
       if resource.setup_completed?
         root_path       # Setup is done, go to home page
       else
-        admin_first_time_setup_path # Setup not done, trap them on the setup page!
+        edit_admin_setup_path
       end
 
     else

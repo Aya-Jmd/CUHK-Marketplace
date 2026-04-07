@@ -8,7 +8,7 @@ class Admin::SetupsController < Admin::BaseController
 
     if @user.update(setup_params.merge(setup_completed: true))
       bypass_sign_in(@user) # Keeps Devise from logging them out
-      redirect_to admin_dashboard_path, notice: "Account secured. Welcome to the Admin Panel."
+      redirect_to admin_root_path, notice: "Account secured. Welcome to the Admin Panel."
     else
       render :edit, status: :unprocessable_entity
     end
