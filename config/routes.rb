@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   # Preparing for the Real-Time Notification system from the proposal
   resources :notifications, only: [ :index ] do
     # for a specific item in notification table
-    member do 
+    member do
       patch :mark_as_read
     end
 

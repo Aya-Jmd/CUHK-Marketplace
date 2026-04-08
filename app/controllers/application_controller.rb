@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
     else
         @error_msg  = "The requested data does not exist."
     end
-      render "errors/not_found"
+      render "errors/not_found", status: :not_found
     end
 
   def reject_banned_user!

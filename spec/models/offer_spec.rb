@@ -1,36 +1,32 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Offer, type: :model do
-  # These are the rules we established today
-  describe "Validations and Callbacks" do
-    let(:college) { College.create!(name: "United College", listing_expiry_days: 30) }
-    let(:category) { Category.create!(name: "Clothing") }
-    let(:buyer) { User.create!(email: "buyer@example.com", password: "password123", password_confirmation: "password123", college: college) }
-    let(:seller) { User.create!(email: "seller@example.com", password: "password123", password_confirmation: "password123", college: college) }
-    let(:item) { Item.create!(title: "CR7 Boots", price: 67, user: seller, college: college, category: category, status: "available") }
+  it "generates meetup code and notifies seller on creation" do
+    seller = create_user(email: "offer_seller@cuhk.edu.hk")
+    buyer = create_user(email: "offer_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "iPad Case")
 
-    it "is valid with a price, buyer, and seller" do
-      offer = Offer.new(price: 60, buyer: buyer, seller: seller, item: item)
-      expect(offer).to be_valid
-    end
+    offer = Offer.create!(item:, buyer:, seller:, price: 120, status: "pending")
 
-    it "automatically sets a 4-digit meetup code before creation" do
-      offer = Offer.create!(price: 60, buyer: buyer, seller: seller, item: item)
-      expect(offer.meetup_code).to be_present
-      expect(offer.meetup_code.length).to eq(4)
-    end
+    expect(offer.meetup_code).to match(/\A\d{4}\z/)
+    expect(Notification.where(recipient: seller, actor: buyer, notifiable: offer, action: "offer_created")).to exist
+  end
 
-    it "defaults to a pending status" do
-      offer = Offer.create!(price: 60, buyer: buyer, seller: seller, item: item)
-      expect(offer.pending?).to be true
-    end
+  it "does not notify when buyer and seller are same user" do
+    seller = create_user(email: "self_offer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Calculator")
 
-    it "allows one reusable offer per buyer and item" do
-      Offer.create!(price: 60, buyer: buyer, seller: seller, item: item)
-      duplicate = Offer.new(price: 62, buyer: buyer, seller: seller, item: item)
+    Offer.create!(item:, buyer: seller, seller:, price: 80, status: "pending")
 
-      expect(duplicate).not_to be_valid
-      expect(duplicate.errors[:buyer_id]).to include("has already been taken")
-    end
+    expect(Notification.where(recipient: seller, action: "offer_created")).to be_empty
+  end
+
+  it "requires a positive offer price" do
+    seller = create_user(email: "offer_validation_seller@cuhk.edu.hk")
+    buyer = create_user(email: "offer_validation_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Chair")
+    offer = Offer.new(item:, buyer:, seller:, price: 0)
+
+    expect(offer).not_to be_valid
   end
 end

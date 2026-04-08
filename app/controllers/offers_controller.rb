@@ -24,7 +24,7 @@ class OffersController < ApplicationController
     @offer.buyer = current_user
     @offer.seller = @item.user
 
-    # for an offer, convert to hkd from the current selected currency 
+    # for an offer, convert to hkd from the current selected currency
     submitted_currency = params[:offer_currency].presence || current_currency_code
     @offer.price = Currency.convert_to_hkd(@offer.price.to_d, submitted_currency)
 
