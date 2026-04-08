@@ -76,16 +76,5 @@
       <% end %>
     </div>
     <%= yield %>
-
-    <% if Rails.env.development? %>
-      <div style="position: fixed; bottom: 100px; right: 25px; z-index: 9999;">
-        <button onclick="window.open('/letter_opener', 'MailPopup', 'width=850,height=700,left=250,top=150,menubar=no,toolbar=no,location=no,status=no');" 
-                style="background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); color: white; border: none; border-radius: 50%; width: 65px; height: 65px; font-size: 28px; box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" 
-                onmouseover="this.style.transform='scale(1.1)'" 
-                onmouseout="this.style.transform='scale(1)'">
-          📧
-        </button>
-      </div>
-    <% end %>
   </body>
 </html>

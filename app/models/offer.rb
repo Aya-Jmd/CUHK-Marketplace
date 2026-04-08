@@ -14,9 +14,6 @@ class Offer < ApplicationRecord
   # Trigger the notification AFTER saving to the DB
   after_create_commit :notify_seller
 
-  # Trigger the notification AFTER status updated
-  after_update_commit :notify_buyer_of_status_change, if: :saved_change_to_status?
-
   private
 
   def generate_meetup_code
@@ -34,13 +31,5 @@ class Offer < ApplicationRecord
       action: "offer_created",
       notifiable: self
     )
-
-    OfferMailer.notify_seller(self).deliver_later
-  end
-
-  def notify_buyer_of_status_change
-    if %w[accepted declined].include?(status)
-      OfferMailer.notify_buyer(self).deliver_later
-    end
   end
 end
