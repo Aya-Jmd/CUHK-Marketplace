@@ -33,8 +33,7 @@ class Item < ApplicationRecord
       },
       trigram: {
         threshold: 0.2    # typo tolerance: lower threshold => fuzzier
-      },
-      dmetaphone: {}      # optional English phonetic search
+      }
     },
     ignoring: :accents
 
