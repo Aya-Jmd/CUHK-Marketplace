@@ -34,18 +34,18 @@ class Admin::DashboardController < Admin::BaseController
     temporary_password = SecureRandom.hex(4)
 
     @new_admin = User.new(
-        email: params[:user][:email],
-        role: params[:user][:role], # Ensure this matches 'college_admin' exactly
-        college_id: assigned_college_id,
-        password: temporary_password,
-        password_confirmation: temporary_password,
-        setup_completed: false # Explicitly force false
-      )
+      email: params[:user][:email],
+      role: params[:user][:role], # Ensure this matches 'college_admin' exactly
+      college_id: assigned_college_id,
+      password: temporary_password,
+      password_confirmation: temporary_password,
+      setup_completed: false # Explicitly force false
+    )
 
     if @new_admin.save
       # In production, you would send an email here using ActionMailer.
       # For now, we will print the temporary password on the screen so you can test it.
-      redirect_toadmin_root_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
+      redirect_to admin_root_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
     else
       redirect_to admin_root_path, alert: "Error sending invite: #{@new_admin.errors.full_messages.join(', ')}"
     end
