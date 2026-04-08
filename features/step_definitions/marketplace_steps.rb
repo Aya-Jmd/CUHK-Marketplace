@@ -11,6 +11,17 @@ Given("a user exists with email {string} in college {string}") do |email, colleg
   end
 end
 
+Given("an admin user {string} exists with role {string} in college {string} and setup {string}") do |email, role, college_name, setup|
+  college = College.find_by!(name: college_name)
+  user = User.find_or_initialize_by(email:)
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.college = college
+  user.role = role
+  user.setup_completed = (setup == "true")
+  user.save!
+end
+
 Given("category {string} exists") do |name|
   Category.find_or_create_by!(name:)
 end
@@ -55,6 +66,10 @@ When("I visit the homepage") do
   visit root_path
 end
 
+When("I visit the admin dashboard") do
+  visit admin_root_path
+end
+
 When("I visit search page with query {string}") do |query|
   visit search_path(q: query)
 end
@@ -80,6 +95,15 @@ end
 
 When("I mark all my notifications as read") do
   page.driver.submit :patch, mark_all_as_read_notifications_path, {}
+end
+
+When("I invite admin user {string} with role {string} and college {string}") do |email, role, college_name|
+  college = College.find_by!(name: college_name)
+  role_label = role == "college_admin" ? "College Admin" : "Super Admin"
+  fill_in "Email Address", with: email
+  select role_label, from: "System Role"
+  select college.name, from: "Assign to College"
+  click_button "Generate Credentials"
 end
 
 Then("the latest offer for {string} should belong to {string}") do |item_title, buyer_email|
@@ -108,6 +132,16 @@ end
 Then("I should have no unread notifications") do
   user = User.find_by!(email: "seller@cuhk.edu.hk")
   expect(user.notifications.unread.count).to eq(0)
+end
+
+Then("I should be on the admin setup page") do
+  expect(page).to have_current_path(edit_admin_setup_path)
+end
+
+Then("invited user {string} should exist with role {string}") do |email, role|
+  invited = User.find_by(email:)
+  expect(invited).to be_present
+  expect(invited.role).to eq(role)
 end
 
 Then("I should see {string}") do |text|
