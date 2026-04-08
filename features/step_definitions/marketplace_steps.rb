@@ -144,6 +144,13 @@ Then("invited user {string} should exist with role {string}") do |email, role|
   expect(invited.role).to eq(role)
 end
 
+Then("conversation should not exist for item {string} between {string} and {string}") do |item_title, buyer_email, seller_email|
+  item = Item.find_by!(title: item_title)
+  buyer = User.find_by!(email: buyer_email)
+  seller = User.find_by!(email: seller_email)
+  expect(Conversation.where(item:, buyer:, seller:)).to be_empty
+end
+
 Then("I should see {string}") do |text|
   expect(page).to have_content(text)
 end
