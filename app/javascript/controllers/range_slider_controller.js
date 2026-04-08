@@ -25,12 +25,12 @@ export default class extends Controller {
       start: [startMin, startMax],
       connect: true,
       range: { min: this.minValue, max: this.maxValue },
-      step: 1
+      step: 0.01
     })
 
     this.sliderTarget.noUiSlider.on("update", (values) => {
-      const min = Math.round(values[0])
-      const max = Math.round(values[1])
+      const min = Math.round(values[0]).toFixed(2)
+      const max = Math.round(values[1]).toFixed(2)
 
       this.minInputTarget.value = min
       this.maxInputTarget.value = max

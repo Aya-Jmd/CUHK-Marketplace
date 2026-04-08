@@ -7,10 +7,19 @@ class Conversation < ApplicationRecord
 
   validates :buyer_id, uniqueness: { scope: [ :seller_id, :item_id ] }
 
-  scope :for_user, ->(user) { where("buyer_id = :id OR seller_id = :id", id: user.id) }
+  scope :for_user, lambda { |user|
+    joins("INNER JOIN users buyers_users ON buyers_users.id = conversations.buyer_id")
+      .joins("INNER JOIN users sellers_users ON sellers_users.id = conversations.seller_id")
+      .where("buyer_id = :id OR seller_id = :id", id: user.id)
+      .where("buyers_users.banned_at IS NULL AND sellers_users.banned_at IS NULL")
+  }
 
   def participant?(user)
     user.present? && [ buyer_id, seller_id ].include?(user.id)
+  end
+
+  def visible_to?(user)
+    participant?(user) && !buyer&.banned? && !seller&.banned?
   end
 
   def other_user_for(user)

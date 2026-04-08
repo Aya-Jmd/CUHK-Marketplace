@@ -34,19 +34,114 @@
 
 <%= render @item %>
 
+<% if @item.category.present? %>
+  <div style="margin-top: 16px; margin-bottom: 24px;">
+    <%= link_to "Compare price in current market",
+        analytics_path(category_ids: [ @item.category_id ], chart_mode: "averages"),
+        style: "display: inline-block; padding: 10px 18px; background-color: #111827; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;" %>
+  </div>
+<% end %>
+
 <div style="margin-top: 30px; margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
   <% if user_signed_in? && current_user != @item.user %>
-    
-    <h3 style="margin-top: 0;">Make an Offer</h3>
-    
-    <%= form_with(model: [@item, Offer.new], local: true) do |form| %>
-      <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
-        <strong><%= current_currency.symbol %></strong>
-        <%= hidden_field_tag :offer_currency, current_currency_code %>
-        <%= form.number_field :price, step: 0.1, placeholder: "Enter amount...", required: true, style: "padding: 8px; border-radius: 4px; border: 1px solid #ccc;" %>
-        <%= form.submit "Send Offer", style: "padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
+    <% existing_offer_price = @existing_offer.present? ? Currency.convert_from_hkd(@existing_offer.price, current_currency.code) : nil %>
+    <% offer_locked = @existing_offer.present? && !@existing_offer.editable_by_buyer?(current_user) %>
+    <% offer_withdrawable = @existing_offer.present? && @existing_offer.withdrawable_by_buyer?(current_user) %>
+    <% offer_form_url = @existing_offer.present? ? offer_path(@existing_offer) : item_offers_path(@item) %>
+    <% offer_form_method = @existing_offer.present? ? :patch : :post %>
+
+    <h3 style="margin-top: 0;"><%= @existing_offer.present? ? "Update Your Offer" : "Make an Offer" %></h3>
+
+    <% if @existing_offer.present? %>
+      <p style="margin: 0 0 12px 0; color: #555;">
+        Current offer status:
+        <strong><%= @existing_offer.status.humanize %></strong>
+      </p>
+    <% end %>
+
+    <% if offer_locked %>
+      <p style="margin: 0; color: #555;">
+        <em>
+          <% if @existing_offer.accepted? %>
+            Your offer is already accepted. Check your dashboard for the meetup PIN.
+          <% elsif @existing_offer.completed? %>
+            This transaction is already completed.
+          <% else %>
+            This item is not accepting changes to your existing offer right now.
+          <% end %>
+        </em>
+      </p>
+    <% else %>
+      <%= form_with url: offer_form_url, method: offer_form_method, scope: :offer, local: true do |form| %>
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
+          <strong><%= current_currency.symbol %></strong>
+          <%= hidden_field_tag :offer_currency, current_currency_code %>
+          <%= form.number_field :price, step: "any", placeholder: "Enter amount...", required: true, value: existing_offer_price, style: "padding: 8px; border-radius: 4px; border: 1px solid #ccc;" %>
+          <%= form.submit(@existing_offer.present? ? "Update Offer" : "Send Offer", style: "padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;") %>
+        </div>
+
+        <% if @existing_offer.present? %>
+          <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #666;">
+            One buyer can keep only one offer per item. Submitting this form updates your existing offer.
+          </p>
+        <% end %>
+      <% end %>
+
+    <% end %>
+
+    <% if offer_withdrawable %>
+      <div style="margin-top: 10px;">
+        <%= button_to "Withdraw Offer", offer_path(@existing_offer), method: :delete,
+            data: { turbo_confirm: "Withdraw this offer?" },
+            style: "padding: 8px 16px; background-color: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
       </div>
     <% end %>
+
+    <div data-controller="modal" style="margin-top: 18px;">
+      <% if !(current_user.admin? || current_user.college_admin?) && !(@item.user.admin? || @item.user.college_admin?) %>
+        <button type="button"
+                data-action="modal#open"
+                style="padding: 8px 16px; background-color: #b91c1c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+          Report Offer
+        </button>
+      <% end %>
+
+      <dialog class="site-modal"
+              data-modal-target="dialog"
+              data-action="click->modal#closeOnBackdrop">
+        <div class="site-modal__card">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div>
+              <h3 style="margin: 0;">Report This Item</h3>
+              <p style="margin: 6px 0 0 0; color: #555;">Explain why this listing should be reviewed by moderators.</p>
+            </div>
+            <button type="button"
+                    data-action="modal#close"
+                    style="border: none; background: transparent; font-size: 1.4rem; cursor: pointer; line-height: 1;">
+              x
+            </button>
+          </div>
+
+          <%= form_with model: [@item, ItemReport.new], local: true do |form| %>
+            <%= form.text_area :message,
+                rows: 6,
+                required: true,
+                maxlength: 1500,
+                placeholder: "Describe the issue with this item...",
+                style: "width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d0d5dd; margin-bottom: 14px;" %>
+
+            <div class="site-modal__actions">
+              <button type="button"
+                      data-action="modal#close"
+                      style="padding: 10px 16px; border-radius: 8px; border: 1px solid #d0d5dd; background: white; color: #344054; cursor: pointer;">
+                Cancel
+              </button>
+              <%= form.submit "Submit Report", style: "padding: 10px 16px; border-radius: 8px; border: none; background: #b91c1c; color: white; cursor: pointer; font-weight: 600;" %>
+            </div>
+          <% end %>
+        </div>
+      </dialog>
+    </div>
 
   <% elsif user_signed_in? && current_user == @item.user %>
     <p style="margin: 0; color: #555;"><em>You own this item. Check your dashboard for incoming offers!</em></p>
@@ -145,5 +240,5 @@
     </div>
   <% end %>
 
-  <%= link_to "Back to items", items_path, style: "text-decoration: none; color: #007bff;" %>
+  <%= link_to "Back to items", items_path(marketplace_base_params), style: "text-decoration: none; color: #007bff;" %>
 </div>

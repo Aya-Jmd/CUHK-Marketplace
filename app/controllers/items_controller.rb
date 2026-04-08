@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[ show edit update destroy ]
+  before_action :ensure_item_visible!, only: :show
   before_action :authorize_item_owner!, only: %i[ edit update destroy ]
 
   # GET /items or /items.json
@@ -11,7 +12,7 @@ class ItemsController < ApplicationController
     price_floor_hkd = Item.minimum(:price)&.to_d || 0.to_d
     price_ceiling_hkd = Item.maximum(:price)&.to_d || 100_000.to_d
 
-    @price_floor = convert_price_from_hkd(price_floor_hkd).floor
+    @price_floor = convert_price_from_hkd(price_floor_hkd).floor.round(2)
     @price_ceiling = convert_price_from_hkd(price_ceiling_hkd).ceil
 
     submitted_in_current_currency = params[:price_currency] == current_currency_code
@@ -34,6 +35,8 @@ class ItemsController < ApplicationController
 
   # GET /items/1 or /items/1.json
   def show
+    @existing_offer = current_user.offers_made.find_by(item: @item) if user_signed_in? && current_user != @item.user
+
     # Calculate distance if user is signed in and has location
     if user_signed_in? && current_user.has_location? && @item.has_location?
       @distance = LocationService.calculate_distance(
@@ -45,7 +48,7 @@ class ItemsController < ApplicationController
 
     # Find nearby items (within 1.5km)
     if @item.has_location?
-      @nearby_items = Item.where.not(id: @item.id)
+      @nearby_items = Item.available.where.not(id: @item.id)
                          .where.not(latitude: nil, longitude: nil)
                          .select do |item|
                            distance = LocationService.calculate_distance(
@@ -72,7 +75,7 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
 
     @item.user = current_user
-    @item.college = current_user.college
+    @item.college = current_user.college unless current_user.admin?
     normalize_price_to_hkd(@item)
 
     respond_to do |format|
@@ -120,7 +123,10 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.require(:item).permit(:title, :price, :description, :category_id, :is_global, :latitude, :longitude, :location_name, images: [])
+      permitted_attributes = [ :title, :price, :description, :category_id, :is_global, :latitude, :longitude, :location_name, images: [] ]
+      permitted_attributes.insert(4, :college_id) if current_user&.admin?
+
+      params.require(:item).permit(*permitted_attributes)
     end
 
     def authorize_item_owner!
@@ -135,6 +141,12 @@ class ItemsController < ApplicationController
 
       # If they fail all 3 checks, kick them out!
       redirect_to @item, alert: "You are not allowed to modify this item."
+    end
+
+    def ensure_item_visible!
+      return if @item.visible_to?(current_user)
+
+      redirect_to items_path, alert: "This item is no longer available."
     end
 
     # PRIVATE METHOD FOR PRICE NORMALIZATION

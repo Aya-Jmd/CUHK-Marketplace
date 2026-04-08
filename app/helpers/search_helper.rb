@@ -11,7 +11,7 @@ module SearchHelper
   end
 
   def search_filter_state(query:, scope:, sort:, selected_category:, price_filter_active:, min_price:, max_price:, price_currency:)
-    state = { q: query.presence, scope: scope, sort: sort }
+    state = marketplace_base_params(scope).merge(q: query.presence, sort: sort)
     state[:category_id] = selected_category.id if selected_category.present?
 
     if price_filter_active
@@ -30,7 +30,7 @@ module SearchHelper
   end
 
   def search_clear_path(query, scope)
-    search_path(q: query.presence, scope: marketplace_scope(scope))
+    search_path(marketplace_base_params(scope).merge(q: query.presence).compact)
   end
 
   def search_result_heading(query:, selected_category:, result_count:)

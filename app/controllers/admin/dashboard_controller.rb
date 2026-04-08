@@ -3,13 +3,13 @@ class Admin::DashboardController < Admin::BaseController
   def index
     if current_user.admin?
       @total_users = User.count
-      @total_items = Item.count
+      @total_items = Item.available.count
       @colleges = College.all
       # Super Admin sees everyone, ordered by most recent
       @users = User.includes(:college).order(created_at: :desc)
     elsif current_user.college_admin?
       @total_users = User.where(college_id: current_user.college_id).count
-      @total_items = Item.joins(:user).where(users: { college_id: current_user.college_id }).count
+      @total_items = Item.available.where(college_id: current_user.college_id).count
 
       # College Admin only sees people in their college
       @users = User.where(college_id: current_user.college_id).order(created_at: :desc)
@@ -45,7 +45,7 @@ class Admin::DashboardController < Admin::BaseController
     if @new_admin.save
       # In production, you would send an email here using ActionMailer.
       # For now, we will print the temporary password on the screen so you can test it.
-      redirect_toadmin_root_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
+      redirect_to admin_root_path, notice: "Invitation sent! The temporary password for #{@new_admin.email} is: #{temporary_password}"
     else
       redirect_to admin_root_path, alert: "Error sending invite: #{@new_admin.errors.full_messages.join(', ')}"
     end

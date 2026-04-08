@@ -23,4 +23,18 @@ RSpec.describe "User sessions", type: :request do
     expect(response.body).to include("Wrong password")
     expect(response.body).to include("Log in")
   end
+
+  it "shows a banned message when a banned user tries to sign in" do
+    user.update!(banned_at: Time.current)
+
+    post user_session_path, params: {
+      user: {
+        email: user.email,
+        password: "password123"
+      }
+    }
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response.body).to include("Your account has been banned.")
+  end
 end

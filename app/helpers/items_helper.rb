@@ -1,8 +1,9 @@
 module ItemsHelper
-  def market_card_price(item)
-    converted_price = item.price ? Currency.convert_from_hkd(item.price.to_d, current_currency_code) : 0
-    "#{market_card_currency_prefix}#{converted_price.to_i}"
-  end
+def market_card_price(item)
+  return "" if item.price.blank?
+
+  display_price(item.price)
+end
 
   def market_card_meta(item)
     [

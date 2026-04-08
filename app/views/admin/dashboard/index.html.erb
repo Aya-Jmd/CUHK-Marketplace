@@ -87,6 +87,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -107,7 +108,11 @@
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <% if user.setup_completed? %>
+                    <% if user.banned? %>
+                      <span class="text-red-600 flex items-center text-xs font-medium">
+                        <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span> Banned
+                      </span>
+                    <% elsif user.setup_completed? %>
                       <span class="text-green-600 flex items-center text-xs font-medium">
                         <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active
                       </span>
@@ -119,6 +124,20 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <%= user.created_at.strftime("%b %d, %y") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <% if admin_manageable_user?(user) %>
+                      <% if user.banned? %>
+                        <%= button_to "Unban", unban_admin_user_path(user), method: :patch,
+                            class: "inline-flex items-center rounded-md border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-700 hover:bg-green-100 cursor-pointer" %>
+                      <% else %>
+                        <%= button_to "Ban", ban_admin_user_path(user), method: :patch,
+                            data: { turbo_confirm: "Ban #{user.email}?" },
+                            class: "inline-flex items-center rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 cursor-pointer" %>
+                      <% end %>
+                    <% else %>
+                      <span class="text-xs text-gray-400">No action</span>
+                    <% end %>
                   </td>
                 </tr>
               <% end %>

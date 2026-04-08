@@ -1,24 +1,55 @@
 <% if user_signed_in? %>
   <% current_scope = marketplace_scope %>
+  <% if current_user.admin? %>
+    <% scope_form_url = controller.controller_name == "search" && controller.action_name == "index" ? search_path : items_path %>
+    <% college_options = [["CUHK Global", ""]] + College.order(:name).pluck(:name, :id) %>
+  <% else %>
+    <% next_scope = current_scope == "college" ? "all" : "college" %>
+    <% current_scope_label = marketplace_scope_label(current_scope) %>
+    <% next_scope_label = marketplace_scope_label(next_scope) %>
+  <% end %>
+
 
   <!-- variable to store top 3 most recent non read notifications for hover display -->
   <% recent_notifications = current_user.notifications.includes(:actor, :notifiable).order(created_at: :desc).where(read_at: nil).limit(3) %>
 
 
   <div class="site-header site-header--minimal">
-    <%= link_to items_path(scope: current_scope), class: "site-header__logo", aria: { label: "Go to homepage" } do %>
+    <%= link_to items_path(marketplace_base_params(current_scope)), class: "site-header__logo", aria: { label: "Go to homepage" } do %>
       <span>CUHK</span>
     <% end %>
 
-    <nav class="site-header__scope-switch" aria-label="Marketplace scope">
-      <%= link_to "CUHK",
-          marketplace_scope_switch_path("all"),
-          class: class_names("site-header__scope-option", { "is-active" => current_scope == "all" }) %>
-      <%= link_to marketplace_college_label,
-          marketplace_scope_switch_path("college"),
-          class: class_names("site-header__scope-option", { "is-active" => current_scope == "college" }),
-          title: marketplace_college_label %>
-    </nav>
+    <% if current_user.admin? %>
+      <div class="site-header__scope-switch">
+          <%= form_with url: scope_form_url, method: :get, local: true, class: "site-header__scope-form" do %>
+            <%= hidden_field_tag :q, params[:q] if params[:q].present? %>
+            <%= hidden_field_tag :category_id, params[:category_id] if params[:category_id].present? %>
+            <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
+            <%= hidden_field_tag :price_currency, params[:price_currency] if params[:price_currency].present? %>
+            <%= hidden_field_tag :min_price, params[:min_price] if params[:min_price].present? %>
+            <%= hidden_field_tag :max_price, params[:max_price] if params[:max_price].present? %>
+
+            <%= select_tag :college_scope_id,
+                options_for_select(college_options, params[:college_scope_id]),
+                class: "site-header__scope-select",
+                onchange: "this.form.requestSubmit()" %>
+          <% end %>
+        </div>
+      <% else %>
+        <nav class="site-header__scope-switch" aria-label="Marketplace scope">
+          <%= link_to marketplace_scope_switch_path(next_scope),
+              class: class_names("site-header__scope-toggle", { "is-college" => current_scope == "college" }),
+              aria: { label: "Switch marketplace scope to #{next_scope_label}" },
+              title: "Switch to #{next_scope_label}" do %>
+            <span class="site-header__scope-toggle-text"><%= current_scope_label %></span>
+            <span class="site-header__scope-toggle-track" aria-hidden="true">
+              <span class="site-header__scope-toggle-thumb"></span>
+            </span>
+          <% end %>
+        </nav>
+      <% end %>
+
+
 
     <% currency_codes = %w[HKD USD EUR] %>
     <%= form_with url: currency_path, method: :patch, local: true, class: "site-header__currency-form" do %>
@@ -31,7 +62,12 @@
     <%= form_with url: search_path, method: :get, local: true, class: "site-header__search-form", role: "search" do %>
       <%= label_tag :q_header, "Search items", class: "site-header__search-label" %>
       <%= text_field_tag :q, params[:q].to_s, id: "q_header", placeholder: "Search items...", autocomplete: "off", class: "site-header__search-input" %>
-      <%= hidden_field_tag :scope, current_scope, id: "header_scope" %>
+      <% unless current_user.admin? %>
+        <%= hidden_field_tag :scope, current_scope, id: "header_scope" %>
+      <% end %>
+      <% if current_user.admin? && params[:college_scope_id].present? %>
+        <%= hidden_field_tag :college_scope_id, params[:college_scope_id], id: "header_college_scope_id" %>
+      <% end %>
       <% if params[:category_id].present? %>
         <%= hidden_field_tag :category_id, params[:category_id], id: "header_category_id" %>
       <% end %>
@@ -87,19 +123,37 @@
       <%= image_tag "nav_mail.svg", alt: "", class: "site-header__icon-image" %>
     <% end %>
 
-    <div class="site-header__user-shell">
-      <%= link_to profile_path, class: "site-header__icon-link", aria: { label: "Profile" } do %>
-        <%= image_tag "nav_user.svg", alt: "", class: "site-header__icon-image" %>
-      <% end %>
+    <div class="site-header__account-actions">
+      <details class="site-header__menu">
+        <summary class="site-header__icon-link site-header__summary" aria-label="Open account menu">
+          <%= image_tag "nav_menu.png", alt: "", class: "site-header__icon-image" %>
+        </summary>
 
-      <div class="site-header__dropdown">
-        <%= link_to "My Profile", edit_profile_path, class: "site-header__dropdown-link" %>
-        <%= link_to "My Items", profile_path, class: "site-header__dropdown-link site-header__dropdown-link--border" %>
-        <hr class="site-header__dropdown-rule">
-        <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
-            form: { class: "site-header__signout-form" },
-            class: "site-header__signout" %>
-      </div>
+        <div class="site-header__dropdown">
+         
+          <%= link_to "My Items", profile_path, class: "site-header__dropdown-link" %>
+
+          <%= link_to "Market Overview", analytics_path, class: class_names("site-header__dropdown-link", { "site-header__dropdown-link--border" => current_user.admin? }) %>
+          <% if current_user.admin? %>
+            <hr class="site-header__dropdown-rule">
+            <%= link_to "Admin Panel", admin_root_path, class: "site-header__dropdown-link" %>
+          <% end %>
+        </div>
+      </details>
+
+      <details class="site-header__menu">
+        <summary class="site-header__icon-link site-header__summary" aria-label="Open profile menu">
+          <%= image_tag "nav_user.svg", alt: "", class: "site-header__icon-image" %>
+        </summary>
+
+        <div class="site-header__dropdown">
+          <%= link_to "My Profile", edit_profile_path, class: "site-header__dropdown-link" %>
+          <hr class="site-header__dropdown-rule">
+          <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+              form: { class: "site-header__signout-form" },
+              class: "site-header__signout" %>
+        </div>
+      </details>
     </div>
   </div>
 <% end %>

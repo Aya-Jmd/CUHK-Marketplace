@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
   end
 
   def ensure_participant!
-    return if @conversation.participant?(current_user)
+    return if @conversation.visible_to?(current_user)
 
     redirect_to root_path, alert: "You are not authorized to view this chat."
   end

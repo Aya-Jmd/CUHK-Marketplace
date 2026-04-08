@@ -3,6 +3,7 @@ class Item < ApplicationRecord
   belongs_to :college
   belongs_to :category, optional: true
   has_many :offers, dependent: :destroy
+  has_many :item_reports, dependent: :destroy
 
   has_many_attached :images
 
@@ -11,7 +12,7 @@ class Item < ApplicationRecord
   validates :price, numericality: { greater_than: 0 }
 
   # Add this scope so Ben's controller knows how to find available items!
-  scope :available, -> { where(status: "available") }
+  scope :available, -> { joins(:user).merge(User.active).where(status: "available") }
 
   # fuzzy search
   include PgSearch::Model
@@ -67,5 +68,17 @@ class Item < ApplicationRecord
       distance = LocationService.calculate_distance(lat, lng, item.latitude, item.longitude)
       distance <= radius_km
     end
+  end
+
+  def removed?
+    status == "removed"
+  end
+
+  def visible_to?(viewer)
+    return true if viewer == user
+    return true if viewer&.admin?
+    return true if viewer&.college_admin? && viewer.college_id == college_id
+
+    !removed? && !user&.banned?
   end
 end

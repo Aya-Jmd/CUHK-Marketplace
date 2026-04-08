@@ -6,14 +6,41 @@ class User < ApplicationRecord
   # Roles engine
   enum :role, { student: 0, admin: 1, college_admin: 2 }
 
-  belongs_to :college
+  belongs_to :college, optional: true
+  belongs_to :banned_by, class_name: "User", optional: true
   has_many :items
+  has_many :item_reports, foreign_key: :reporter_id, inverse_of: :reporter
   has_many :messages
   has_many :conversations_as_buyer, class_name: "Conversation", foreign_key: "buyer_id"
   has_many :conversations_as_seller, class_name: "Conversation", foreign_key: "seller_id"
   has_many :offers_made, class_name: "Offer", foreign_key: "buyer_id"
   has_many :offers_received, class_name: "Offer", foreign_key: "seller_id"
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
+
+  validates :college, presence: true, unless: :admin?
+
+  scope :active, -> { where(banned_at: nil) }
+  scope :banned, -> { where.not(banned_at: nil) }
+
+  def banned?
+    banned_at.present?
+  end
+
+  def ban!(actor:)
+    update!(banned_at: Time.current, banned_by: actor)
+  end
+
+  def unban!
+    update!(banned_at: nil, banned_by: nil)
+  end
+
+  def active_for_authentication?
+    super && !banned?
+  end
+
+  def inactive_message
+    banned? ? :locked : super
+  end
 
   def display_name
     email.to_s.split("@").first

@@ -4,7 +4,9 @@
       <%= hidden_field_tag :category_id, params[:category_id] %>
     <% end %>
 
-    <%= hidden_field_tag :scope, marketplace_scope %>
+    <% marketplace_base_params.each do |name, value| %>
+      <%= hidden_field_tag name, value %>
+    <% end %>
     <%= text_field_tag :q, params[:q], placeholder: "Search items...", class: "form-control" %>
     <%= submit_tag "Search", class: "btn btn-primary" %>
   <% end %>

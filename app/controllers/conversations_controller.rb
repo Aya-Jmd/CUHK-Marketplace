@@ -20,6 +20,11 @@ class ConversationsController < ApplicationController
       return
     end
 
+    if @item.removed? || @item.user.banned?
+      redirect_to items_path, alert: "This conversation is no longer available."
+      return
+    end
+
     content = params.dig(:message, :content).to_s.strip
     if content.blank?
       redirect_to @item, alert: "Message cannot be empty."
@@ -64,7 +69,7 @@ class ConversationsController < ApplicationController
   end
 
   def ensure_participant!
-    return if @conversation.participant?(current_user)
+    return if @conversation.visible_to?(current_user)
 
     redirect_to root_path, alert: "You are not authorized to view this chat."
   end

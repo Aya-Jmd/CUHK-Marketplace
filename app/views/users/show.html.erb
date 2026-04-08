@@ -5,7 +5,11 @@
       <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
         <%= current_user == @user ? "My Dashboard" : "#{@user.email}'s Profile" %>
       </h1>
-      <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong></p>
+      <% if !(@user.admin? || @user.college_admin?) %>
+        <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong></p>
+      <% else %>
+        <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;"> <strong><%= @user.college&.name || "System" %> Administrator </strong></p>
+      <%end %>
     </div>
     <%= link_to "⬅️ Back to Home", root_path, style: "background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1;" %>
   </div>
@@ -80,26 +84,54 @@
         <h2 style="margin-top: 0; color: #2d3436;"><span>🛍️ Buyer Hub</span></h2>
         <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 20px;">
 
-        <% active_bids = @user.offers_made.where(status: ['pending', 'accepted']).order(created_at: :desc) %>
-        <% if active_bids.any? %>
-          <% active_bids.each do |offer| %>
-            <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid <%= offer.accepted? ? '#27ae60' : '#fab005' %>;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
-                <span style="font-weight: bold; color: <%= offer.accepted? ? '#27ae60' : '#f39c12' %>"><%= offer.status.upcase %></span>
-              </div>
-              <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
+        <% pending_bids = @user.offers_made.where(status: "pending").order(created_at: :desc) %>
+        <% accepted_bids = @user.offers_made.where(status: "accepted").order(created_at: :desc) %>
 
-              <% if offer.accepted? %>
+        <% if pending_bids.any? %>
+          <div style="margin-bottom: 24px;">
+            <h3 style="margin: 0 0 12px 0; font-size: 1.1em; color: #2d3436;">Pending Offers</h3>
+
+            <% pending_bids.each do |offer| %>
+              <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid #fab005;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
+                  <span style="font-weight: bold; color: #f39c12;"><%= offer.status.upcase %></span>
+                </div>
+                <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
+
+                <div style="margin-top: 10px;">
+                  <%= button_to "Cancel offer", offer_path(offer), method: :delete,
+                      data: { turbo_confirm: "Cancel this bid?" },
+                      style: "background: none; border: none; color: #e74c3c; text-decoration: underline; font-size: 0.9em; cursor: pointer; padding: 0;" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if accepted_bids.any? %>
+          <div>
+            <h3 style="margin: 0 0 12px 0; font-size: 1.1em; color: #2d3436;">Accepted Offers</h3>
+
+            <% accepted_bids.each do |offer| %>
+              <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid #27ae60;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
+                  <span style="font-weight: bold; color: #27ae60;"><%= offer.status.upcase %></span>
+                </div>
+                <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
+
                 <div style="margin-top: 12px; padding: 15px; background: #e8f8f5; border-radius: 8px; text-align: center;">
                   <span style="display: block; font-size: 0.8em; color: #16a085; font-weight: bold;">MEETUP PIN</span>
                   <span style="font-size: 2em; font-weight: 900; letter-spacing: 5px; color: #2c3e50;"><%= offer.meetup_code %></span>
                   <p style="font-size: 0.8em; color: #16a085; margin: 5px 0 0 0;">Show this to the seller to receive your item.</p>
                 </div>
-              <% end %>
-            </div>
-          <% end %>
-        <% else %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if pending_bids.none? && accepted_bids.none? %>
           <p style="color: #a4b0be; font-style: italic;">You have no active bids.</p>
         <% end %>
       </div>
@@ -108,7 +140,7 @@
     <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
       <h2 style="margin-top: 0;">Items posted by <%= @user.email.split('@').first %></h2>
       <ul style="list-style: none; padding: 0;">
-        <% public_items = @user.items.where(status: 'available').order(created_at: :desc) %>
+        <% public_items = @user.banned? ? Item.none : @user.items.where(status: 'available').order(created_at: :desc) %>
         <% if public_items.any? %>
           <% public_items.each do |item| %>
             <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 10px;">
@@ -116,6 +148,8 @@
               <span style="float: right; font-weight: bold;"><%= display_price(item.price) %></span>
             </li>
           <% end %>
+        <% elsif @user.banned? %>
+          <p style="color: #a4b0be;">This seller is currently banned.</p>
         <% else %>
           <p style="color: #a4b0be;">No available items right now.</p>
         <% end %>

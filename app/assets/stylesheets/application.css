@@ -910,7 +910,7 @@ body[data-theme="chung-chi"] {
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(236, 225, 249, 0.14));
   border: 1px solid rgba(255, 255, 255, 0.3);
-  /box-shadow: 0 18px 40px rgba(31, 10, 45, 0.22);
+  box-shadow: 0 18px 40px rgba(31, 10, 45, 0.22);
   backdrop-filter: blur(18px) saturate(1.18);
   -webkit-backdrop-filter: blur(18px) saturate(1.18);
   overflow: hidden;
@@ -955,13 +955,24 @@ body[data-theme="chung-chi"] {
 
 .site-header__menu {
   position: relative;
+  align-items: center;
 }
 
 .site-header__summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  line-height: 1;
+  margin: 0;
   list-style: none;
   cursor: pointer;
   color: #0984e3;
   font-weight: 500;
+}
+
+.site-header__summary::marker {
+  content: "";
 }
 
 .site-header__summary::-webkit-details-marker {
@@ -1164,6 +1175,61 @@ body[data-theme="chung-chi"] {
   gap: 0.4rem;
 }
 
+.site-header__scope-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 999px;
+  background: #fff;
+  color: #111827;
+  text-decoration: none;
+}
+
+.site-header__scope-toggle:hover {
+  background: #f9fafb;
+}
+
+.site-header__scope-toggle-text {
+  max-width: 10rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.site-header__scope-toggle-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 2rem;
+  height: 1.125rem;
+  padding: 0 0.125rem;
+  border-radius: 999px;
+  background: #d1d5db;
+  transition: background 0.18s ease;
+}
+
+.site-header__scope-toggle-thumb {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+  transition: transform 0.18s ease;
+}
+
+.site-header__scope-toggle.is-college .site-header__scope-toggle-track {
+  background: #111827;
+}
+
+.site-header__scope-toggle.is-college .site-header__scope-toggle-thumb {
+  transform: translateX(0.875rem);
+}
+
 .site-header.site-header--minimal .site-header__scope-option {
   min-height: auto;
   max-width: none;
@@ -1218,7 +1284,7 @@ body[data-theme="chung-chi"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.25rem;
+  min-height: 20px;
   padding: 0.5rem 0.75rem;
   border: 1px solid #d0d7de;
   border-radius: 4px;
@@ -1236,6 +1302,12 @@ body[data-theme="chung-chi"] {
   width: 20px;
   height: 20px;
   display: block;
+}
+
+.site-header__account-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .site-header__user-shell {
@@ -1327,8 +1399,39 @@ body[data-theme="chung-chi"] {
   top: calc(100% + 4px);
 }
 
-.site-header.site-header--minimal .site-header__user-shell:hover .site-header__dropdown,
-.site-header.site-header--minimal .site-header__user-shell:focus-within .site-header__dropdown {
+.site-header__menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-modal {
+  width: min(32rem, calc(100vw - 2rem));
+  max-width: none;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.site-modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.site-modal__card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+}
+
+.site-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.site-header.site-header--minimal .site-header__menu[open] .site-header__dropdown {
   display: block;
 }
 
@@ -1353,6 +1456,11 @@ body[data-theme="chung-chi"] {
   .site-header__scope-option {
     max-width: none;
     flex: 1 1 0;
+  }
+
+  .site-header__scope-toggle {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .site-header.site-header--minimal {

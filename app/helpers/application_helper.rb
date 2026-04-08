@@ -13,11 +13,18 @@ module ApplicationHelper
 
   def notification_message(notification)
     offer = notification.notifiable if notification.notifiable.is_a?(Offer)
-    item_name = offer&.item&.title || "your item"
+    item = notification.notifiable if notification.notifiable.is_a?(Item)
+    report = notification.notifiable if notification.notifiable.is_a?(ItemReport)
+    offer_amount_hkd = notification[:amount_hkd] || offer&.price
+    item_name = offer&.item&.title || report&.item&.title || item&.title || "your item"
 
     case notification.action
     when "offer_created", "made an offer on"
       "#{notification.actor.display_name} has made an offer of #{display_price(offer&.price)} for your item #{item_name}!"
+    when "offer_updated"
+      "#{notification.actor.display_name} updated their offer to #{display_price(offer&.price)} for your item #{item_name}."
+    when "offer_withdrawn"
+      "#{notification.actor.display_name} has cancelled their offer of #{display_price(offer_amount_hkd)} for item #{item_name}."
     when "offer_declined", "declined your offer for"
       "#{notification.actor.display_name} rejected your offer for the item #{item_name}."
     when "offer_accepted", "accepted your offer for"
@@ -26,6 +33,10 @@ module ApplicationHelper
       "#{notification.actor.display_name} cancelled the transaction for the item #{item_name}."
     when "offer_completed", "confirmed the sale of"
       "#{notification.actor.display_name} confirmed the sale of the item #{item_name}."
+    when "item_report_created"
+      "#{notification.actor.display_name} reported the item #{item_name} for review."
+    when "item_report_resolved"
+      "#{notification.actor.display_name} resolved the report for #{item_name}."
     else
       "#{notification.actor.display_name} #{notification.action}."
     end
@@ -42,9 +53,21 @@ module ApplicationHelper
     name.sub(/\s+College\z/i, "").presence || name
   end
 
+  
+  def marketplace_base_params(scope = params[:scope])
+    if current_user&.admin?
+      return params[:college_scope_id].present? ? { college_scope_id: params[:college_scope_id] } : {}
+    end
+
+    { scope: marketplace_scope(scope) }
+  end
+
   def marketplace_scope_label(scope = params[:scope])
+    return selected_marketplace_college&.name || "CUHK Global" if current_user&.admin?
+
     marketplace_scope(scope) == "college" ? marketplace_college_label : "CUHK"
   end
+
 
   def marketplace_scope_switch_path(target_scope)
     preserved_params =
@@ -57,7 +80,7 @@ module ApplicationHelper
         {}
       end
 
-    route_params = preserved_params.merge(scope: marketplace_scope(target_scope))
+    route_params = preserved_params.merge(marketplace_base_params(target_scope))
 
     if controller.controller_name == "search" && controller.action_name == "index"
       search_path(route_params)

@@ -26,6 +26,8 @@ class Users::SessionsController < Devise::SessionsController
 
     existing_user = resource_class.find_for_database_authentication(authentication_key => submitted_login)
 
+    return "Your account has been banned." if existing_user&.banned?
+
     existing_user.present? ? "Wrong password" : default_invalid_sign_in_message
   end
 

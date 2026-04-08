@@ -1,5 +1,5 @@
 <% content_for :title, "CUHK Marketplace" %>
-<% browse_state = { scope: @scope } %>
+<% browse_state = marketplace_base_params(@scope) %>
 <% if @price_filter_active %>
   <% browse_state[:price_currency] = current_currency_code %>
   <% browse_state[:min_price] = @min_price %>
@@ -23,17 +23,6 @@
     <%= render "items/category_strip", categories: @categories, base_state: browse_state %>
 
 
-    <!-- div class="items-filters-card" -->
-      <!-- div class="items-search-wrap" -->
-        <!-- %= render "search/search_bar" % -->
-      <!-- /div -->
-      <!-- %= form_with url: items_path, method: :get, local: true, id: "items-filter-form" do % -->
-        <!-- div class="items-price-panel" -->
-          <!-- h4 class="items-price-panel__title">Filter by price</h4 -->
-          <!-- %= render "price_slider" % -->
-        <!-- /div -->
-      <!-- % end % -->
-    <!-- /div --> 
 
 
     <%= render "items/market_grid", items: @items, dom_id: "items" %>

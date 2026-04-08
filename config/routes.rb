@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   # This ensures an offer is always tied to an item.
   resources :items do
     resources :offers, only: [ :new, :create ]
+    resources :item_reports, only: [ :create ]
   end
 
   # -----------------------------------------------------------------------
@@ -40,7 +41,7 @@ Rails.application.routes.draw do
   # -----------------------------------------------------------------------
   # Once an offer exists, we use "Shallow Routing" to manage its state.
   # We don't need the item_id in the URL to accept/decline an offer.
-  resources :offers, only: [ :index, :show ] do
+  resources :offers, only: [ :index, :show, :update, :destroy ] do
     member do
       patch :accept
       patch :decline
@@ -66,7 +67,6 @@ Rails.application.routes.draw do
     # for all items in notifications table
     collection do
       patch :mark_all_as_read
-      get :all # view all notifications in a separate page (all VS unread notifications)
     end
   end
 
@@ -79,6 +79,20 @@ Rails.application.routes.draw do
 
     get "category_prices", to: "dashboard#category_prices", as: :category_prices
     post "invite", to: "dashboard#invite", as: :invite
+
+    resources :users, only: [] do
+      member do
+        patch :ban
+        patch :unban
+      end
+    end
+
+    resources :item_reports, only: [] do
+      member do
+        patch :ignore
+        patch :delete_item
+      end
+    end
 
     resource :setup, only: [ :edit, :update ]
   end

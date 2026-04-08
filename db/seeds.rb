@@ -67,3 +67,30 @@ Currency.find_or_create_by!(code: "EUR") do |c|
 end
 
 puts "Done! #{Currency.count} currencies are now in the database."
+
+
+
+# ------- DEVELOPMENT ADMIN SEED
+
+if Rails.env.development? || Rails.env.test?
+  puts "Creating development super admin..."
+
+  admin_email = "admin@example.com"
+  admin_password = "Admin12345"
+
+  admin = User.find_or_initialize_by(email: admin_email)
+  admin.assign_attributes(
+    college: nil,
+    role: :admin,
+    password: admin_password,
+    password_confirmation: admin_password,
+    setup_completed: false
+  )
+  admin.save!
+
+  puts "Done! Super admin is ready:"
+  puts "  Email: #{admin_email}"
+  puts "  Password: #{admin_password}"
+end
+
+

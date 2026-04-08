@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   # redirecting unsigned-in users to sign in page (except for devise's controlers)
   before_action :authenticate_user!, unless: :devise_controller? # Devise's controllers are accessible without authentication
-  helper_method :current_currency_code, :current_currency
+  before_action :reject_banned_user!, unless: :devise_controller?
+  helper_method :current_currency_code, :current_currency, :selected_marketplace_college
 
   rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
 
@@ -59,6 +60,13 @@ class ApplicationController < ActionController::Base
       render "errors/not_found"
     end
 
+  def reject_banned_user!
+    return unless current_user&.banned?
+
+    sign_out current_user
+    redirect_to new_user_session_path, alert: "Your account has been banned."
+  end
+
   def current_currency_code
     session[:currency_code] || Currency::BASE_CODE
   end
@@ -90,10 +98,24 @@ class ApplicationController < ActionController::Base
     relation.where.not(user_id: current_user.id)
   end
 
+
+  # add this private method
+  def selected_marketplace_college
+    return unless current_user&.admin?
+    return if params[:college_scope_id].blank?
+
+    @selected_marketplace_college ||= College.find_by(id: params[:college_scope_id])
+  end
+
+
   def apply_marketplace_scope(scope, relation)
+    if current_user&.admin?
+      return relation.where(college_id: selected_marketplace_college.id) if selected_marketplace_college.present?
+      return relation
+    end
+
     if normalized_marketplace_scope(scope) == "college"
       return relation.none unless current_user&.college_id.present?
-
       return relation.where(college_id: current_user.college_id)
     end
 
@@ -103,4 +125,6 @@ class ApplicationController < ActionController::Base
       global: true,
       college_id: current_user.college_id)
   end
+
+
 end

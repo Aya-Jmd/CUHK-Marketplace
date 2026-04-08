@@ -46,6 +46,8 @@ export default class extends Controller {
       case "offer_created":
       case "made an offer on":
         return `${actorName} has made an offer of ${this.formatPrice(data.offer_price_hkd)} for your item ${itemName}!`
+      case "offer_updated":
+        return `${actorName} updated an offer for your item ${itemName} to ${this.formatPrice(data.offer_price_hkd)}.`
       case "offer_declined":
       case "declined your offer for":
         return `${actorName} rejected your offer for the item ${itemName}.`
@@ -55,9 +57,14 @@ export default class extends Controller {
       case "offer_cancelled":
       case "cancelled the transaction for":
         return `${actorName} cancelled the transaction for the item ${itemName}.`
+      case "offer_withdrawn":
+        return data.message || `${actorName} has cancelled their offer of ${this.formatPrice(data.offer_price_hkd)} for item ${itemName}.`
       case "offer_completed":
       case "confirmed the sale of":
         return `${actorName} confirmed the sale of the item ${itemName}.`
+      case "item_report_created":
+      case "item_report_resolved":
+        return data.message || `${actorName} updated a report for ${itemName}.`
       default:
         return data.message || `${actorName} ${data.action || "sent a notification"}.`
     }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_08_113000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -56,7 +56,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
     t.datetime "created_at", null: false
     t.integer "listing_expiry_days"
     t.string "name"
+    t.string "slug", null: false
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_colleges_on_slug", unique: true
   end
 
   create_table "conversations", force: :cascade do |t|
@@ -75,6 +77,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
     t.decimal "rate_from_hkd"
     t.string "symbol"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "item_reports", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "item_id", null: false
+    t.text "message", null: false
+    t.bigint "reporter_id", null: false
+    t.datetime "resolved_at"
+    t.bigint "resolved_by_id"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_item_reports_on_item_id"
+    t.index ["reporter_id"], name: "index_item_reports_on_reporter_id"
+    t.index ["resolved_by_id"], name: "index_item_reports_on_resolved_by_id"
+    t.index ["status"], name: "index_item_reports_on_status"
   end
 
   create_table "items", force: :cascade do |t|
@@ -110,6 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
   create_table "notifications", force: :cascade do |t|
     t.string "action"
     t.bigint "actor_id", null: false
+    t.decimal "amount_hkd"
     t.datetime "created_at", null: false
     t.bigint "notifiable_id", null: false
     t.string "notifiable_type", null: false
@@ -131,11 +149,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
     t.string "status", default: "pending"
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_offers_on_buyer_id"
+    t.index ["item_id", "buyer_id"], name: "index_offers_on_item_id_and_buyer_id", unique: true
     t.index ["item_id"], name: "index_offers_on_item_id"
     t.index ["seller_id"], name: "index_offers_on_seller_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.datetime "banned_at"
+    t.bigint "banned_by_id"
     t.integer "college_id"
     t.datetime "created_at", null: false
     t.string "default_location"
@@ -149,6 +170,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
     t.integer "role", default: 0, null: false
     t.boolean "setup_completed", default: false
     t.datetime "updated_at", null: false
+    t.index ["banned_by_id"], name: "index_users_on_banned_by_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -156,6 +178,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "items"
+  add_foreign_key "item_reports", "items"
+  add_foreign_key "item_reports", "users", column: "reporter_id"
+  add_foreign_key "item_reports", "users", column: "resolved_by_id"
   add_foreign_key "items", "categories"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
@@ -164,4 +189,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_060527) do
   add_foreign_key "offers", "items"
   add_foreign_key "offers", "users", column: "buyer_id"
   add_foreign_key "offers", "users", column: "seller_id"
+  add_foreign_key "users", "users", column: "banned_by_id"
 end

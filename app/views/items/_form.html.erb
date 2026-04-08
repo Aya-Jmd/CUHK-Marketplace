@@ -18,7 +18,7 @@
 
   <div>
     <%= form.label :price, "Price (#{current_currency_code})", style: "display: block" %>
-    <%= form.text_field :price, value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil %>
+    <%= form.text_field :price, step: "any", value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil %>
   </div>
 
   <div>
@@ -30,6 +30,13 @@
     <%= form.label :category_id, "Select a Category", style: "display: block" %>
     <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, prompt: "Choose a category..." %>
   </div>
+
+  <% if current_user.admin? %>
+    <div>
+      <%= form.label :college_id, "Select a College", style: "display: block" %>
+      <%= form.collection_select :college_id, College.order(:name), :id, :name, prompt: "Choose a college..." %>
+    </div>
+  <% end %>
 
   <div>
     <%= form.label :is_global, "Make this item visible to all CUHK colleges? (Global)", style: "display: block" %>

@@ -4,7 +4,7 @@
     price_floor: @price_floor,
     price_ceiling: @price_ceiling,
     price_currency: current_currency_code,
-    hidden_fields: { price_currency: current_currency_code, scope: @scope },
-    reset_path: items_path(scope: @scope),
+    hidden_fields: marketplace_base_params(@scope).merge(price_currency: current_currency_code),
+    reset_path: items_path(marketplace_base_params(@scope)),
     auto_submit: false,
     show_apply: true %>

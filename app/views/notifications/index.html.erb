@@ -2,31 +2,38 @@
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h1 style="margin: 0;">NOTIFICATIONS</h1>
 
-    <% if @notifications.any? { |notification| notification.read_at.nil? } %>
-      <%= button_to "Mark all as read", mark_all_as_read_notifications_path, method: :patch,
+    <% if @has_unread_notifications %>
+      <%= button_to "Mark all as read",
+          mark_all_as_read_notifications_path(notification_filter_params(category: @selected_category, show_unread_only: @show_unread_only)),
+          method: :patch,
           style: "padding: 8px 12px; border: 1px solid #ccc; background: white; cursor: pointer;" %>
     <% end %>
   </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;" >
-        <%= button_to "All", all_notifications_path, method: :get%>
-        <%= button_to "Unread", notifications_path, method: :get %>
-    </div>
+  <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid #eaecf0;">
+    <%= form_with url: notifications_path, method: :get, local: true, style: "display: inline-flex; align-items: center; gap: 10px; margin: 0;" do %>
+      <%= hidden_field_tag :category, @selected_category %>
+      <%= hidden_field_tag :show_unread, "0" %>
+      <%= check_box_tag :show_unread, "1", @show_unread_only, id: "notifications_show_unread", onchange: "this.form.requestSubmit()" %>
+      <%= label_tag :notifications_show_unread, "Show only unread", style: "font-weight: 600; color: #344054;" %>
+    <% end %>
+
+    <% notification_categories.each do |category, label| %>
+      <%= link_to notifications_path(notification_filter_params(category: category, show_unread_only: @show_unread_only)),
+          style: notification_category_link_style(@selected_category, category) do %>
+        <span><%= label %></span>
+        <span style="<%= notification_count_badge_style %>"><%= @category_counts[category] || 0 %></span>
+      <% end %>
+    <% end %>
+  </div>
 
   <% if @notifications.any? %>
     <div>
       <% @notifications.each do |notification| %>
-        <% unread = notification.read_at.nil? %>
-          <%= link_to mark_as_read_notification_path(notification),
-              data: { turbo_method: :patch },
-              style: "display: block; text-decoration: none; color: inherit; border: 1px solid #ddd; 
-              padding: 14px 16px; margin-bottom: 10px; background: #{unread ? '#f8fbff' : 'white'};" do %>
-          <div style="font-weight: 600; margin-bottom: 6px;"><%= notification_message(notification) %></div>
-          <div style="font-size: 0.9em; color: #666;"><%= notification.created_at.strftime("%B %d, %Y at %I:%M %p") %></div>
-        <% end %>
+        <%= render "notification", notification: notification %>
       <% end %>
     </div>
   <% else %>
-    <p>No new notifications yet.</p>
+    <p>No notifications match the selected category.</p>
   <% end %>
 </div>
