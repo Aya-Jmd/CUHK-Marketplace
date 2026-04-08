@@ -1,0 +1,26 @@
+<% is_accepted = @offer.status == 'accepted' %>
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e1e8ed; border-radius: 12px; overflow: hidden;">
+  <div style="background: <%= is_accepted ? 'linear-gradient(135deg, #00b894, #55efc4)' : 'linear-gradient(135deg, #d63031, #ff7675)' %>; padding: 30px; text-align: center; color: white;">
+    <h1 style="margin: 0;"><%= is_accepted ? "Offer Accepted! 🥳" : "Offer Declined 😔" %></h1>
+  </div>
+  
+  <div style="padding: 30px;">
+    <p>Hi <strong><%= @buyer.display_name %></strong>,</p>
+    <p>The seller (<strong><%= @seller.display_name %></strong>) has reviewed your offer of <strong>HK$<%= @offer.price.to_i %></strong> for <strong><%= @item.title %></strong>.</p>
+
+    <% if is_accepted %>
+      <div style="background-color: #e8f8f5; border: 2px dashed #00b894; padding: 25px; margin: 30px 0; text-align: center; border-radius: 8px;">
+        <p style="margin: 0 0 10px 0; font-size: 16px;">Your Secret Meetup PIN</p>
+        <h2 style="margin: 0; font-size: 42px; letter-spacing: 5px; color: #00b894;"><%= @offer.meetup_code %></h2>
+        <p style="margin: 15px 0 0 0; font-size: 14px; color: #636e72;">⚠️ Give this PIN to the seller when you meet up.</p>
+      </div>
+      <div style="text-align: center;">
+        <%= link_to "View Dashboard", profile_url, style: "background-color: #00b894; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block;" %>
+      </div>
+    <% else %>
+      <div style="text-align: center; margin-top: 30px;">
+        <%= link_to "Back to Marketplace", root_url, style: "background-color: #636e72; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

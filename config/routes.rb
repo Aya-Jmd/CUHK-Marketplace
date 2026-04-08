@@ -91,4 +91,9 @@ Rails.application.routes.draw do
     get "locations/closest", to: "locations#closest"
     get "locations/:key", to: "locations#show"
   end
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+  
 end
