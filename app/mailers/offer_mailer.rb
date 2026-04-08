@@ -1,5 +1,5 @@
 class OfferMailer < ApplicationMailer
-  default from: "no-reply@cuhk-marketplace.com"
+  default from: 'no-reply@cuhk-marketplace.com'
 
   # Scenario 1: buyers bid, sellers get notified
   def notify_seller(offer)
@@ -18,7 +18,7 @@ class OfferMailer < ApplicationMailer
     @seller = offer.seller
     @item = offer.item
 
-    status_text = @offer.status == "accepted" ? "Accepted 🎉" : "Declined ❌"
+    status_text = @offer.status == 'accepted' ? 'Accepted 🎉' : 'Declined ❌'
     mail(to: @buyer.email, subject: "Your offer for #{@item.title} was #{status_text}")
   end
 end
