@@ -13,8 +13,8 @@ RSpec.describe OfferMailer, type: :mailer do
 
     it "renders the headers" do
       expect(mail.subject).to eq("New Offer for your Calculus Textbook!")
-      expect(mail.to).to eq(["seller@cuhk.edu"])
-      expect(mail.from).to eq(["no-reply@cuhk-marketplace.com"])
+      expect(mail.to).to eq([ "seller@cuhk.edu" ])
+      expect(mail.from).to eq([ "no-reply@cuhk-marketplace.com" ])
     end
 
     it "renders the body" do
@@ -28,8 +28,8 @@ RSpec.describe OfferMailer, type: :mailer do
 
     it "renders the headers" do
       expect(mail.subject).to eq("Your offer for Calculus Textbook was Accepted 🎉")
-      expect(mail.to).to eq(["buyer@cuhk.edu"])
-      expect(mail.from).to eq(["no-reply@cuhk-marketplace.com"])
+      expect(mail.to).to eq([ "buyer@cuhk.edu" ])
+      expect(mail.from).to eq([ "no-reply@cuhk-marketplace.com" ])
     end
 
     it "renders the body" do
