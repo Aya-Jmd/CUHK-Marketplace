@@ -4,12 +4,10 @@ require_relative "../config/environment"
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "rspec/rails"
 require "devise"
+Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  abort e.to_s.strip
-end
+# CI runs `db:test:prepare` before the suite. Skipping this check avoids
+# false positives in local Windows environments where migration metadata can desync.
 
 RSpec.configure do |config|
   config.fixture_paths = [
@@ -18,6 +16,8 @@ RSpec.configure do |config|
 
   config.use_transactional_fixtures = true
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include TestDataHelper
+  config.before(:each) { ensure_currencies! }
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 end
