@@ -56,9 +56,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_113000) do
     t.datetime "created_at", null: false
     t.integer "listing_expiry_days"
     t.string "name"
-    t.string "slug", null: false
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_colleges_on_slug", unique: true
   end
 
   create_table "conversations", force: :cascade do |t|
