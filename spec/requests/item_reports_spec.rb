@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Item reports", type: :request do
-  let!(:college) { College.create!(name: "Shaw College", listing_expiry_days: 30) }
-  let!(:category) { Category.create!(name: "Textbook") }
+  let!(:college) { College.find_or_create_by!(name: "Shaw College") { |c| c.listing_expiry_days = 30 } }
+  let!(:category) { Category.find_or_create_by!(name: "Textbook") }
   let!(:seller) do
     User.create!(
       email: "seller@example.com",
@@ -21,7 +21,7 @@ RSpec.describe "Item reports", type: :request do
   end
   let!(:admin) do
     User.create!(
-      email: "admin@example.com",
+      email: "item-reports-admin@example.com",
       password: "password123",
       password_confirmation: "password123",
       role: :admin,
