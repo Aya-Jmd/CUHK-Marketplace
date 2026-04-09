@@ -92,5 +92,3 @@ if Rails.env.development? || Rails.env.test?
   puts "  Email: #{admin_email}"
   puts "  Password: #{admin_password}"
 end
-
-

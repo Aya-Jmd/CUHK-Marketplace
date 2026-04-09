@@ -62,7 +62,7 @@ RSpec.describe "Item reports", type: :request do
     report = ItemReport.order(:created_at).last
 
     expect(report.reporter).to eq(reporter)
-    expect(Notification.where(action: "item_report_created", notifiable: report).pluck(:recipient_id)).to match_array([admin.id, college_admin.id])
+    expect(Notification.where(action: "item_report_created", notifiable: report).pluck(:recipient_id)).to match_array([ admin.id, college_admin.id ])
   end
 
   it "marks report notifications resolved and removes the item when an admin deletes it" do
@@ -76,6 +76,6 @@ RSpec.describe "Item reports", type: :request do
     expect(item.reload.status).to eq("removed")
     expect(report.reload).to be_item_deleted
     expect(Notification.where(action: "item_report_created", notifiable: report).pluck(:read_at)).to all(be_present)
-    expect(Notification.where(action: "item_report_resolved", notifiable: report).pluck(:recipient_id)).to match_array([admin.id, college_admin.id])
+    expect(Notification.where(action: "item_report_resolved", notifiable: report).pluck(:recipient_id)).to match_array([ admin.id, college_admin.id ])
   end
 end

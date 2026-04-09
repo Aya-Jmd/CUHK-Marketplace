@@ -65,7 +65,6 @@ module ApplicationHelper
     name.sub(/\s+College\z/i, "").presence || name
   end
 
-  
   def marketplace_base_params(scope = params[:scope])
     if current_user&.admin?
       return params[:college_scope_id].present? ? { college_scope_id: params[:college_scope_id] } : {}

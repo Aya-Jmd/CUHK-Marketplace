@@ -12,12 +12,14 @@ RSpec.describe Offer, type: :model do
     expect(Notification.where(recipient: seller, actor: buyer, notifiable: offer, action: "offer_created")).to exist
   end
 
-  it "does not notify when buyer and seller are same user" do
+  it "rejects self-offers" do
     seller = create_user(email: "self_offer@cuhk.edu.hk")
     item = create_item(user: seller, title: "Calculator")
 
-    Offer.create!(item:, buyer: seller, seller:, price: 80, status: "pending")
+    offer = Offer.new(item:, buyer: seller, seller:, price: 80, status: "pending")
 
+    expect(offer).not_to be_valid
+    expect(offer.errors[:buyer]).to include("cannot make an offer on their own item")
     expect(Notification.where(recipient: seller, action: "offer_created")).to be_empty
   end
 

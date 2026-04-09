@@ -125,6 +125,4 @@ class ApplicationController < ActionController::Base
       global: true,
       college_id: current_user.college_id)
   end
-
-
 end

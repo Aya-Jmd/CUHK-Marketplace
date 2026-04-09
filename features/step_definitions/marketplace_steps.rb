@@ -81,7 +81,7 @@ end
 
 When("I submit offer price {string}") do |amount|
   fill_in "offer_price", with: amount
-  click_button "Send Offer"
+  click_button "Send offer"
 end
 
 When("I send initial chat message {string}") do |message|
@@ -100,9 +100,9 @@ end
 When("I invite admin user {string} with role {string} and college {string}") do |email, role, college_name|
   college = College.find_by!(name: college_name)
   role_label = role == "college_admin" ? "College Admin" : "Super Admin"
-  fill_in "Email Address", with: email
-  select role_label, from: "System Role"
-  select college.name, from: "Assign to College"
+  fill_in "Email address", with: email
+  select role_label, from: "System role"
+  select college.name, from: "Assign to college"
   click_button "Generate Credentials"
 end
 

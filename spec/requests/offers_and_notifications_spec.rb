@@ -42,7 +42,7 @@ RSpec.describe "Offers and Notifications", type: :request do
     sign_in seller
     patch mark_all_as_read_notifications_path
 
-    expect(response).to redirect_to(notifications_path)
+    expect(response).to redirect_to(notifications_path(category: "all", show_unread: "1"))
     expect(seller.notifications.unread.count).to eq(0)
   end
 end
