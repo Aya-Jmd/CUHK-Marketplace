@@ -1,11 +1,13 @@
-<%= form_with model: [conversation, message], id: "new_message_form" do |form| %>
-  <div>
+<%= form_with model: [conversation, message], id: "new_message_form", class: "chat-compose" do |form| %>
+  <div class="chat-compose__field">
     <%= form.text_area :content,
         placeholder: "Type a message...",
         required: true,
-        rows: 3,
-        style: "width: 100%; margin-bottom: 10px;" %>
+        rows: 1,
+        class: "chat-compose__textarea" %>
   </div>
 
-  <%= form.submit "Send", style: "padding: 8px 16px; cursor: pointer;" %>
+  <div class="chat-compose__actions">
+    <%= form.submit "Send", class: "market-button market-button--compact" %>
+  </div>
 <% end %>

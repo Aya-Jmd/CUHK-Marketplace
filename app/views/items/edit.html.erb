@@ -1,12 +1,44 @@
 <% content_for :title, "Editing item" %>
 
-<h1>Editing item</h1>
+<div class="market-page market-page--soft listing-form-page">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner">
+      <%= link_to "Back to item", item_path(@item), class: "market-back-link" %>
+      <p class="market-page__eyebrow">Edit listing</p>
+      <h1 class="market-page__title">Update your item</h1>
+      <p class="market-page__lede">
+        Refine the description, adjust the price, or update photos and location without changing the item workflow.
+      </p>
+    </div>
+  </section>
 
-<%= render "form", item: @item %>
+  <div class="market-page__body">
+    <div class="market-split">
+      <article class="market-surface-card market-surface-card--muted">
+        <p class="market-section-eyebrow">Current listing</p>
+        <h2 class="market-section-title"><%= @item.title %></h2>
 
-<br>
+        <dl class="market-data-list">
+          <div>
+            <dt>Price</dt>
+            <dd><%= display_price(@item.price) %></dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd><%= @item.category&.name || "Uncategorized" %></dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd><%= @item.status.presence&.humanize || "Available" %></dd>
+          </div>
+        </dl>
+      </article>
 
-<div>
-  <%= link_to "Show this item", @item %> |
-  <%= link_to "Back to items", items_path %>
+      <section class="market-surface-card">
+        <p class="market-section-eyebrow">Listing details</p>
+        <h2 class="market-section-title">Edit this item</h2>
+        <%= render "form", item: @item %>
+      </section>
+    </div>
+  </div>
 </div>

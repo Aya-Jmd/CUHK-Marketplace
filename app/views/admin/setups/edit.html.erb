@@ -1,39 +1,31 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-    
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-      Complete Your Admin Setup
-    </h2>
-    <p class="text-sm text-gray-600 mb-6 text-center">
-      Welcome! Before accessing the admin dashboard, you must establish a secure password for your account.
-    </p>
+<% content_for :title, "Complete Admin Setup" %>
 
-    <%= form_with(model: @user, url: admin_setup_path, method: :patch, local: true) do |f| %>
-      
-      <% if @user.errors.any? %>
-        <div class="bg-red-50 text-red-600 p-4 rounded mb-6 text-sm">
-          <ul class="list-disc pl-5">
-            <% @user.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
+<div class="auth-shell auth-shell--admin">
+  <section class="auth-card auth-card--narrow">
+    <div class="auth-card__hero">
+      <p class="auth-card__eyebrow">Admin Access</p>
+      <h1 class="auth-card__title">Secure your account</h1>
+      <p class="auth-card__copy">
+        Before entering the admin panel, set a password for the invited account.
+      </p>
+    </div>
+
+    <div class="auth-card__panel">
+      <%= form_with model: @user, url: admin_setup_path, method: :patch, local: true, class: "auth-form" do |f| %>
+        <%= render "devise/shared/error_messages", resource: @user %>
+
+        <div class="auth-form__field">
+          <%= f.label :password, "New password" %>
+          <%= f.password_field :password, required: true, minlength: 8, class: "auth-form__input" %>
         </div>
+
+        <div class="auth-form__field">
+          <%= f.label :password_confirmation, "Confirm new password" %>
+          <%= f.password_field :password_confirmation, required: true, minlength: 8, class: "auth-form__input" %>
+        </div>
+
+        <%= f.submit "Secure Account & Enter Dashboard", class: "market-button" %>
       <% end %>
-
-      <div class="mb-4">
-        <%= f.label :password, "New Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.password_field :password, required: true, minlength: 8, class: "w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" %>
-      </div>
-
-      <div class="mb-6">
-        <%= f.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.password_field :password_confirmation, required: true, minlength: 8, class: "w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" %>
-      </div>
-
-      <div>
-        <%= f.submit "Secure Account & Enter Dashboard", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150" %>
-      </div>
-
-    <% end %>
-  </div>
+    </div>
+  </section>
 </div>

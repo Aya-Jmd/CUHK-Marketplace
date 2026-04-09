@@ -1,11 +1,12 @@
-<div style="margin-bottom: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-  <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px;">
+<div class="chat-message"
+     data-controller="chat-message"
+     data-message-user-id="<%= message.user_id %>">
+  <div class="chat-message__meta">
     <strong><%= message.user.display_name %></strong>
-    <span style="color: gray; font-size: 0.75em;"><%= message.created_at.strftime("%B %d, %Y %H:%M") %></span>
+    <time datetime="<%= message.created_at.iso8601 %>" title="<%= message.created_at.strftime("%B %d, %Y %H:%M") %>">
+      <%= message.created_at.strftime("%H:%M") %>
+    </time>
   </div>
 
-  <span><%= message.content %></span>
-  <div style="color: gray; font-size: 0.75em; margin-top: 3px;">
-    <%= time_ago_in_words(message.created_at) %> ago
-  </div>
+  <div class="chat-message__body"><%= message.content %></div>
 </div>

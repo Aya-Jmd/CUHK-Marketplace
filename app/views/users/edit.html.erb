@@ -1,35 +1,77 @@
-<h2>Edit Your Profile</h2>
+<% content_for :title, "My Profile" %>
 
-<%= form_with model: @user, url: profile_path, method: :patch, local: true do |f| %>
-  <div class="field">
-    <%= f.label :college_id, "Your College" %><br />
-    <%= f.collection_select :college_id, College.all, :id, :name, prompt: "Select your college..." %>
-  </div>
-
-  <div class="field">
-    <%= f.label :default_location, "Your Location (click on map to set)", style: "display: block" %><br />
-    
-    <div data-controller="map-picker"
-         data-map-picker-initial-lat-value="<%= @user.latitude || 22.4172 %>"
-         data-map-picker-initial-lng-value="<%= @user.longitude || 114.2071 %>"
-         data-map-picker-zoom-value="15">
-      
-      <div data-map-picker-target="map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
-      
-      <p class="location-hint" style="font-size: 12px; color: #666; margin-top: 5px;">
-        📍 Click on the map to set your default location. This helps calculate distances to items.
+<div class="market-page market-page--soft">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner">
+      <%= link_to "Back to my items", profile_path, class: "market-back-link" %>
+      <p class="market-page__eyebrow">Profile</p>
+      <h1 class="market-page__title">Manage your profile</h1>
+      <p class="market-page__lede">
+        Update your college and default campus location so distance-based listing details remain accurate everywhere.
       </p>
-      
-      <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
-      <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
-      <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
+    </div>
+  </section>
+
+  <div class="market-page__body">
+    <div class="market-split market-split--profile">
+      <article class="market-surface-card market-surface-card--muted">
+        <p class="market-section-eyebrow">Account summary</p>
+        <h2 class="market-section-title">Your current details</h2>
+
+        <dl class="market-data-list">
+          <div>
+            <dt>Email</dt>
+            <dd><%= @user.email %></dd>
+          </div>
+          <div>
+            <dt>College</dt>
+            <dd><%= @user.college&.name || "Not specified" %></dd>
+          </div>
+          <div>
+            <dt>Default location</dt>
+            <dd><%= @user.location_display_name %></dd>
+          </div>
+        </dl>
+      </article>
+
+      <section class="market-surface-card">
+        <p class="market-section-eyebrow">Settings</p>
+        <h2 class="market-section-title">Profile preferences</h2>
+
+        <%= form_with model: @user, url: profile_path, method: :patch, local: true, class: "profile-form" do |f| %>
+          <div class="profile-form__field">
+            <%= f.label :college_id, "Your college" %>
+            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Select your college..." }, class: "profile-form__select" %>
+          </div>
+
+          <div class="profile-form__field">
+            <%= f.label :default_location, "Default campus location" %>
+
+            <div data-controller="map-picker"
+                 data-map-picker-initial-lat-value="<%= @user.latitude || 22.4172 %>"
+                 data-map-picker-initial-lng-value="<%= @user.longitude || 114.2071 %>"
+                 data-map-picker-zoom-value="15"
+                 data-map-picker-marker-popup-value="Drag to set your default location within campus"
+                 data-map-picker-selection-label-value="Set your default location here">
+
+              <div data-map-picker-target="map" class="market-map market-map--compact"></div>
+
+              <p class="market-note">
+                Click anywhere on the campus map to store the location used for distance calculations.
+              </p>
+
+              <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
+              <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
+              <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
+            </div>
+          </div>
+
+          <div class="market-button-row">
+            <%= f.submit "Update Profile", class: "market-button" %>
+            <%= link_to "Back to my items", profile_path, class: "market-button market-button--secondary" %>
+          </div>
+        <% end %>
+      </section>
     </div>
   </div>
-
-  <div class="actions" style="margin-top: 20px;">
-    <%= f.submit "Update Profile", style: "padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;" %>
-  </div>
-<% end %>
-
-<br>
-<%= link_to "Back to Profile", profile_path %>
+</div>

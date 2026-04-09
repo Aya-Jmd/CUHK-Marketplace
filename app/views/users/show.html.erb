@@ -1,159 +1,322 @@
-<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 100px;">
+<% profile_owner = current_user == @user %>
+<% display_name = profile_owner ? "My Dashboard" : @user.display_name %>
+<% active_items = @user.items.where(status: ["available", "pending_dropoff"]).order(created_at: :desc) %>
+<% pending_bids = profile_owner ? @user.offers_made.where(status: "pending").order(created_at: :desc) : Offer.none %>
+<% accepted_bids = profile_owner ? @user.offers_made.where(status: "accepted").order(created_at: :desc) : Offer.none %>
+<% public_items = @user.banned? ? Item.none : @user.items.where(status: "available").order(created_at: :desc) %>
+<% content_for :title, profile_owner ? "My Items" : "#{display_name}'s Listings" %>
 
-  <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
-    <div>
-      <h1 style="font-size: 2.5em; color: #2c3e50; margin-bottom: 10px;">
-        <%= current_user == @user ? "My Dashboard" : "#{@user.email}'s Profile" %>
-      </h1>
-      <% if !(@user.admin? || @user.college_admin?) %>
-        <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;">🎓 College: <strong><%= @user.college&.name || "Not specified" %></strong></p>
-      <% else %>
-        <p style="color: #7f8c8d; font-size: 1.1em; margin: 0;"> <strong><%= @user.college&.name || "System" %> Administrator </strong></p>
-      <%end %>
-    </div>
-    <%= link_to "⬅️ Back to Home", root_path, style: "background-color: #f8f9fa; color: #2c3e50; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #dcdde1;" %>
-  </div>
+<div class="market-page market-page--item profile-show-page">
+  <section class="item-show__hero profile-show__hero">
+    <div class="item-show__shell">
+      <nav class="item-show__breadcrumbs" aria-label="Breadcrumb">
+        <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "item-show__back-link" %>
+        <span class="item-show__crumb-divider" aria-hidden="true">/</span>
+        <span class="item-show__crumb"><%= profile_owner ? "My profile" : "Seller profile" %></span>
+      </nav>
 
-  <% if current_user == @user %>
-    <div style="display: flex; flex-wrap: wrap; gap: 30px;">
-      
-      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #6c5ce7;">
-        <h2 style="margin-top: 0; color: #2d3436; display: flex; align-items: center; justify-content: space-between;">
-          <span>📦 Seller Hub</span>
-          <%= link_to "+ Post Item", new_item_path, style: "font-size: 0.6em; background: #6c5ce7; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none;" %>
-        </h2>
-        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 20px;">
+      <div class="profile-show__hero-card">
+        <div class="profile-show__hero-copy">
+          <p class="market-page__eyebrow"><%= profile_owner ? "My Items" : "Seller profile" %></p>
+          <h1 class="market-page__title"><%= profile_owner ? "My listings and buyer hub" : "#{display_name}'s listings" %></h1>
+          <p class="market-page__lede">
+            <%= profile_owner ? "Manage items you posted for sale and track the offers you made, without changing any of the underlying marketplace flows." : "Browse the items this seller currently has available on the CUHK marketplace." %>
+          </p>
 
-        <% active_items = @user.items.where(status: ['available', 'pending_dropoff']).order(created_at: :desc) %>
-        <% if active_items.any? %>
-          <% active_items.each do |item| %>
-            <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 15px; background-color: #fafbff;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #2d3436; text-decoration: none; font-size: 1.1em;" %>
-                <span style="color: <%= item.status == 'available' ? '#27ae60' : '#f39c12' %>; font-weight: bold; font-size: 0.9em;"><%= item.status.upcase %></span>
+          <div class="item-show__hero-tags profile-show__hero-tags">
+            <span class="item-show__hero-tag"><%= @user.college&.name || "College not specified" %></span>
+            <span class="item-show__hero-tag"><%= pluralize(active_items.size, "seller item") %></span>
+            <% if profile_owner %>
+              <span class="item-show__hero-tag"><%= pluralize(pending_bids.size + accepted_bids.size, "buyer offer") %></span>
+            <% end %>
+          </div>
+
+          <div class="market-page__actions">
+            <% if profile_owner %>
+              <%= link_to "Post a New Item", new_item_path, class: "market-button market-button--light" %>
+              <%= link_to "Edit Profile", edit_profile_path, class: "market-button market-button--ghost-light" %>
+            <% else %>
+              <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-button market-button--light" %>
+            <% end %>
+          </div>
+        </div>
+
+        <aside class="profile-show__hero-panel">
+          <div class="profile-show__hero-avatar" aria-hidden="true"><%= @user.display_name.first.to_s.upcase %></div>
+          <div class="profile-show__hero-panel-copy">
+            <p class="profile-show__hero-panel-label"><%= profile_owner ? "Profile owner" : "Seller" %></p>
+            <h2 class="profile-show__hero-panel-title"><%= display_name %></h2>
+            <p class="profile-show__hero-panel-subtitle"><%= @user.email %></p>
+          </div>
+
+          <dl class="profile-show__hero-metrics">
+            <div>
+              <dt>College</dt>
+              <dd><%= @user.college&.name || "Not specified" %></dd>
+            </div>
+            <div>
+              <dt>Listings</dt>
+              <dd><%= pluralize(active_items.size, "item") %></dd>
+            </div>
+            <% if profile_owner %>
+              <div>
+                <dt>Buyer hub</dt>
+                <dd><%= pluralize(pending_bids.size + accepted_bids.size, "offer") %></dd>
               </div>
+            <% end %>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
 
-              <% item.offers.where(status: ['pending', 'accepted']).each do |offer| %>
-                <div style="margin-top: 10px; padding: 12px; background: <%= offer.accepted? ? '#fff9db' : 'white' %>; border: 1px solid #ddd; border-radius: 8px;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>Offer: <strong><%= display_price(offer.price) %></strong></span>
-                    <span style="color: #7f8c8d; font-size: 0.9em;"><%= offer.buyer.email.split('@').first %></span>
+  <div class="item-show__shell profile-show__content">
+    <div class="market-summary-grid <%= "market-summary-grid--triple" if profile_owner %>">
+      <article class="market-surface-card market-surface-card--muted market-summary-card">
+        <p class="market-summary-card__label">College</p>
+        <strong class="market-summary-card__value"><%= @user.college&.name || "Not specified" %></strong>
+      </article>
+
+      <article class="market-surface-card market-surface-card--muted market-summary-card">
+        <p class="market-summary-card__label"><%= profile_owner ? "Seller Hub" : "Listings" %></p>
+        <strong class="market-summary-card__value"><%= pluralize(active_items.size, "item") %></strong>
+      </article>
+
+      <% if profile_owner %>
+        <article class="market-surface-card market-surface-card--muted market-summary-card">
+          <p class="market-summary-card__label">Buyer Hub</p>
+          <strong class="market-summary-card__value"><%= pluralize(pending_bids.size + accepted_bids.size, "offer") %></strong>
+        </article>
+      <% end %>
+    </div>
+
+    <div class="<%= class_names("profile-show__sections", { "profile-show__sections--dashboard" => profile_owner }) %>">
+      <section class="market-surface-card profile-show__section">
+        <div class="market-section-heading profile-show__section-heading">
+          <div>
+            <p class="market-section-eyebrow"><%= profile_owner ? "Seller Hub" : "Posted items" %></p>
+            <h2 class="market-section-title"><%= profile_owner ? "Items you posted for sale" : "Items posted by this seller" %></h2>
+            <p class="market-note">
+              <%= profile_owner ? "Keep your seller actions attached to each listing: offer review, reservation handling, and sale completion." : "Only currently available items are shown here." %>
+            </p>
+          </div>
+
+          <% if profile_owner %>
+            <%= link_to "New listing", new_item_path, class: "market-text-link" %>
+          <% end %>
+        </div>
+
+        <% seller_rows = profile_owner ? active_items : public_items %>
+        <% if seller_rows.any? %>
+          <div class="profile-show__rows" role="list">
+            <% seller_rows.each do |item| %>
+              <% relevant_offers = profile_owner ? item.offers.where(status: ["pending", "accepted"]) : Offer.none %>
+              <article class="profile-item-row" role="listitem">
+                <div class="profile-item-row__top">
+                  <div class="profile-item-row__identity">
+                    <p class="profile-item-row__meta">
+                      <span><%= item.category&.name || "Uncategorized" %></span>
+                      <span><%= item.created_at.strftime("%b %d, %Y") %></span>
+                      <% if profile_owner %>
+                        <span><%= pluralize(relevant_offers.count, "active offer") %></span>
+                      <% end %>
+                    </p>
+
+                    <h3 class="profile-item-row__title">
+                      <%= link_to item.title, item_path(item), class: "profile-item-row__title-link" %>
+                    </h3>
+
+                    <div class="profile-item-row__badges">
+                      <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
+                        <%= item.status == "available" ? "LIVE" : item.status.upcase %>
+                      </span>
+                      <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
+                    </div>
                   </div>
 
-                  <% if offer.pending? %>
-                    <div style="display: flex; gap: 10px;">
-                      <%= button_to "Accept", accept_offer_path(offer), method: :patch, style: "background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; flex: 1;" %>
-                      <%= button_to "Decline", decline_offer_path(offer), method: :patch, style: "background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;" %>
-                    </div>
-                  <% elsif offer.accepted? %>
-                    <div style="border-top: 1px dashed #f39c12; padding-top: 10px; margin-top: 5px;">
-                      <p style="font-size: 0.85em; color: #e67e22; margin: 0 0 8px 0;"><strong>Reserved.</strong> Ask the buyer for their PIN:</p>
-                      <%= form_with url: complete_offer_path(offer), method: :patch, data: { controller: "pin-input" }, style: "margin-bottom: 15px;" do |f| %>
-                        
-                        <div style="display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px;">
-                          <% 4.times do %>
-                            <input type="text" 
-                                  maxlength="1" 
-                                  inputmode="numeric" 
-                                  pattern="[0-9]*"
-                                  autocomplete="one-time-code"
-                                  data-pin-input-target="digit"
-                                  data-action="input->pin-input#handleInput keydown->pin-input#handleKeydown paste->pin-input#handlePaste"
-                                  style="width: 50px; height: 60px; font-size: 1.8em; text-align: center; border: 2px solid #cbd5e1; border-radius: 8px; font-weight: bold; color: #2c3e50; outline-color: #00cec9; flex: 1;">
+                  <div class="profile-item-row__price-block">
+                    <p class="profile-item-row__price-label">Price</p>
+                    <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
+                    <%= link_to "View listing", item_path(item), class: "profile-item-row__link" %>
+                  </div>
+                </div>
+
+                <% if profile_owner %>
+                  <div class="profile-item-row__details">
+                    <section class="profile-item-panel profile-item-panel--activity">
+                      <p class="profile-item-panel__label">Incoming offers</p>
+
+                      <% if relevant_offers.any? %>
+                        <div class="profile-offer-list">
+                          <% relevant_offers.each do |offer| %>
+                            <div class="profile-inline-offer">
+                              <div class="profile-inline-offer__copy">
+                                <h4 class="profile-inline-offer__headline"><%= offer.buyer.display_name %> offered <%= display_price(offer.price) %></h4>
+                                <p class="profile-inline-offer__meta">
+                                  Status: <%= offer.status.humanize %>. Created <%= time_ago_in_words(offer.created_at) %> ago.
+                                </p>
+                              </div>
+
+                              <% if offer.pending? %>
+                                <div class="profile-inline-offer__actions">
+                                  <%= button_to "Accept", accept_offer_path(offer), method: :patch, class: "profile-action-button", form: { class: "profile-action-form" } %>
+                                  <%= button_to "Decline", decline_offer_path(offer), method: :patch, class: "profile-action-button profile-action-button--danger", form: { class: "profile-action-form" } %>
+                                </div>
+                              <% else %>
+                                <span class="profile-status-badge profile-status-badge--reserved">RESERVED</span>
+                              <% end %>
+                            </div>
+
+                            <% if offer.accepted? %>
+                              <div class="profile-item-panel profile-item-panel--pin">
+                                <p class="profile-item-panel__label">Meetup verification</p>
+                                <p class="profile-item-panel__copy">Ask the buyer for their 4-digit PIN to complete the sale.</p>
+
+                                <%= form_with url: complete_offer_path(offer), method: :patch, data: { controller: "pin-input" }, class: "profile-pin-form" do |f| %>
+                                  <div class="profile-pin-grid">
+                                    <% 4.times do %>
+                                      <input type="text"
+                                             maxlength="1"
+                                             inputmode="numeric"
+                                             pattern="[0-9]*"
+                                             autocomplete="one-time-code"
+                                             data-pin-input-target="digit"
+                                             data-action="input->pin-input#handleInput keydown->pin-input#handleKeydown paste->pin-input#handlePaste"
+                                             class="profile-pin-grid__digit">
+                                    <% end %>
+                                  </div>
+
+                                  <%= f.hidden_field :meetup_code, data: { pin_input_target: "hidden" }, required: true %>
+
+                                  <div class="profile-action-row">
+                                    <%= f.submit "Complete Sale", class: "profile-action-button" %>
+                                  </div>
+                                <% end %>
+
+                                <div class="profile-action-row">
+                                  <%= button_to "Cancel Transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "profile-action-button profile-action-button--secondary", form: { class: "profile-action-form" } %>
+                                </div>
+                              </div>
+                            <% end %>
                           <% end %>
                         </div>
-
-                        <%= f.hidden_field :meetup_code, data: { pin_input_target: "hidden" }, required: true %>
-
-                        <%= f.submit "Complete Sale", style: "width: 100%; background: #0984e3; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background 0.2s;" %>
-
+                      <% else %>
+                        <div class="market-empty-state market-empty-state--inline">
+                          <p>No active offers on this item yet.</p>
+                        </div>
                       <% end %>
-                      <%= button_to "Buyer didn't show? Cancel Transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, style: "background: none; border: none; color: #e74c3c; text-decoration: underline; font-size: 0.8em; cursor: pointer; padding: 0;" %>
+                    </section>
+                  </div>
+                <% end %>
+              </article>
+            <% end %>
+          </div>
+        <% elsif !profile_owner && @user.banned? %>
+          <div class="market-empty-state">
+            <p>This seller is currently banned.</p>
+          </div>
+        <% else %>
+          <div class="market-empty-state">
+            <p><%= profile_owner ? "You have no active listings right now." : "No available items right now." %></p>
+          </div>
+        <% end %>
+      </section>
+
+      <% if profile_owner %>
+        <section class="market-surface-card profile-show__section">
+          <div class="market-section-heading profile-show__section-heading">
+            <div>
+              <p class="market-section-eyebrow">Buyer Hub</p>
+              <h2 class="market-section-title">Offers you made</h2>
+              <p class="market-note">
+                Track offers you placed, see accepted listings, and retrieve the meetup PIN when a seller confirms.
+              </p>
+            </div>
+
+            <%= link_to "Browse items", items_path(marketplace_base_params), class: "market-text-link" %>
+          </div>
+
+          <% if pending_bids.any? || accepted_bids.any? %>
+            <div class="profile-show__rows" role="list">
+              <% pending_bids.each do |offer| %>
+                <article class="profile-item-row" role="listitem">
+                  <div class="profile-item-row__top">
+                    <div class="profile-item-row__identity">
+                      <p class="profile-item-row__meta">
+                        <span>Pending offer</span>
+                        <span><%= offer.item.category&.name || "Uncategorized" %></span>
+                        <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
+                      </p>
+                      <h3 class="profile-item-row__title">
+                        <%= link_to offer.item.title, item_path(offer.item), class: "profile-item-row__title-link" %>
+                      </h3>
+                      <div class="profile-item-row__badges">
+                        <span class="profile-status-badge profile-status-badge--pending">PENDING</span>
+                        <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
+                      </div>
                     </div>
-                  <% end %>
-                </div>
+
+                    <div class="profile-item-row__price-block">
+                      <p class="profile-item-row__price-label">My offer</p>
+                      <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                    </div>
+                  </div>
+
+                  <div class="profile-item-row__details profile-item-row__details--single">
+                    <section class="profile-item-panel profile-item-panel--activity">
+                      <p class="profile-item-panel__label">Status</p>
+                      <p class="profile-item-panel__copy">The seller has not responded yet. You can still cancel this offer.</p>
+                      <div class="profile-action-row">
+                        <%= button_to "Cancel offer", offer_path(offer), method: :delete, data: { turbo_confirm: "Cancel this bid?" }, class: "profile-action-button profile-action-button--danger", form: { class: "profile-action-form" } %>
+                      </div>
+                    </section>
+                  </div>
+                </article>
+              <% end %>
+
+              <% accepted_bids.each do |offer| %>
+                <article class="profile-item-row" role="listitem">
+                  <div class="profile-item-row__top">
+                    <div class="profile-item-row__identity">
+                      <p class="profile-item-row__meta">
+                        <span>Accepted offer</span>
+                        <span><%= offer.item.category&.name || "Uncategorized" %></span>
+                        <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
+                      </p>
+                      <h3 class="profile-item-row__title">
+                        <%= link_to offer.item.title, item_path(offer.item), class: "profile-item-row__title-link" %>
+                      </h3>
+                      <div class="profile-item-row__badges">
+                        <span class="profile-status-badge profile-status-badge--live">ACCEPTED</span>
+                        <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
+                      </div>
+                    </div>
+
+                    <div class="profile-item-row__price-block">
+                      <p class="profile-item-row__price-label">My offer</p>
+                      <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                    </div>
+                  </div>
+
+                  <div class="profile-item-row__details profile-item-row__details--single">
+                    <section class="profile-item-panel profile-item-panel--pin">
+                      <p class="profile-item-panel__label">Meetup PIN</p>
+                      <div class="profile-pin-display">
+                        <strong class="profile-pin-display__value"><%= offer.meetup_code %></strong>
+                      </div>
+                      <p class="profile-item-panel__copy">Show this code to the seller when you meet up to receive the item.</p>
+                    </section>
+                  </div>
+                </article>
               <% end %>
             </div>
+          <% else %>
+            <div class="market-empty-state">
+              <p>You have no active bids right now.</p>
+            </div>
           <% end %>
-        <% else %>
-          <p style="color: #a4b0be; font-style: italic;">No active listings or offers.</p>
-        <% end %>
-      </div>
-
-      <div style="flex: 1; min-width: 300px; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 5px solid #00cec9;">
-        <h2 style="margin-top: 0; color: #2d3436;"><span>🛍️ Buyer Hub</span></h2>
-        <hr style="border: 0; border-top: 1px solid #f1f2f6; margin-bottom: 20px;">
-
-        <% pending_bids = @user.offers_made.where(status: "pending").order(created_at: :desc) %>
-        <% accepted_bids = @user.offers_made.where(status: "accepted").order(created_at: :desc) %>
-
-        <% if pending_bids.any? %>
-          <div style="margin-bottom: 24px;">
-            <h3 style="margin: 0 0 12px 0; font-size: 1.1em; color: #2d3436;">Pending Offers</h3>
-
-            <% pending_bids.each do |offer| %>
-              <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid #fab005;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
-                  <span style="font-weight: bold; color: #f39c12;"><%= offer.status.upcase %></span>
-                </div>
-                <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
-
-                <div style="margin-top: 10px;">
-                  <%= button_to "Cancel offer", offer_path(offer), method: :delete,
-                      data: { turbo_confirm: "Cancel this bid?" },
-                      style: "background: none; border: none; color: #e74c3c; text-decoration: underline; font-size: 0.9em; cursor: pointer; padding: 0;" %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if accepted_bids.any? %>
-          <div>
-            <h3 style="margin: 0 0 12px 0; font-size: 1.1em; color: #2d3436;">Accepted Offers</h3>
-
-            <% accepted_bids.each do |offer| %>
-              <div style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 12px; border-left: 5px solid #27ae60;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <%= link_to offer.item.title, item_path(offer.item), style: "font-weight: bold; color: #2d3436; text-decoration: none;" %>
-                  <span style="font-weight: bold; color: #27ae60;"><%= offer.status.upcase %></span>
-                </div>
-                <div style="color: #7f8c8d; font-size: 0.9em;">My Bid: <strong><%= display_price(offer.price) %></strong></div>
-
-                <div style="margin-top: 12px; padding: 15px; background: #e8f8f5; border-radius: 8px; text-align: center;">
-                  <span style="display: block; font-size: 0.8em; color: #16a085; font-weight: bold;">MEETUP PIN</span>
-                  <span style="font-size: 2em; font-weight: 900; letter-spacing: 5px; color: #2c3e50;"><%= offer.meetup_code %></span>
-                  <p style="font-size: 0.8em; color: #16a085; margin: 5px 0 0 0;">Show this to the seller to receive your item.</p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if pending_bids.none? && accepted_bids.none? %>
-          <p style="color: #a4b0be; font-style: italic;">You have no active bids.</p>
-        <% end %>
-      </div>
+        </section>
+      <% end %>
     </div>
-  <% else %>
-    <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-      <h2 style="margin-top: 0;">Items posted by <%= @user.email.split('@').first %></h2>
-      <ul style="list-style: none; padding: 0;">
-        <% public_items = @user.banned? ? Item.none : @user.items.where(status: 'available').order(created_at: :desc) %>
-        <% if public_items.any? %>
-          <% public_items.each do |item| %>
-            <li style="padding: 15px; border: 1px solid #e1e8ed; border-radius: 10px; margin-bottom: 10px;">
-              <%= link_to item.title, item_path(item), style: "font-weight: bold; color: #0984e3; text-decoration: none;" %>
-              <span style="float: right; font-weight: bold;"><%= display_price(item.price) %></span>
-            </li>
-          <% end %>
-        <% elsif @user.banned? %>
-          <p style="color: #a4b0be;">This seller is currently banned.</p>
-        <% else %>
-          <p style="color: #a4b0be;">No available items right now.</p>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  </div>
 </div>

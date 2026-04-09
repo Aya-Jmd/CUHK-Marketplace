@@ -1,67 +1,91 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<% content_for :title, "Account Settings" %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :college, "Your College" %></p>
-    <p><%= f.collection_select :college_id, College.all, :id, :name, prompt: "Select your college..." %></p>
-  </div>
-
-  <div class="field">
-    <%= f.label :default_location, "Your Location (click on map to set)", style: "display: block" %><br />
-    
-    <div data-controller="map-picker"
-         data-map-picker-initial-lat-value="<%= resource.latitude || 22.4172 %>"
-         data-map-picker-initial-lng-value="<%= resource.longitude || 114.2071 %>"
-         data-map-picker-zoom-value="15">
-      
-      <div data-map-picker-target="map" style="height: 250px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
-      
-      <p class="location-hint" style="font-size: 12px; color: #666; margin-top: 5px;">
-        📍 Click on the map to set your default location
+<div class="auth-shell">
+  <section class="auth-card auth-card--wide">
+    <div class="auth-card__hero">
+      <p class="auth-card__eyebrow">Account</p>
+      <h1 class="auth-card__title">Update your account</h1>
+      <p class="auth-card__copy">
+        Change your email, password, college, and default location without affecting marketplace functionality.
       </p>
-      
-      <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
-      <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
-      <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
     </div>
-  </div>
 
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
+    <div class="auth-card__panel">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
+        <div class="auth-form__grid">
+          <div class="auth-form__field">
+            <%= f.label :email %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "auth-form__input" %>
+          </div>
 
-<h3>Cancel my account</h3>
+          <div class="auth-form__field">
+            <%= f.label :college_id, "Your college" %>
+            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Select your college..." }, class: "auth-form__select" %>
+          </div>
+        </div>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p class="auth-form__hint">Waiting confirmation for <strong><%= resource.unconfirmed_email %></strong>.</p>
+        <% end %>
 
-<%= link_to "Back", :back %>
+        <div class="auth-form__grid">
+          <div class="auth-form__field">
+            <%= f.label :password, "New password" %>
+            <% if @minimum_password_length %>
+              <span class="auth-form__hint">Leave blank to keep the current password. Minimum <%= @minimum_password_length %> characters.</span>
+            <% end %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "auth-form__input" %>
+          </div>
+
+          <div class="auth-form__field">
+            <%= f.label :password_confirmation, "Confirm new password" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "auth-form__input" %>
+          </div>
+        </div>
+
+        <div class="auth-form__field">
+          <%= f.label :default_location, "Default campus location" %>
+
+          <div data-controller="map-picker"
+               data-map-picker-initial-lat-value="<%= resource.latitude || 22.4172 %>"
+               data-map-picker-initial-lng-value="<%= resource.longitude || 114.2071 %>"
+               data-map-picker-zoom-value="15"
+               class="auth-map-picker">
+
+            <div data-map-picker-target="map" class="market-map market-map--compact auth-map-picker__map"></div>
+
+            <p class="auth-form__hint">
+              Click on the map to store the location used for distance-based marketplace features.
+            </p>
+
+            <%= f.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
+            <%= f.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
+            <%= f.hidden_field :default_location, data: { map_picker_target: "locationNameInput" } %>
+          </div>
+        </div>
+
+        <div class="auth-form__field">
+          <%= f.label :current_password, "Current password" %>
+          <span class="auth-form__hint">Required to confirm account changes.</span>
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "auth-form__input" %>
+        </div>
+
+        <div class="market-button-row">
+          <%= f.submit "Update account", class: "market-button" %>
+          <%= link_to "Back", profile_path, class: "market-button market-button--secondary" %>
+        </div>
+      <% end %>
+
+      <div class="auth-danger-zone">
+        <h2 class="market-section-title">Close account</h2>
+        <p class="market-note">This keeps the existing server-side account removal behavior unchanged.</p>
+        <%= button_to "Cancel my account", registration_path(resource_name),
+            data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" },
+            method: :delete,
+            class: "market-button market-button--danger" %>
+      </div>
+    </div>
+  </section>
+</div>

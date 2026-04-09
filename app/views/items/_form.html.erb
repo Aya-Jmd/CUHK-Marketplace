@@ -1,8 +1,7 @@
-<%= form_with(model: item) do |form| %>
+<%= form_with(model: item, class: "listing-form") do |form| %>
   <% if item.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
-
+    <div class="listing-form__errors">
+      <h3><%= pluralize(item.errors.count, "error") %> prevented this item from being saved:</h3>
       <ul>
         <% item.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,63 +10,75 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="market-form-field">
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title, class: "market-input", placeholder: "What are you selling?" %>
   </div>
 
-  <div>
-    <%= form.label :price, "Price (#{current_currency_code})", style: "display: block" %>
-    <%= form.text_field :price, step: "any", value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil %>
+  <div class="market-form-field">
+    <%= form.label :price, "Price (#{current_currency_code})" %>
+    <%= form.text_field :price, step: "any", value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil, class: "market-input", placeholder: "Enter the asking price" %>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
+  <div class="market-form-field">
+    <%= form.label :description, "Description" %>
+    <%= form.text_area :description, rows: 6, class: "market-input market-input--textarea", placeholder: "Describe condition, included accessories, and anything buyers should know." %>
   </div>
 
-  <div>
-    <%= form.label :category_id, "Select a Category", style: "display: block" %>
-    <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, prompt: "Choose a category..." %>
-  </div>
-
-  <% if current_user.admin? %>
-    <div>
-      <%= form.label :college_id, "Select a College", style: "display: block" %>
-      <%= form.collection_select :college_id, College.order(:name), :id, :name, prompt: "Choose a college..." %>
+  <div class="listing-form__grid">
+    <div class="market-form-field">
+      <%= form.label :category_id, "Category" %>
+      <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, { prompt: "Choose a category..." }, { class: "profile-form__select" } %>
     </div>
-  <% end %>
 
-  <div>
-    <%= form.label :is_global, "Make this item visible to all CUHK colleges? (Global)", style: "display: block" %>
-    <%= form.check_box :is_global %>
+    <% if current_user.admin? %>
+      <div class="market-form-field">
+        <%= form.label :college_id, "College" %>
+        <%= form.collection_select :college_id, College.order(:name), :id, :name, { prompt: "Choose a college..." }, { class: "profile-form__select" } %>
+      </div>
+    <% end %>
   </div>
 
-  <!-- Interactive Map for Location Picker -->
-  <div class="field">
-    <%= form.label :location, "Item Location (Click on map to set)", style: "display: block" %>
-    
+  <label class="listing-form__toggle">
+    <%= form.check_box :is_global %>
+    <span class="listing-form__toggle-copy">
+      <strong>Global visibility</strong>
+      <span>Make this item visible across all CUHK colleges.</span>
+    </span>
+  </label>
+
+  <div class="market-form-field">
+    <%= form.label :location, "Item location" %>
+
     <div data-controller="map-picker"
-         data-map-picker-initial-lat-value="22.4172"
-         data-map-picker-initial-lng-value="114.2071"
-         data-map-picker-zoom-value="16">
-      
-      <div data-map-picker-target="map" class="map-view" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
-      
-      <p class="location-hint">📍 Click on the map or drag the marker to set your item's pickup location</p>
-      
-      <!-- Hidden fields to store coordinates -->
+         data-map-picker-initial-lat-value="<%= item.latitude || 22.4172 %>"
+         data-map-picker-initial-lng-value="<%= item.longitude || 114.2071 %>"
+         data-map-picker-zoom-value="16"
+         data-map-picker-marker-popup-value="Drag to set your item's pickup location within campus"
+         data-map-picker-selection-label-value="Set item pickup location here">
+
+      <div data-map-picker-target="map" class="market-map"></div>
+
+      <p class="market-note">
+        Click on the map or drag the marker to set the pickup point used for buyer distance calculations.
+      </p>
+
       <%= form.hidden_field :latitude, data: { map_picker_target: "latInput" } %>
       <%= form.hidden_field :longitude, data: { map_picker_target: "lngInput" } %>
       <%= form.hidden_field :location_name, data: { map_picker_target: "locationNameInput" } %>
     </div>
   </div>
-  <div style="margin-bottom: 20px; margin-top: 20px;">
-    <%= form.label :images, "Item Photos (You can select multiple)", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
-    <%= form.file_field :images, multiple: true, accept: "image/png, image/jpeg, image/jpg, image/webp", style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" %>
-    <p style="font-size: 0.8em; color: #666; margin-top: 4px;">Supported formats: JPG, PNG, WEBP</p>
+
+  <div class="market-form-field">
+    <%= form.label :images, "Item photos" %>
+    <div class="listing-form__upload">
+      <%= form.file_field :images, multiple: true, accept: "image/png, image/jpeg, image/jpg, image/webp", class: "listing-form__file" %>
+      <p class="market-note">Supported formats: JPG, PNG, WEBP. You can upload multiple images.</p>
+    </div>
   </div>
-  <div>
-    <%= form.submit %>
+
+  <div class="market-button-row">
+    <%= form.submit(item.persisted? ? "Update item" : "Publish item", class: "market-button") %>
+    <%= link_to(item.persisted? ? "Cancel" : "Back to marketplace", item.persisted? ? item_path(item) : items_path(marketplace_base_params), class: "market-button market-button--secondary") %>
   </div>
 <% end %>

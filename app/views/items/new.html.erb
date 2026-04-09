@@ -1,11 +1,44 @@
 <% content_for :title, "New item" %>
 
-<h1>New item</h1>
+<div class="market-page market-page--soft listing-form-page">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner">
+      <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-back-link" %>
+      <p class="market-page__eyebrow">Create listing</p>
+      <h1 class="market-page__title">Post a new item</h1>
+      <p class="market-page__lede">
+        Add clear details, upload photos, and set a pickup point on campus without changing how listing creation works.
+      </p>
+    </div>
+  </section>
 
-<%= render "form", item: @item %>
+  <div class="market-page__body">
+    <div class="market-split">
+      <article class="market-surface-card market-surface-card--muted">
+        <p class="market-section-eyebrow">Listing checklist</p>
+        <h2 class="market-section-title">Before you publish</h2>
 
-<br>
+        <div class="listing-form__tips">
+          <div class="listing-form__tip">
+            <strong>Clear title</strong>
+            <span>Use searchable keywords so buyers can find the item quickly.</span>
+          </div>
+          <div class="listing-form__tip">
+            <strong>Accurate pricing</strong>
+            <span>Prices are stored consistently in the current currency flow you already use.</span>
+          </div>
+          <div class="listing-form__tip">
+            <strong>Pickup point</strong>
+            <span>Set the campus location so buyers can compare distance before messaging you.</span>
+          </div>
+        </div>
+      </article>
 
-<div>
-  <%= link_to "Back to items", items_path %>
+      <section class="market-surface-card">
+        <p class="market-section-eyebrow">Listing details</p>
+        <h2 class="market-section-title">Create your item</h2>
+        <%= render "form", item: @item %>
+      </section>
+    </div>
+  </div>
 </div>

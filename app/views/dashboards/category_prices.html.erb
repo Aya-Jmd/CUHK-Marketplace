@@ -1,78 +1,91 @@
 <% content_for :title, "Price Dashboard" %>
 
-<section class="dashboard-shell" id="category-price-dashboard">
-  <div class="dashboard-card">
-    <%= link_to "Back to items", items_path, class: "dashboard-back-link" %>
-
-    <div class="dashboard-header">
-      <div class="dashboard-heading">
-        <h1>Analytics Dashboard</h1>
-        <p class="dashboard-subtitle">
-          Price data for selected categories: <strong><%= @selected_category_summary %></strong>.
-        </p>
-      </div>
-
-      <div class="dashboard-side-controls">
-        <%= form_with url: analytics_path, method: :get, local: true, class: "dashboard-filters" do %>
-          <%= hidden_field_tag :chart_mode, @chart_mode, id: "dashboard-chart-mode-input" %>
-
-          <fieldset class="dashboard-category-filter">
-            <legend>Categories</legend>
-
-            <div class="dashboard-category-grid">
-              <% @categories.each do |category| %>
-                <% input_id = "dashboard-category-#{category.id}" %>
-                <label class="dashboard-category-option" for="<%= input_id %>" title="<%= category.name %>">
-                  <%= check_box_tag "category_ids[]", category.id, @selected_category_ids.include?(category.id),
-                    id: input_id,
-                    class: "dashboard-category-checkbox" %>
-                  <span><%= category.name %></span>
-                </label>
-              <% end %>
-            </div>
-          </fieldset>
-
-          <label>
-            <span>From</span>
-            <%= date_field_tag :start_date, @start_date %>
-          </label>
-
-          <label>
-            <span>To</span>
-            <%= date_field_tag :end_date, @end_date %>
-          </label>
-        <% end %>
-      </div>
+<div class="market-page market-page--soft analytics-page">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner market-page__hero-inner--wide">
+      <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-back-link" %>
+      <p class="market-page__eyebrow">Analytics</p>
+      <h1 class="market-page__title">Price dashboard</h1>
+      <p class="market-page__lede">
+        Compare posted and sold prices across categories without changing the analytics logic already in place.
+      </p>
     </div>
+  </section>
 
-    <div class="dashboard-toolbar dashboard-toolbar-compact">
-      <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
-        <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
-        <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
+  <div class="market-page__body market-page__body--wide">
+    <section class="dashboard-shell" id="category-price-dashboard">
+      <div class="dashboard-card">
+        <div class="dashboard-header">
+          <div class="dashboard-heading">
+            <h1>Analytics dashboard</h1>
+            <p class="dashboard-subtitle">
+              Price data for selected categories: <strong><%= @selected_category_summary %></strong>.
+            </p>
+          </div>
+
+          <div class="dashboard-side-controls">
+            <%= form_with url: analytics_path, method: :get, local: true, class: "dashboard-filters" do %>
+              <%= hidden_field_tag :chart_mode, @chart_mode, id: "dashboard-chart-mode-input" %>
+
+              <fieldset class="dashboard-category-filter">
+                <legend>Categories</legend>
+
+                <div class="dashboard-category-grid">
+                  <% @categories.each do |category| %>
+                    <% input_id = "dashboard-category-#{category.id}" %>
+                    <label class="dashboard-category-option" for="<%= input_id %>" title="<%= category.name %>">
+                      <%= check_box_tag "category_ids[]", category.id, @selected_category_ids.include?(category.id),
+                        id: input_id,
+                        class: "dashboard-category-checkbox" %>
+                      <span><%= category.name %></span>
+                    </label>
+                  <% end %>
+                </div>
+              </fieldset>
+
+              <label>
+                <span>From</span>
+                <%= date_field_tag :start_date, @start_date %>
+              </label>
+
+              <label>
+                <span>To</span>
+                <%= date_field_tag :end_date, @end_date %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="dashboard-toolbar dashboard-toolbar-compact">
+          <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
+            <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
+            <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
+          </div>
+        </div>
+
+        <div class="dashboard-legend" id="dashboard-chart-legend" aria-label="Chart legend"></div>
+
+        <div class="dashboard-stage">
+          <div class="dashboard-chart-panel is-active" data-chart-panel="averages">
+            <canvas id="category-prices-averages-chart"></canvas>
+          </div>
+
+          <div class="dashboard-chart-panel" data-chart-panel="exact">
+            <canvas id="category-prices-exact-chart"></canvas>
+          </div>
+
+          <div class="dashboard-empty-state" data-empty-mode="averages" hidden>
+            No posted or sold items were found for the selected categories in the selected date range.
+          </div>
+
+          <div class="dashboard-empty-state" data-empty-mode="exact" hidden>
+            No exact posted or sold offers were found for the selected categories in the selected date range.
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="dashboard-legend" id="dashboard-chart-legend" aria-label="Chart legend"></div>
-
-    <div class="dashboard-stage">
-      <div class="dashboard-chart-panel is-active" data-chart-panel="averages">
-        <canvas id="category-prices-averages-chart"></canvas>
-      </div>
-
-      <div class="dashboard-chart-panel" data-chart-panel="exact">
-        <canvas id="category-prices-exact-chart"></canvas>
-      </div>
-
-      <div class="dashboard-empty-state" data-empty-mode="averages" hidden>
-        No posted or sold items were found for the selected categories in the selected date range.
-      </div>
-
-      <div class="dashboard-empty-state" data-empty-mode="exact" hidden>
-        No exact posted or sold offers were found for the selected categories in the selected date range.
-      </div>
-    </div>
+    </section>
   </div>
-</section>
+</div>
 
 <script id="category-price-dashboard-data" type="application/json"><%= raw @chart_payload.to_json %></script>
 <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chart.js" %>

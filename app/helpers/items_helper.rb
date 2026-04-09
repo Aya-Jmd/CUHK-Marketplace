@@ -1,9 +1,9 @@
 module ItemsHelper
-def market_card_price(item)
-  return "" if item.price.blank?
+  def market_card_price(item)
+    return "" if item.price.blank?
 
-  display_price(item.price)
-end
+    display_price(item.price)
+  end
 
   def market_card_meta(item)
     [
@@ -11,6 +11,11 @@ end
       item.college&.name || "CUHK",
       "#{time_ago_in_words(item.created_at)} ago"
     ].join(" | ")
+  end
+
+  def item_placeholder_initials(item)
+    initials = item.title.to_s.scan(/\b[[:alnum:]]/).join.upcase.first(2)
+    initials.presence || "CU"
   end
 
   private

@@ -1,30 +1,38 @@
-<h2>Log in</h2>
+<% content_for :title, "Log in" %>
 
-<% if flash[:alert].present? %>
-  <p style="color: #d63031; margin-bottom: 16px;"><%= flash[:alert] %></p>
-<% end %>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me %></p>
+<div class="auth-shell">
+  <section class="auth-card auth-card--narrow">
+    <div class="auth-card__hero">
+      <p class="auth-card__eyebrow">CUHK Marketplace</p>
+      <h1 class="auth-card__title">Log in</h1>
+      <p class="auth-card__copy">
+        Access listings, offers, notifications, and chat from one marketplace account.
+      </p>
     </div>
-  <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
+    <div class="auth-card__panel">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
+        <div class="auth-form__field">
+          <%= f.label :email %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "auth-form__input" %>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <div class="auth-form__field">
+          <%= f.label :password %>
+          <%= f.password_field :password, autocomplete: "current-password", class: "auth-form__input" %>
+        </div>
+
+        <% if devise_mapping.rememberable? %>
+          <label class="auth-form__checkbox">
+            <%= f.check_box :remember_me %>
+            <span>Remember me</span>
+          </label>
+        <% end %>
+
+        <%= f.submit "Log in", class: "market-button" %>
+      <% end %>
+
+      <%= render "devise/shared/links" %>
+    </div>
+  </section>
+</div>

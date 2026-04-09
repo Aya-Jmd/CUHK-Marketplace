@@ -36,6 +36,7 @@ class ItemsController < ApplicationController
   # GET /items/1 or /items/1.json
   def show
     @existing_offer = current_user.offers_made.find_by(item: @item) if user_signed_in? && current_user != @item.user
+    @seller_live_items_count = @item.user.items.available.count
 
     # Calculate distance if user is signed in and has location
     if user_signed_in? && current_user.has_location? && @item.has_location?

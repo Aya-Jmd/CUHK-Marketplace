@@ -1,47 +1,67 @@
 <% unread = notification.read_at.nil? %>
-<% base_style = "border: 1px solid #ddd; padding: 14px 16px; margin-bottom: 10px; background: #{unread ? '#f8fbff' : 'white'};" %>
+<% short_timestamp = notification.created_at.strftime("%b %d, %H:%M") %>
 
 <% if actionable_report_notification?(notification) %>
-  <div style="<%= base_style %>">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
-      <div style="font-weight: 600; margin-bottom: 6px;">
-        <%= link_to notification_message(notification),
-            notification_mark_as_read_path(notification),
-            data: { turbo_method: :patch },
-            style: "color: inherit; text-decoration: none;" %>
-      </div>
-      <span style="display: inline-flex; align-items: center; gap: 6px; background: #fff4e5; color: #b54708; border: 1px solid #fedf89; border-radius: 999px; padding: 4px 10px; font-size: 0.75em; font-weight: 700;">Pending</span>
-    </div>
-
-    <% if notification_detail_message(notification).present? %>
-      <div style="font-size: 0.95em; color: #374151; margin-bottom: 12px;"><%= notification_detail_message(notification) %></div>
-    <% end %>
-
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+  <article class="notification-card notification-card--actionable <%= "notification-card--unread" if unread %>">
+    <div class="notification-card__rail">
+      <%= link_to "View listing",
+          notification_mark_as_read_path(notification),
+          data: { turbo_method: :patch },
+          class: "market-button market-button--secondary market-button--compact" %>
       <%= button_to "Delete item", delete_item_admin_item_report_path(notification.notifiable), method: :patch,
           data: { turbo_confirm: "Remove this item from the marketplace?" },
-          style: "padding: 8px 14px; border: none; border-radius: 6px; background: #dc2626; color: white; cursor: pointer; font-weight: 600;" %>
+          class: "market-button market-button--danger market-button--compact" %>
       <%= button_to "Ignore report", ignore_admin_item_report_path(notification.notifiable), method: :patch,
-          style: "padding: 8px 14px; border: 1px solid #d0d5dd; border-radius: 6px; background: white; color: #344054; cursor: pointer; font-weight: 600;" %>
+          class: "market-button market-button--secondary market-button--compact" %>
     </div>
 
-    <div style="font-size: 0.9em; color: #666;"><%= notification.created_at.strftime("%B %d, %Y at %I:%M %p") %></div>
-  </div>
+    <div class="notification-card__content">
+      <div class="notification-card__header">
+        <div class="notification-card__message">
+          <%= notification_report_message(notification) %>
+        </div>
+        <span class="notification-card__badge notification-card__badge--pending">Pending</span>
+      </div>
+
+      <% if notification_detail_message(notification).present? %>
+        <p class="notification-card__detail"><%= notification_detail_message(notification) %></p>
+      <% end %>
+
+      <p class="notification-card__timestamp"><%= short_timestamp %></p>
+    </div>
+  </article>
+<% elsif offer_notification?(notification) %>
+  <article class="notification-card notification-card--offer <%= "notification-card--unread" if unread %>">
+    <div class="notification-card__header">
+      <div class="notification-card__message"><%= notification_offer_message(notification) %></div>
+      <% if notification_offer_badge_label(notification).present? %>
+        <span class="notification-card__badge <%= notification_offer_badge_class(notification) %>">
+          <%= notification_offer_badge_label(notification) %>
+        </span>
+      <% end %>
+    </div>
+
+    <% if notification_offer_detail_message(notification).present? %>
+      <p class="notification-card__detail"><%= notification_offer_detail_message(notification) %></p>
+    <% end %>
+
+    <p class="notification-card__timestamp"><%= short_timestamp %></p>
+  </article>
 <% else %>
-  <%= link_to notification_mark_as_read_path(notification),
-      data: { turbo_method: :patch },
-      style: "display: block; text-decoration: none; color: inherit; #{base_style}" do %>
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
-      <div style="font-weight: 600; margin-bottom: 6px;"><%= notification_message(notification) %></div>
+  <article class="notification-card notification-card--standard <%= "notification-card--unread" if unread %>">
+    <div class="notification-card__header">
+      <div class="notification-card__message">
+        <%= notification_standard_message(notification) %>
+      </div>
       <% if notification_badge_label(notification).present? %>
-        <span style="<%= notification_badge_style(notification) %>"><%= notification_badge_label(notification) %></span>
+        <span class="notification-card__badge notification-card__badge--resolved"><%= notification_badge_label(notification) %></span>
       <% end %>
     </div>
 
     <% if notification_detail_message(notification).present? %>
-      <div style="font-size: 0.95em; color: #374151; margin-bottom: 10px;"><%= notification_detail_message(notification) %></div>
+      <p class="notification-card__detail"><%= notification_detail_message(notification) %></p>
     <% end %>
 
-    <div style="font-size: 0.9em; color: #666;"><%= notification.created_at.strftime("%B %d, %Y at %I:%M %p") %></div>
-  <% end %>
+    <p class="notification-card__timestamp"><%= short_timestamp %></p>
+  </article>
 <% end %>

@@ -1,53 +1,86 @@
-<div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
-  <h1 style="margin-top: 0;">CHAT</h1>
+<% content_for :title, "Chat" %>
 
-  <div style="display: flex; gap: 20px; align-items: stretch; min-height: 70vh;">
-    <aside style="width: 32%; min-width: 280px; border: 1px solid #ddd;">
-      <% if @conversations.any? %>
-        <% @conversations.each do |conversation| %>
-          <% last_message = conversation.last_message %>
-          <% other_user = conversation.other_user_for(current_user) %>
-          <% selected = conversation == @current_conversation %>
+<div class="market-page market-page--soft chat-page">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner market-page__hero-inner--wide">
+      <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-back-link" %>
+      <p class="market-page__eyebrow">Messages</p>
+      <h1 class="market-page__title">Messages</h1>
+      <p class="market-page__lede">
+        Continue buyer and seller conversations in one place. The message flow and access rules remain unchanged.
+      </p>
+    </div>
+  </section>
 
-          <%= link_to conversations_path(conversation_id: conversation.id),
-              style: "display: block; padding: 14px 16px; border-bottom: 1px solid #eee; text-decoration: none; color: inherit; background: #{selected ? '#f5f5f5' : 'white'};" do %>
-            <div style="font-weight: 700; margin-bottom: 6px;">
-              <%= "#{other_user.display_name}, #{conversation.item.title}" %>
-            </div>
-            <div style="font-size: 0.9em; color: #555;">
-              <% if last_message.present? %>
-                <%= "#{last_message.user.display_name}: #{truncate(last_message.content, length: 55)}" %>
-                <span style="float: right;"><%= last_message.created_at.strftime("%H:%M") %></span>
-              <% else %>
-                &lt;empty conversation&gt;
+  <div class="market-page__body market-page__body--wide">
+    <div class="chat-page__layout">
+      <aside class="market-surface-card chat-page__threads">
+        <div class="chat-page__threads-head">
+          <h2 class="chat-page__section-title">Conversations</h2>
+          <span class="chat-page__thread-count"><%= pluralize(@conversations.size, "thread") %></span>
+        </div>
+
+        <% if @conversations.any? %>
+          <div class="chat-page__thread-list">
+            <% @conversations.each do |conversation| %>
+              <% last_message = conversation.last_message %>
+              <% other_user = conversation.other_user_for(current_user) %>
+              <% selected = conversation == @current_conversation %>
+
+              <%= link_to conversations_path(conversation_id: conversation.id),
+                  class: class_names("chat-page__thread-link", { "is-active" => selected }) do %>
+                <div class="chat-page__thread-top">
+                  <strong><%= other_user.display_name %></strong>
+                  <% if last_message.present? %>
+                    <span><%= last_message.created_at.strftime("%H:%M") %></span>
+                  <% end %>
+                </div>
+                <p class="chat-page__thread-item"><%= conversation.item.title %></p>
+                <p class="chat-page__thread-preview">
+                  <% if last_message.present? %>
+                    <%= "#{last_message.user.display_name}: #{truncate(last_message.content, length: 70)}" %>
+                  <% else %>
+                    No messages yet.
+                  <% end %>
+                </p>
               <% end %>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="market-empty-state">
+            <p>No conversations yet.</p>
+          </div>
         <% end %>
-      <% else %>
-        <div style="padding: 16px;">No conversations yet.</div>
-      <% end %>
-    </aside>
+      </aside>
 
-    <section style="flex: 1; border: 1px solid #ddd; padding: 16px;">
-      <% if @current_conversation.present? %>
-        <% other_user = @current_conversation.other_user_for(current_user) %>
-        <div style="padding-bottom: 12px; border-bottom: 1px solid #eee; margin-bottom: 16px;">
-          <strong><%= other_user.display_name %></strong>
-          <div style="color: #666; margin-top: 4px;"><%= @current_conversation.item.title %></div>
-        </div>
+      <section class="market-surface-card chat-page__panel">
+        <% if @current_conversation.present? %>
+          <% other_user = @current_conversation.other_user_for(current_user) %>
+          <div class="chat-page__panel-head">
+            <div>
+              <p class="market-section-eyebrow">Active conversation</p>
+              <h2 class="chat-page__section-title"><%= other_user.display_name %></h2>
+              <p class="market-note"><%= @current_conversation.item.title %></p>
+            </div>
 
-        <%= turbo_stream_from @current_conversation %>
+            <%= link_to "View listing",
+                item_path(@current_conversation.item, marketplace_base_params),
+                class: "market-button market-button--secondary market-button--compact" %>
+          </div>
 
-        <!-- ADDING data-controller ==> for autoscrolling mechanism ? -->
-        <div id="messages" data-controller="chat-scroll" style="height: 55vh; overflow-y: auto; border: 1px solid #eee; padding: 12px; margin-bottom: 16px;">
-          <%= render @messages %>
-        </div>
+          <%= turbo_stream_from @current_conversation %>
 
-        <%= render "messages/form", conversation: @current_conversation, message: @message %>
-      <% else %>
-        <p>Select a conversation to start chatting.</p>
-      <% end %>
-    </section>
+          <div id="messages" data-controller="chat-scroll" class="chat-page__messages">
+            <%= render @messages %>
+          </div>
+
+          <%= render "messages/form", conversation: @current_conversation, message: @message %>
+        <% else %>
+          <div class="market-empty-state">
+            <p>Select a conversation to start chatting.</p>
+          </div>
+        <% end %>
+      </section>
+    </div>
   </div>
 </div>

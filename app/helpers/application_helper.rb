@@ -1,4 +1,16 @@
 module ApplicationHelper
+  MARKETPLACE_COLLEGE_SLUGS = %w[
+    chung-chi
+    new-asia
+    united
+    shaw
+    morningside
+    s-h-ho
+    c-w-chu
+    wu-yee-sun
+    lee-woo-sing
+  ].freeze
+
   # amount_hkd is a numeric value stored in DB in HKD
   def display_price(amount_hkd)
     return "" if amount_hkd.nil?
@@ -90,12 +102,33 @@ module ApplicationHelper
   end
 
   def marketplace_theme_name
-    return "global" unless controller.action_name == "index" && %w[items search].include?(controller.controller_name)
-    return "global" unless marketplace_scope == "college"
+    if controller.controller_name == "items" && controller.action_name == "show"
+      return theme_slug_for_college(@item&.college)
+    end
 
-    slug = current_user&.college&.name.to_s.parameterize.delete_suffix("-college")
-    return slug if %w[wu-yee-sun chung-chi].include?(slug)
+    if current_user&.admin?
+      return theme_slug_for_college(selected_marketplace_college) if selected_marketplace_college.present?
 
-    "global" # default value
+      return "global"
+    end
+
+    if %w[items search].include?(controller.controller_name) && marketplace_scope != "college"
+      return "global"
+    end
+
+    theme_slug_for_college(current_user&.college)
+  end
+
+  def theme_slug_for_college(college)
+    slug = college_slug(college)
+    return slug if MARKETPLACE_COLLEGE_SLUGS.include?(slug)
+
+    "global"
+  end
+
+  def college_slug(college)
+    return if college.blank?
+
+    college.try(:slug).presence || college.name.to_s.parameterize.delete_suffix("-college")
   end
 end

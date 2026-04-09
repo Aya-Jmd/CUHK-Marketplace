@@ -5,16 +5,20 @@ class Admin::DashboardController < Admin::BaseController
       @total_users = User.count
       @total_items = Item.available.count
       @colleges = College.all
+      @report_scope = ItemReport.includes(:item)
       # Super Admin sees everyone, ordered by most recent
       @users = User.includes(:college).order(created_at: :desc)
     elsif current_user.college_admin?
       @total_users = User.where(college_id: current_user.college_id).count
       @total_items = Item.available.where(college_id: current_user.college_id).count
+      @report_scope = ItemReport.joins(:item).where(items: { college_id: current_user.college_id })
 
       # College Admin only sees people in their college
       @users = User.where(college_id: current_user.college_id).order(created_at: :desc)
     end
 
+    @total_reports = @report_scope.count
+    @pending_reports = @report_scope.pending.count
     @new_admin = User.new
   end
 

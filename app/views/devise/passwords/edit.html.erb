@@ -1,25 +1,37 @@
-<h2>Change your password</h2>
+<% content_for :title, "Reset Password" %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+<div class="auth-shell">
+  <section class="auth-card auth-card--narrow">
+    <div class="auth-card__hero">
+      <p class="auth-card__eyebrow">Account Recovery</p>
+      <h1 class="auth-card__title">Change your password</h1>
+      <p class="auth-card__copy">
+        Set a new password to continue using your marketplace account.
+      </p>
+    </div>
 
-  <div class="field">
-    <p><%= f.label :password, "New password" %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
-    <% end %>
-    <p><%= f.password_field :password, autofocus: true, autocomplete: "new-password" %></p>
-  </div>
+    <div class="auth-card__panel">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation, "Confirm new password" %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
+        <div class="auth-form__field">
+          <%= f.label :password, "New password" %>
+          <% if @minimum_password_length %>
+            <span class="auth-form__hint"><%= @minimum_password_length %> characters minimum</span>
+          <% end %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "auth-form__input" %>
+        </div>
 
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
+        <div class="auth-form__field">
+          <%= f.label :password_confirmation, "Confirm new password" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "auth-form__input" %>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <%= f.submit "Change password", class: "market-button" %>
+      <% end %>
+
+      <%= render "devise/shared/links" %>
+    </div>
+  </section>
+</div>

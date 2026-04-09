@@ -50,7 +50,9 @@
     </style>
   </head>
 
-  <body data-theme="<%= marketplace_theme_name %>"
+  <body class="<%= class_names("page-#{controller.controller_name}", "action-#{controller.action_name}", { "is-authenticated" => user_signed_in?, "is-guest" => !user_signed_in?, "is-devise" => devise_controller? }) %>"
+        data-theme="<%= marketplace_theme_name %>"
+        data-current-user-id="<%= current_user&.id %>"
         data-controller="notification"
         data-notification-currency-code-value="<%= current_currency_code %>">
     
@@ -58,20 +60,21 @@
          class="hidden fixed top-4 right-4 bg-blue-600 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300">
     </div>
 
-
     <!-- Render the shared navigation bar everywhere, at top of page -->
     <%= render "general/header" %>
     
-    <div id="flash-messages" style="max-width: 1200px; margin: 15px auto 0; padding: 0 20px;">
+    <div id="flash-messages" class="site-flash-stack">
       <% if notice %>
-        <div style="background-color: #d4edda; color: #155724; padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; font-weight: bold;">
-          ✅ <%= notice %>
+        <div class="site-flash site-flash--notice">
+          <span class="site-flash__icon" aria-hidden="true">OK</span>
+          <span><%= notice %></span>
         </div>
       <% end %>
 
       <% if alert %>
-        <div style="background-color: #f8d7da; color: #721c24; padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; font-weight: bold;">
-          ⚠️ <%= alert %>
+        <div class="site-flash site-flash--alert">
+          <span class="site-flash__icon" aria-hidden="true">!</span>
+          <span><%= alert %></span>
         </div>
       <% end %>
     </div>
