@@ -5,6 +5,33 @@ module ItemsHelper
     display_price(item.price)
   end
 
+  def market_card_age(item)
+    seconds = Time.current - item.created_at
+
+    case seconds
+    when 0...60
+      "Now"
+    when 60...3600
+      minutes = (seconds / 60).floor
+      "#{minutes} #{'minute'.pluralize(minutes)} ago"
+    when 3600...86_400
+      hours = (seconds / 3600).floor
+      "#{hours} #{'hour'.pluralize(hours)} ago"
+    when 86_400...604_800
+      days = (seconds / 86_400).floor
+      "#{days} #{'day'.pluralize(days)} ago"
+    when 604_800...2_592_000
+      weeks = (seconds / 604_800).floor
+      "#{weeks} #{'week'.pluralize(weeks)} ago"
+    when 2_592_000...31_536_000
+      months = (seconds / 2_592_000).floor
+      "#{months} #{'month'.pluralize(months)} ago"
+    else
+      years = (seconds / 31_536_000).floor
+      "#{years} #{'year'.pluralize(years)} ago"
+    end
+  end
+
   def market_card_meta(item)
     [
       item.category&.name || "Uncategorized",

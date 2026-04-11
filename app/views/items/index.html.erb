@@ -9,8 +9,11 @@
 <div class="items-index <%= "items-index--floating-nav" if user_signed_in? %>">
   <%= render "items/hero_carousel", browse_state: browse_state %>
 
-  <div class="items-main">
-    <p class="items-index-strip">Shop by category</p>
+  <div class="items-main items-main--homepage">
+    <div class="items-main__intro">
+      <p class="items-index-strip">Browse the marketplace</p>
+      <p class="items-main__subcopy">Pick a category, refine the campus scope, and discover the latest student listings in one flow.</p>
+    </div>
     <%= render "items/category_strip", categories: @categories, base_state: browse_state %>
     <%= render "items/market_grid", items: @items, dom_id: "items" %>
   </div>

@@ -114,9 +114,9 @@
 
     <div class="site-header__account-actions">
       <div class="site-header__hover-shell site-header__menu-shell">
-        <button type="button" class="site-header__icon-link site-header__summary site-header__summary--static" aria-label="Open account menu">
+        <span class="site-header__icon-link site-header__summary site-header__summary--static" aria-hidden="true">
           <%= image_tag "nav_menu.png", alt: "", class: "site-header__icon-image" %>
-        </button>
+        </span>
 
         <div class="site-header__hover-dropdown site-header__dropdown site-header__account-dropdown">
          
@@ -131,9 +131,9 @@
       </div>
 
       <div class="site-header__hover-shell site-header__profile-shell">
-        <button type="button" class="site-header__icon-link site-header__summary site-header__summary--static" aria-label="Open profile menu">
+        <span class="site-header__icon-link site-header__summary site-header__summary--static" aria-hidden="true">
           <%= image_tag "nav_user.svg", alt: "", class: "site-header__icon-image" %>
-        </button>
+        </span>
 
         <div class="site-header__hover-dropdown site-header__dropdown site-header__profile-dropdown">
           <%= link_to "My Profile", edit_profile_path, class: "site-header__dropdown-link" %>
