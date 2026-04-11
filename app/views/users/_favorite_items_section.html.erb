@@ -1,0 +1,21 @@
+<section class="market-surface-card profile-show__section profile-show__section--full" id="dashboard_favorite_items_section">
+  <div class="market-section-heading profile-show__section-heading">
+    <div>
+      <p class="market-section-eyebrow">Saved</p>
+      <h2 class="market-section-title">Liked items</h2>
+      <p class="market-note">
+        Keep a shortlist of listings you want to revisit without searching for them again.
+      </p>
+    </div>
+  </div>
+
+  <% if favorite_items.any? %>
+    <div class="profile-favorites__scroller">
+      <%= render "items/market_grid", items: favorite_items, favorite_context: "dashboard_favorites", grid_class: "profile-favorites__grid" %>
+    </div>
+  <% else %>
+    <div class="market-empty-state">
+      <p>You have not liked any items yet.</p>
+    </div>
+  <% end %>
+</section>

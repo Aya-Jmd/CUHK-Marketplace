@@ -94,6 +94,6 @@ class NotificationsController < ApplicationController
     redirect_path = params[:redirect_to].to_s
     return redirect_path if redirect_path.start_with?("/") && !redirect_path.start_with?("//")
 
-    profile_path
+    dashboard_path
   end
 end

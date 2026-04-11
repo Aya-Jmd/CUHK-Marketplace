@@ -11,12 +11,9 @@ Rails.application.routes.draw do
   resources :users, only: [ :show ]
 
   # Private user dashboard (The logged-in user's management area)
-  resource :profile, only: [ :show, :edit, :update ] do
-    collection do
-      get :my_items   # Page to manage their active listings
-      get :my_offers  # Page to track offers they've made/received
-    end
-  end
+  get "/dashboard", to: "profiles#show", as: :dashboard
+  get "/profile", to: "profiles#edit", as: :profile
+  patch "/profile", to: "profiles#update"
 
   # -----------------------------------------------------------------------
   # 2. PUBLIC MARKETPLACE & TENANCY
@@ -34,6 +31,7 @@ Rails.application.routes.draw do
   resources :items do
     resources :offers, only: [ :new, :create ]
     resources :item_reports, only: [ :create ]
+    resource :favorite, only: [ :create, :destroy ]
   end
 
   # -----------------------------------------------------------------------

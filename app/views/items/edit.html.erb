@@ -1,15 +1,21 @@
 <% content_for :title, "Editing item" %>
 
-<div class="market-page market-page--soft listing-form-page">
-  <div class="market-page__body">
-    <section class="market-page__hero">
-      <br><br>
-      <div class="market-page__hero-inner">
-        <h1 class="market-page__title">Update your item</h1>
-      </div>
-    </section>
+<div class="market-page market-page--soft listing-form-page listing-form-page--edit">
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner">
+      <h1 class="market-page__title">Update your item</h1>
+    </div>
+  </section>
 
+  <div class="market-page__body">
     <div class="market-split listing-form-page__split">
+      <section class="market-surface-card listing-form-page__details">
+        <div class="listing-form-page__details-head">
+          <p class="market-section-eyebrow">Listing details</p>
+        </div>
+        <%= render "form", item: @item %>
+      </section>
+
       <article class="market-surface-card market-surface-card--muted listing-form-page__checklist">
         <p class="market-section-eyebrow">Listing checklist</p>
         <h2 class="market-section-title">Before you publish</h2>
@@ -29,12 +35,6 @@
           </div>
         </div>
       </article>
-
-      <section class="market-surface-card listing-form-page__details">
-        <p class="market-section-eyebrow">Listing details</p>
-        <h2 class="market-section-title">Update your item</h2>
-        <%= render "form", item: @item %>
-      </section>
     </div>
   </div>
 </div>

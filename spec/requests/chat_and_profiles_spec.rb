@@ -41,13 +41,13 @@ RSpec.describe "Chat and Profiles", type: :request do
     sign_in buyer
     get conversations_path(conversation_id: conversation.id)
 
-    document = Capybara.string(response.body)
+    document = Nokogiri::HTML.parse(response.body)
 
     expect(response).to have_http_status(:ok)
-    expect(document).to have_css(".chat-page__messages-shell[data-controller='chat-scroll']")
-    expect(document).to have_css("#messages.chat-page__messages[data-chat-scroll-target='viewport']")
-    expect(document).to have_css(".chat-page__custom-scrollbar[data-chat-scroll-target='track']", visible: false)
-    expect(document).to have_css(".chat-page__custom-scrollbar-thumb[data-chat-scroll-target='thumb']")
+    expect(document.at_css(".chat-page__messages-shell[data-controller='chat-scroll']")).to be_present
+    expect(document.at_css("#messages.chat-page__messages[data-chat-scroll-target='viewport']")).to be_present
+    expect(document.at_css(".chat-page__custom-scrollbar[data-chat-scroll-target='track']")).to be_present
+    expect(document.at_css(".chat-page__custom-scrollbar-thumb[data-chat-scroll-target='thumb']")).to be_present
   end
 
   it "updates current user profile location" do
@@ -58,7 +58,7 @@ RSpec.describe "Chat and Profiles", type: :request do
     sign_in user
     patch profile_path, params: { user: { college_id: college_b.id, default_location: "new_asia", latitude: 22.42, longitude: 114.21 } }
 
-    expect(response).to redirect_to(profile_path)
+    expect(response).to redirect_to(dashboard_path)
     expect(user.reload.college_id).to eq(college_b.id)
     expect(user.default_location).to eq("new_asia")
   end

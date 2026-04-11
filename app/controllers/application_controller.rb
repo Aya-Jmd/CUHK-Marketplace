@@ -125,4 +125,13 @@ class ApplicationController < ActionController::Base
       global: true,
       college_id: current_user.college_id)
   end
+
+  def preload_favorited_item_ids(items)
+    return @favorited_item_ids = [] unless user_signed_in?
+
+    item_ids = Array(items).flatten.compact.map { |item| item.respond_to?(:id) ? item.id : item }.uniq
+    return @favorited_item_ids = [] if item_ids.empty?
+
+    @favorited_item_ids = current_user.favorites.where(item_id: item_ids).pluck(:item_id)
+  end
 end

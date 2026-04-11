@@ -5,6 +5,17 @@ module ConversationsHelper
 
     if last_message.offer_update_notice?
       "Offer updated to #{display_price(last_message.offer_update_amount_hkd)}"
+    elsif last_message.marketplace_notice?
+      case last_message.marketplace_notice_type
+      when "offer_accepted"
+        "Offer accepted"
+      when "offer_cancelled"
+        "Transaction cancelled"
+      when "offer_completed"
+        "Item sold"
+      else
+        truncate(last_message.content, length: 42)
+      end
     else
       truncate(last_message.content, length: 42)
     end

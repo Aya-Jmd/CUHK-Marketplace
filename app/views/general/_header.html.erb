@@ -120,7 +120,7 @@
 
         <div class="site-header__hover-dropdown site-header__dropdown site-header__account-dropdown">
          
-          <%= link_to "My Items", profile_path, class: "site-header__dropdown-link" %>
+          <%= link_to "My Dashboard", dashboard_path, class: "site-header__dropdown-link" %>
           <hr class="site-header__dropdown-rule">
           <%= link_to "Market Overview", analytics_path, class: "site-header__dropdown-link" %>
           <% if current_user.admin? || current_user.college_admin? %>
@@ -136,7 +136,7 @@
         </span>
 
         <div class="site-header__hover-dropdown site-header__dropdown site-header__profile-dropdown">
-          <%= link_to "My Profile", edit_profile_path, class: "site-header__dropdown-link" %>
+          <%= link_to "My Profile", profile_path, class: "site-header__dropdown-link" %>
           <hr class="site-header__dropdown-rule">
           <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
               form: { class: "site-header__signout-form" },

@@ -4,6 +4,8 @@ class Item < ApplicationRecord
   belongs_to :category, optional: true
   has_many :offers, dependent: :destroy
   has_many :item_reports, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :favorited_by_users, through: :favorites, source: :user
 
   has_many_attached :images
 

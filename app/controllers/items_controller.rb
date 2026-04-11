@@ -31,6 +31,7 @@ class ItemsController < ApplicationController
     min_price_hkd = convert_price_to_hkd(@min_price)
     max_price_hkd = convert_price_to_hkd(@max_price)
     @items = base.where(price: min_price_hkd..max_price_hkd).order(created_at: :desc)
+    preload_favorited_item_ids(@items)
   end
 
   # GET /items/1 or /items/1.json
@@ -60,6 +61,8 @@ class ItemsController < ApplicationController
                          end
                          .first(5)
     end
+
+    preload_favorited_item_ids([ @item, *@nearby_items.to_a ])
   end
 
   # GET /items/new

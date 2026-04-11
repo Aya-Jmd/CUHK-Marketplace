@@ -1,4 +1,21 @@
 module ItemsHelper
+  def favorited_item?(item)
+    return false unless user_signed_in?
+
+    ids = @favorited_item_ids
+    return current_user.favorites.exists?(item_id: item.id) if ids.nil?
+
+    ids.include?(item.id)
+  end
+
+  def favorite_button_dom_id(item, context = "market_card")
+    dom_id(item, :"favorite_button_#{normalized_favorite_context(context)}")
+  end
+
+  def normalized_favorite_context(context)
+    context.to_s.presence || "market_card"
+  end
+
   def market_card_price(item)
     return "" if item.price.blank?
 

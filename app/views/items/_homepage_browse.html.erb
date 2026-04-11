@@ -1,0 +1,93 @@
+<% scope_params = marketplace_base_params(@scope) %>
+<% row_size = 5 %>
+<% homepage_items = items.to_a %>
+<% used_ids = [] %>
+
+<% recent_items = homepage_items.first(row_size) %>
+<% used_ids.concat(recent_items.map(&:id)) %>
+
+<% second_pool = homepage_items.reject { |item| used_ids.include?(item.id) } %>
+<% campus_picks = second_pool.select { |item| item.images.attached? }.first(row_size) %>
+<% if campus_picks.size < row_size %>
+  <% campus_picks += second_pool.reject { |item| campus_picks.any? { |pick| pick.id == item.id } }.first(row_size - campus_picks.size) %>
+<% end %>
+<% used_ids.concat(campus_picks.map(&:id)) %>
+
+<% third_pool = homepage_items.reject { |item| used_ids.include?(item.id) } %>
+<% third_eyebrow = "Your community" %>
+<% third_title = "From your college" %>
+<% third_description = "A closer look at listings connected to your college community." %>
+
+<% if current_user&.college_id.present? %>
+  <% your_college_items = third_pool.select { |item| item.college_id == current_user.college_id }.first(row_size) %>
+  <% if your_college_items.any? %>
+    <% college_name = current_user.college&.name.presence || "your college" %>
+    <% third_items = your_college_items %>
+    <% third_title = "From #{college_name}" %>
+    <% third_description = "Fresh listings visible within the #{college_name} community." %>
+  <% else %>
+    <% third_items = third_pool.first(row_size) %>
+    <% third_eyebrow = "Across campus" %>
+    <% third_title = "More to explore" %>
+    <% third_description = "Keep browsing what students across CUHK are posting right now." %>
+  <% end %>
+<% else %>
+  <% third_items = third_pool.first(row_size) %>
+  <% third_eyebrow = "Across campus" %>
+  <% third_title = "More to explore" %>
+  <% third_description = "Keep browsing what students across CUHK are posting right now." %>
+<% end %>
+
+<div class="items-home-browse">
+  <%= render "items/homepage_listing_row",
+      eyebrow: "Just in",
+      title: "Recently posted",
+      description: "The newest listings students can browse right now.",
+      items: recent_items,
+      row_size: row_size %>
+
+  <%= render "items/homepage_listing_row",
+      eyebrow: "Campus picks",
+      title: "Highlighted finds",
+      description: "A quick mix of standout listings worth checking next.",
+      items: campus_picks,
+      row_size: row_size %>
+
+  <section class="items-home-promo" aria-label="Marketplace promotion">
+    <div class="items-home-promo__content">
+      <p class="items-home-promo__eyebrow">Student marketplace flow</p>
+      <h3 class="items-home-promo__title">Post once and stay visible across campus</h3>
+      <p class="items-home-promo__copy">Create a listing, keep the details clean, and make it easy for the right buyers to find you fast.</p>
+
+      <div class="items-home-promo__actions">
+        <%= link_to "Sell an item", new_item_path, class: "items-home-promo__cta" %>
+        <%= link_to "Browse all", search_path(scope_params), class: "items-home-promo__secondary" %>
+      </div>
+    </div>
+
+    <div class="items-home-promo__visual" aria-hidden="true">
+      <div class="items-home-promo__card items-home-promo__card--primary">
+        <span class="items-home-promo__card-label">Quick listing flow</span>
+        <strong>Photos, price, and category in one tidy form</strong>
+        <p>Designed so campus buyers can scan listings fast.</p>
+      </div>
+
+      <div class="items-home-promo__stats">
+        <span>Campus-wide visibility</span>
+        <span>College-aware browsing</span>
+        <span>Fast search discovery</span>
+      </div>
+    </div>
+  </section>
+
+  <%= render "items/homepage_listing_row",
+      eyebrow: third_eyebrow,
+      title: third_title,
+      description: third_description,
+      items: third_items,
+      row_size: row_size %>
+
+  <div class="items-home-browse__footer">
+    <%= link_to "Browse all listings", search_path(scope_params), class: "items-home-browse__link" %>
+  </div>
+</div>

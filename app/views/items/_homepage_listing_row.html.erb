@@ -1,0 +1,19 @@
+<% row_size = local_assigns.fetch(:row_size, 5) %>
+<% row_items = Array(local_assigns[:items]).compact.first(row_size) %>
+<% filler_count = [row_size - row_items.size, 0].max %>
+
+<section class="items-home-section" aria-label="<%= title %>">
+  <div class="items-home-section__header">
+    <div>
+      <p class="items-home-section__eyebrow"><%= eyebrow %></p>
+      <h3 class="items-home-section__title"><%= title %></h3>
+    </div>
+  </div>
+
+  <div class="items-home-section__grid" role="list">
+    <%= render partial: "items/market_card", collection: row_items, as: :item %>
+    <% filler_count.times do %>
+      <%= render "items/market_card_skeleton" %>
+    <% end %>
+  </div>
+</section>

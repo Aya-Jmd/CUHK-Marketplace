@@ -15,6 +15,6 @@
       <p class="items-main__subcopy">Pick a category, refine the campus scope, and discover the latest student listings in one flow.</p>
     </div>
     <%= render "items/category_strip", categories: @categories, base_state: browse_state %>
-    <%= render "items/market_grid", items: @items, dom_id: "items" %>
+    <%= render "items/homepage_browse", items: @items %>
   </div>
 </div>

@@ -1,8 +1,16 @@
 <% category_label = item.category&.name.presence || "Uncategorized" %>
 <% college_label = item.college&.name.presence || "CUHK" %>
 <% card_price = market_card_price(item) %>
+<% card_age = market_card_age(item) %>
+<% compact_price = card_price.length >= 15 %>
+<% compact_footer = compact_price || card_age.length >= 14 %>
+<% favorite_context = normalized_favorite_context(local_assigns[:favorite_context]) %>
 
 <article class="market-card" role="listitem"> 
+  <div class="market-card__favorite">
+    <%= render "items/favorite_button", item: item, favorite_context: favorite_context %>
+  </div>
+
   <%= link_to item_path(item, marketplace_base_params), class: "market-card__link" do %>
     <div class="market-card__media">
       <% if item.images.attached? %>
@@ -23,11 +31,11 @@
 
       <h3 class="market-card__title"><%= item.title %></h3>
 
-      <div class="market-card__footer">
-        <span class="market-card__price <%= "market-card__price--empty" if card_price.blank? %>">
+      <div class="market-card__footer <%= "market-card__footer--compact" if compact_footer %>">
+        <span class="market-card__price <%= "market-card__price--empty" if card_price.blank? %> <%= "market-card__price--compact" if compact_price %>">
           <%= card_price.presence || "Price pending" %>
         </span>
-        <span class="market-card__age"><%= market_card_age(item) %></span>
+        <span class="market-card__age <%= "market-card__age--compact" if compact_footer %>"><%= card_age %></span>
       </div>
     </div>
   <% end %>

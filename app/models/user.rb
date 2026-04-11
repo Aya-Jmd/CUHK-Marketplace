@@ -16,6 +16,8 @@ class User < ApplicationRecord
   has_many :offers_made, class_name: "Offer", foreign_key: "buyer_id"
   has_many :offers_received, class_name: "Offer", foreign_key: "seller_id"
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :favorited_items, through: :favorites, source: :item
 
   validates :college, presence: true, unless: :admin?
 

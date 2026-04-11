@@ -52,6 +52,12 @@ class Notification < ApplicationRecord
     case action
     when "offer_updated"
       "#{actor.display_name} updated their offer for #{item_name} to #{offer_price_hkd} HKD."
+    when "offer_accepted"
+      "#{actor.display_name} accepted the offer for #{item_name}."
+    when "offer_cancelled"
+      "#{actor.display_name} cancelled the transaction for #{item_name}."
+    when "offer_completed"
+      "#{actor.display_name} completed the transaction for #{item_name}."
     when "offer_withdrawn"
       "#{actor.display_name} has cancelled their offer of #{offer_price_hkd} HKD for item #{item_name}."
     when "item_report_created"

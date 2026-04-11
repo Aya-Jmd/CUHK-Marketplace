@@ -20,66 +20,58 @@
     []
   end %>
 <% content_for :title, profile_owner ? "My Items" : "#{display_name}'s profile" %>
-<BR>
-<div class="market-page market-page--item profile-show-page">
-  <section class="item-show__hero profile-show__hero">
-    <div class="item-show__shell">
-
-      <div class="profile-show__hero-card">
-        <div class="profile-show__hero-copy">
-          <h1 class="market-page__title"><%= profile_owner ? "My listings and buyer hub" : "#{display_name}'s profile" %></h1>
-
-          <div class="item-show__hero-tags profile-show__hero-tags">
-            <span class="item-show__hero-tag"><%= @user.college&.name || "College not specified" %></span>
-            <span class="item-show__hero-tag"><%= pluralize(active_items.size, "seller item") %></span>
-            
-            <% if profile_owner %>
-              <span class="item-show__hero-tag"><%= pluralize(pending_bids.size + accepted_bids.size, "buyer offer") %></span>
-            <% end %>
-          </div>
-
-          <p class="market-page__lede">
-            <%= profile_owner ? "Manage items you posted for sale and track the offers you made, 
-            without changing any of the underlying marketplace flows." : "Browse the items this 
-            seller currently has available on the CUHK marketplace." %>
-          </p>
-
-          <div class="market-page__actions">
-            <% if profile_owner %>
-              <%= link_to "Edit Profile", edit_profile_path, class: "market-button market-button--ghost-light" %>
-            <% else %>
-              <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-button market-button--light" %>
-            <% end %>
-          </div>
-        </div>
-
-        <aside class="profile-show__hero-panel">
-          <div class="profile-show__hero-avatar" aria-hidden="true"><%= @user.display_name.first.to_s.upcase %></div>
-          <div class="profile-show__hero-panel-copy">
-            <h2 class="profile-show__hero-panel-title"><%= @user.display_name %></h2>
-            <% if @user==current_user%><p class="profile-show__hero-panel-subtitle"><%= @user.email %></p><% end %>
-          </div>
-
-        </aside>
+<div class="<%= class_names("market-page market-page--item profile-show-page", { "profile-show-page--dashboard" => profile_owner }) %>">
+  <% if profile_owner %>
+    <section class="market-page__hero profile-dashboard__hero">
+      <div class="market-page__hero-inner profile-dashboard__hero-inner">
+        <h1 class="market-page__title">Dashboard</h1>
       </div>
-    </div>
-  </section>
+    </section>
+  <% else %>
+    <section class="item-show__hero profile-show__hero">
+      <div class="item-show__shell">
+        <div class="profile-show__hero-card">
+          <div class="profile-show__hero-copy">
+            <h1 class="market-page__title"><%= "#{display_name}'s profile" %></h1>
+
+            <div class="item-show__hero-tags profile-show__hero-tags">
+              <span class="item-show__hero-tag"><%= @user.college&.name || "College not specified" %></span>
+              <span class="item-show__hero-tag"><%= pluralize(public_items.size, "seller item") %></span>
+            </div>
+
+            <p class="market-page__lede">
+              Browse the items this seller currently has available on the CUHK marketplace.
+            </p>
+
+            <div class="market-page__actions">
+              <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-button market-button--light" %>
+            </div>
+          </div>
+
+          <aside class="profile-show__hero-panel">
+            <div class="profile-show__hero-avatar" aria-hidden="true"><%= @user.display_name.first.to_s.upcase %></div>
+            <div class="profile-show__hero-panel-copy">
+              <h2 class="profile-show__hero-panel-title"><%= @user.display_name %></h2>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  <% end %>
 
   <div class="item-show__shell profile-show__content">
-    <% if profile_owner %>
-      <div class="profile-show__dashboard-header" id="dashboard">
-        <h2 class="profile-show__dashboard-title">My Dashboard</h2>
-      </div>
-    <% end %>
-
     <div class="<%= class_names("profile-show__sections", { "profile-show__sections--dashboard" => profile_owner }) %>">
+      <% if profile_owner %>
+        <%= render "users/favorite_items_section", favorite_items: @favorite_items %>
+      <% end %>
+
       <section class="market-surface-card profile-show__section">
         <div class="market-section-heading profile-show__section-heading">
           <div>
-            <p class="market-section-eyebrow"><%= profile_owner ? "Seller Hub" : "Posted items" %></p>
-            <h2 class="market-section-title"><%= profile_owner ? "Items you posted for sale" : "Items posted by this seller" %></h2>
+            <p class="market-section-eyebrow"><%= profile_owner ? "Selling" : "Seller inventory" %></p>
+            <h2 class="market-section-title"><%= profile_owner ? "Listings and incoming offers" : "Available listings" %></h2>
             <p class="market-note">
-              <%= profile_owner ? "Keep your seller actions attached to each listing: offer review, reservation handling, and sale completion." : "Only currently available items are shown here." %>
+              <%= profile_owner ? "Follow each listing from first offer to final completion, all in one place." : "Only items that are currently visible on the marketplace are shown here." %>
             </p>
           </div>
 
@@ -190,32 +182,31 @@
               <% end %>
             <% else %>
               <% public_items.each do |item| %>
-                <article class="profile-item-row" role="listitem">
-                  <div class="profile-item-row__top">
-                    <div class="profile-item-row__identity">
-                      <p class="profile-item-row__meta">
-                        <span><%= item.category&.name || "Uncategorized" %></span>
-                        <span><%= item.created_at.strftime("%b %d, %Y") %></span>
-                      </p>
+                <article class="profile-item-row profile-item-row--linkable" role="listitem">
+                  <%= link_to item_path(item), class: "profile-item-row__card-link" do %>
+                    <div class="profile-item-row__top">
+                      <div class="profile-item-row__identity">
+                        <p class="profile-item-row__meta">
+                          <span><%= item.category&.name || "Uncategorized" %></span>
+                          <span><%= item.created_at.strftime("%b %d, %Y") %></span>
+                        </p>
 
-                      <h3 class="profile-item-row__title">
-                        <%= link_to item.title, item_path(item), class: "profile-item-row__title-link" %>
-                      </h3>
+                        <h3 class="profile-item-row__title"><%= item.title %></h3>
 
-                      <div class="profile-item-row__badges">
-                        <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
-                          <%= item.status == "available" ? "LIVE" : item.status.upcase %>
-                        </span>
-                        <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
+                        <div class="profile-item-row__badges">
+                          <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
+                            <%= item.status == "available" ? "LIVE" : item.status.upcase %>
+                          </span>
+                          <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
+                        </div>
+                      </div>
+
+                      <div class="profile-item-row__price-block">
+                        <p class="profile-item-row__price-label">Price</p>
+                        <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
                       </div>
                     </div>
-
-                    <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">Price</p>
-                      <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
-                      <%= link_to "View listing", item_path(item), class: "profile-item-row__link" %>
-                    </div>
-                  </div>
+                  <% end %>
                 </article>
               <% end %>
             <% end %>
@@ -235,10 +226,10 @@
         <section class="market-surface-card profile-show__section">
           <div class="market-section-heading profile-show__section-heading">
             <div>
-              <p class="market-section-eyebrow">Buyer Hub</p>
-              <h2 class="market-section-title">Offers you made</h2>
+              <p class="market-section-eyebrow">Buying</p>
+              <h2 class="market-section-title">Offers you are tracking</h2>
               <p class="market-note">
-                Track offers you placed, see accepted listings, and retrieve the meetup PIN when a seller confirms.
+                Keep an eye on the offers you have placed and the listings that are already confirmed.
               </p>
             </div>
 
@@ -329,6 +320,7 @@
             </div>
           <% end %>
         </section>
+
       <% end %>
     </div>
   </div>

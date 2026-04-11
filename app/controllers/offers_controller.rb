@@ -49,7 +49,7 @@ class OffersController < ApplicationController
 
     if @offer.save
       Notification.create(recipient: @offer.seller, actor: current_user, action: "offer_updated", notifiable: @offer)
-      sync_offer_update_to_conversation(@offer)
+      sync_offer_notice_to_conversation(@offer, "offer_updated")
       redirect_to @offer.item, notice: "Your offer was updated to #{helpers.display_price(@offer.price)}."
     else
       redirect_to @offer.item, alert: @offer.errors.full_messages.to_sentence
@@ -63,7 +63,8 @@ class OffersController < ApplicationController
       @offer.item.update(status: "pending_dropoff")
 
       Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_accepted", notifiable: @offer)
-      redirect_to profile_path, notice: "Offer accepted! Item reserved. Waiting for the buyer's PIN."
+      sync_offer_notice_to_conversation(@offer, "offer_accepted")
+      redirect_to dashboard_path, notice: "Offer accepted! Item reserved. Waiting for the buyer's PIN."
     end
   end
 
@@ -72,7 +73,7 @@ class OffersController < ApplicationController
 
     @offer.update(status: "declined")
     Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_declined", notifiable: @offer)
-    redirect_to profile_path, notice: "Offer declined."
+    redirect_to dashboard_path, notice: "Offer declined."
   end
 
   def cancel
@@ -82,7 +83,8 @@ class OffersController < ApplicationController
     @offer.item.update(status: "available")
 
     Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_cancelled", notifiable: @offer)
-    redirect_to profile_path, alert: "Transaction cancelled. The item is back on the market."
+    sync_offer_notice_to_conversation(@offer, "offer_cancelled")
+    redirect_to dashboard_path, alert: "Transaction cancelled. The item is back on the market."
   end
 
   def complete
@@ -94,9 +96,10 @@ class OffersController < ApplicationController
       @offer.item.offers.where(status: "pending").update_all(status: "declined")
 
       Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_completed", notifiable: @offer)
-      redirect_to profile_path, notice: "Transaction Complete! Item officially sold.", status: :see_other
+      sync_offer_notice_to_conversation(@offer, "offer_completed")
+      redirect_to dashboard_path, notice: "Transaction Complete! Item officially sold.", status: :see_other
     else
-      redirect_to profile_path, alert: "Incorrect PIN. Please try again.", status: :see_other
+      redirect_to dashboard_path, alert: "Incorrect PIN. Please try again.", status: :see_other
     end
   end
 
@@ -135,13 +138,20 @@ class OffersController < ApplicationController
     params.require(:offer).permit(:price)
   end
 
-  def sync_offer_update_to_conversation(offer)
+  def sync_offer_notice_to_conversation(offer, notice_type)
     conversation = Conversation.find_by(item: offer.item, buyer: offer.buyer, seller: offer.seller)
     return if conversation.blank?
 
+    content =
+      if notice_type == "offer_updated"
+        Message.offer_update_notice_content(offer.price)
+      else
+        Message.offer_status_notice_content(notice_type)
+      end
+
     conversation.messages.create(
-      user: offer.buyer,
-      content: Message.offer_update_notice_content(offer.price)
+      user: current_user,
+      content: content
     )
 
     Turbo::StreamsChannel.broadcast_replace_to(

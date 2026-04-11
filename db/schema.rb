@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_113000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -75,6 +75,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_113000) do
     t.decimal "rate_from_hkd"
     t.string "symbol"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "item_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["item_id"], name: "index_favorites_on_item_id"
+    t.index ["user_id", "item_id"], name: "index_favorites_on_user_id_and_item_id", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
   create_table "item_reports", force: :cascade do |t|
@@ -176,6 +186,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_113000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "items"
+  add_foreign_key "favorites", "items"
+  add_foreign_key "favorites", "users"
   add_foreign_key "item_reports", "items"
   add_foreign_key "item_reports", "users", column: "reporter_id"
   add_foreign_key "item_reports", "users", column: "resolved_by_id"

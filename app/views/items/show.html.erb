@@ -51,6 +51,10 @@
         </section>
 
         <section class="item-show__surface item-show__media-card">
+          <div class="item-show__favorite">
+            <%= render "items/favorite_button", item: @item, favorite_context: "item_show" %>
+          </div>
+
           <% if @item.images.attached? %>
             <div class="item-show__gallery" data-controller="gallery">
               <div class="item-show__gallery-main">
@@ -303,7 +307,7 @@
               <p class="item-show__section-note">
                 Save your usual campus area to see travel distance for listings automatically.
               </p>
-              <%= link_to "Update location", edit_profile_path, class: "item-show__secondary-link" %>
+              <%= link_to "Update location", profile_path, class: "item-show__secondary-link" %>
             <% else %>
               <h2 class="item-show__section-title">Sign in to see distance</h2>
               <p class="item-show__section-note">

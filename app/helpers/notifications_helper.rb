@@ -158,13 +158,13 @@ module NotificationsHelper
     case notification.action
     when "offer_created", "offer_updated", "offer_accepted", "offer_declined",
          "offer_completed", "offer_cancelled", "offer_withdrawn"
-      profile_path(anchor: "dashboard")
+      dashboard_path(anchor: "dashboard")
     when "item_report_created"
-      report&.item.present? ? item_path(report.item) : profile_path
+      report&.item.present? ? item_path(report.item) : dashboard_path
     when "item_report_resolved"
       user_path(notification.actor)
     else
-      profile_path
+      dashboard_path
     end
   end
 

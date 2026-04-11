@@ -1,25 +1,21 @@
-<% page_title = current_user.admin? ? "Super Admin Dashboard" : "#{current_user.college.name} Admin Dashboard" %>
 <% summary_cards = [
   { label: "Users", value: @total_users, href: "#admin-users", hint: "View" },
   { label: "Listings", value: @total_items, href: items_path(marketplace_base_params), hint: "Open" }
 ] %>
-<% content_for :title, page_title %>
+<% content_for :title, "Admin panel" %>
 
 <div class="market-page market-page--soft admin-page admin-page--dashboard">
-
+  <section class="market-page__hero">
+    <div class="market-page__hero-inner market-page__hero-inner--wide">
+      <div class="admin-page__hero-row">
+        <div>
+          <h1 class="market-page__title"><%= page_title %></h1>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="market-page__body market-page__body--wide">
-
-      <section class="market-page__hero">
-        <div class="market-page__hero-inner market-page__hero-inner--wide">
-          <div class="admin-page__hero-row">
-            <div>
-              <h1 class="market-page__title"><%= page_title %></h1>
-            </div>
-          </div>
-        </div>
-      </section>
-
     <section class="admin-dashboard__overview">
       <section class="market-surface-card admin-overview-panel">
         <div class="market-section-heading admin-overview-panel__heading">
