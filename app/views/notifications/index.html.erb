@@ -1,20 +1,21 @@
 <% content_for :title, "Notifications" %>
 
 <div class="market-page market-page--soft notification-page">
-  <section class="market-page__hero">
-    <div class="market-page__hero-inner">
-      <h1 class="market-page__title">Activity and alerts</h1>
-      <p class="market-page__lede">
-        Review offer updates, moderation actions, and marketplace activity in one place without changing how notifications behave.
-      </p>
-    </div>
-  </section>
+
+ 
 
   <div class="market-page__body">
+
+    <section class="market-page__hero">
+      <div class="market-page__hero-inner market-page__hero-inner--wide">
+        <h1 class="market-page__title">Notifications</h1>
+      </div>
+    </section>
+
     <section class="market-surface-card notification-page__controls">
       <section class="items-category-strip notification-page__tabs-strip" aria-label="Notification categories">
         <div class="notification-page__tabs-row">
-          <div class="items-category-strip__grid notification-page__tabs">
+          <div>
           <% notification_categories.each do |category, label| %>
             <%= link_to notifications_path(notification_filter_params(category: category, show_unread_only: @show_unread_only)),
                 class: class_names("items-category-strip__item notification-page__tab", { "is-active" => @selected_category == category }) do %>

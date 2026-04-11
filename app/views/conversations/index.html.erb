@@ -83,8 +83,20 @@
 
           <%= turbo_stream_from @current_conversation %>
 
-          <div id="messages" data-controller="chat-scroll" class="chat-page__messages">
-            <%= render @messages %>
+          <div data-controller="chat-scroll" class="chat-page__messages-shell">
+            <div id="messages" data-chat-scroll-target="viewport" class="chat-page__messages">
+              <%= render @messages %>
+            </div>
+
+            <div class="chat-page__custom-scrollbar"
+                 data-chat-scroll-target="track"
+                 data-action="pointerdown->chat-scroll#trackPointerDown"
+                 hidden
+                 aria-hidden="true">
+              <div class="chat-page__custom-scrollbar-thumb"
+                   data-chat-scroll-target="thumb"
+                   data-action="pointerdown->chat-scroll#thumbPointerDown"></div>
+            </div>
           </div>
 
           <%= render "messages/form", conversation: @current_conversation, message: @message %>

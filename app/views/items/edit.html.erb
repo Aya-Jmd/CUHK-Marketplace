@@ -1,42 +1,38 @@
 <% content_for :title, "Editing item" %>
 
 <div class="market-page market-page--soft listing-form-page">
-  <section class="market-page__hero">
-    <div class="market-page__hero-inner">
-      <%= link_to "Back to item", item_path(@item), class: "market-back-link" %>
-      <p class="market-page__eyebrow">Edit listing</p>
-      <h1 class="market-page__title">Update your item</h1>
-      <p class="market-page__lede">
-        Refine the description, adjust the price, or update photos and location without changing the item workflow.
-      </p>
-    </div>
-  </section>
-
   <div class="market-page__body">
-    <div class="market-split">
-      <article class="market-surface-card market-surface-card--muted">
-        <p class="market-section-eyebrow">Current listing</p>
-        <h2 class="market-section-title"><%= @item.title %></h2>
+    <section class="market-page__hero">
+      <br><br>
+      <div class="market-page__hero-inner">
+        <h1 class="market-page__title">Update your item</h1>
+      </div>
+    </section>
 
-        <dl class="market-data-list">
-          <div>
-            <dt>Price</dt>
-            <dd><%= display_price(@item.price) %></dd>
+    <div class="market-split listing-form-page__split">
+      <article class="market-surface-card market-surface-card--muted listing-form-page__checklist">
+        <p class="market-section-eyebrow">Listing checklist</p>
+        <h2 class="market-section-title">Before you publish</h2>
+
+        <div class="listing-form__tips">
+          <div class="listing-form__tip">
+            <strong>Clear title</strong>
+            <span>Use searchable keywords so buyers can find the item quickly.</span>
           </div>
-          <div>
-            <dt>Category</dt>
-            <dd><%= @item.category&.name || "Uncategorized" %></dd>
+          <div class="listing-form__tip">
+            <strong>Accurate pricing</strong>
+            <span>Prices are stored consistently in the current currency flow you already use.</span>
           </div>
-          <div>
-            <dt>Status</dt>
-            <dd><%= @item.status.presence&.humanize || "Available" %></dd>
+          <div class="listing-form__tip">
+            <strong>Pickup point</strong>
+            <span>Set the campus location so buyers can compare distance before messaging you.</span>
           </div>
-        </dl>
+        </div>
       </article>
 
-      <section class="market-surface-card">
+      <section class="market-surface-card listing-form-page__details">
         <p class="market-section-eyebrow">Listing details</p>
-        <h2 class="market-section-title">Edit this item</h2>
+        <h2 class="market-section-title">Update your item</h2>
         <%= render "form", item: @item %>
       </section>
     </div>

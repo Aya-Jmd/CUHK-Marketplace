@@ -44,7 +44,6 @@
           <%= render "items/market_grid", items: @results, grid_class: "search-results-page__grid" %>
         <% else %>
           <div class="search-results-page__empty">
-            <strong><%= search_result_heading(query: @query, selected_category: @selected_category, result_count: @results.size) %></strong>
             <span>Try another keyword, switch category, or broaden the side filters.</span>
           </div>
         <% end %>

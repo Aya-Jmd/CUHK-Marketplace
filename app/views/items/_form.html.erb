@@ -69,11 +69,31 @@
     </div>
   </div>
 
-  <div class="market-form-field">
-    <%= form.label :images, "Item photos" %>
-    <div class="listing-form__upload">
-      <%= form.file_field :images, multiple: true, accept: "image/png, image/jpeg, image/jpg, image/webp", class: "listing-form__file" %>
-      <p class="market-note">Supported formats: JPG, PNG, WEBP. You can upload multiple images.</p>
+  <div class="market-form-field market-form-field--upload">
+    <span class="market-form-field__label">Item photos</span>
+    <div class="listing-form__upload" data-controller="file-upload">
+      <div class="listing-form__upload-callout">
+        <div class="listing-form__upload-copy">
+          <strong>Add photos</strong>
+          <span data-file-upload-target="summary">JPG, PNG, WEBP. You can upload multiple images.</span>
+        </div>
+
+        <%= form.file_field :images,
+            multiple: true,
+            accept: "image/png, image/jpeg, image/jpg, image/webp",
+            class: "listing-form__file",
+            data: {
+              action: "change->file-upload#update",
+              file_upload_target: "input"
+            } %>
+
+        <button type="button" class="listing-form__upload-action" data-action="file-upload#pick">
+          <span class="listing-form__upload-action-icon" aria-hidden="true"></span>
+          <span>Add photos</span>
+        </button>
+      </div>
+
+      <p class="listing-form__upload-note">Bright, clear photos help buyers trust the listing faster.</p>
     </div>
   </div>
 

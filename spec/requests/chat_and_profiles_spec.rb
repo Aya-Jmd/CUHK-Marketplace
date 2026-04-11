@@ -1,4 +1,5 @@
 require "rails_helper"
+require "capybara/rspec"
 
 RSpec.describe "Chat and Profiles", type: :request do
   it "creates a conversation with initial message from item page" do
@@ -27,6 +28,26 @@ RSpec.describe "Chat and Profiles", type: :request do
 
     expect(response).to redirect_to(root_path)
     expect(conversation.messages).to be_empty
+  end
+
+  it "renders the custom chat scrollbar shell for the selected conversation" do
+    seller = create_user(email: "chat_shell_seller@cuhk.edu.hk")
+    buyer = create_user(email: "chat_shell_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Smartcase")
+    conversation = Conversation.create!(item:, buyer:, seller:)
+    conversation.messages.create!(user: seller, content: "pls")
+    conversation.messages.create!(user: buyer, content: "ok")
+
+    sign_in buyer
+    get conversations_path(conversation_id: conversation.id)
+
+    document = Capybara.string(response.body)
+
+    expect(response).to have_http_status(:ok)
+    expect(document).to have_css(".chat-page__messages-shell[data-controller='chat-scroll']")
+    expect(document).to have_css("#messages.chat-page__messages[data-chat-scroll-target='viewport']")
+    expect(document).to have_css(".chat-page__custom-scrollbar[data-chat-scroll-target='track']", visible: false)
+    expect(document).to have_css(".chat-page__custom-scrollbar-thumb[data-chat-scroll-target='thumb']")
   end
 
   it "updates current user profile location" do

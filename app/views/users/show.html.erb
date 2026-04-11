@@ -20,15 +20,10 @@
     []
   end %>
 <% content_for :title, profile_owner ? "My Items" : "#{display_name}'s profile" %>
-
+<BR>
 <div class="market-page market-page--item profile-show-page">
   <section class="item-show__hero profile-show__hero">
     <div class="item-show__shell">
-      <nav class="item-show__breadcrumbs" aria-label="Breadcrumb">
-        <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "item-show__back-link" %>
-        <span class="item-show__crumb-divider" aria-hidden="true">/</span>
-        <span class="item-show__crumb"><%= profile_owner ? "My profile" : "Seller profile" %></span>
-      </nav>
 
       <div class="profile-show__hero-card">
         <div class="profile-show__hero-copy">

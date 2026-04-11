@@ -7,15 +7,17 @@ export default class extends Controller {
     this.handleScroll = this.updateScrollbar.bind(this)
     this.handlePointerMove = this.pointerMove.bind(this)
     this.handlePointerUp = this.pointerUp.bind(this)
+    this.handleMutations = this.scheduleUpdate.bind(this)
 
-    this.viewportTarget.style.visibility = "hidden"
     this.viewportTarget.addEventListener("scroll", this.handleScroll)
 
-    this.observer = new MutationObserver(() => {
-      this.refreshToBottom()
+    this.mutationObserver = new MutationObserver(this.handleMutations)
+    this.mutationObserver.observe(this.viewportTarget, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "hidden", "open", "style"]
     })
-
-    this.observer.observe(this.viewportTarget, { childList: true })
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => {
@@ -26,27 +28,31 @@ export default class extends Controller {
       this.resizeObserver.observe(this.viewportTarget)
     }
 
-    this.refreshToBottom()
+    this.scheduleUpdate()
   }
 
   disconnect() {
-    this.observer?.disconnect()
+    this.mutationObserver?.disconnect()
     this.resizeObserver?.disconnect()
     this.viewportTarget.removeEventListener("scroll", this.handleScroll)
     window.removeEventListener("pointermove", this.handlePointerMove)
     window.removeEventListener("pointerup", this.handlePointerUp)
     window.removeEventListener("pointercancel", this.handlePointerUp)
+
+    if (this.frame) {
+      cancelAnimationFrame(this.frame)
+      this.frame = null
+    }
   }
 
-  scrollToBottom() {
-    this.viewportTarget.scrollTop = this.viewportTarget.scrollHeight
-  }
+  scheduleUpdate() {
+    if (this.frame) {
+      cancelAnimationFrame(this.frame)
+    }
 
-  refreshToBottom() {
-    requestAnimationFrame(() => {
-      this.scrollToBottom()
+    this.frame = requestAnimationFrame(() => {
+      this.frame = null
       this.updateScrollbar()
-      this.viewportTarget.style.visibility = "visible"
     })
   }
 
@@ -125,7 +131,7 @@ export default class extends Controller {
     const scrollRatio = this.dragState.maxThumbOffset === 0 ? 0 : deltaY / this.dragState.maxThumbOffset
     const nextScrollTop = this.dragState.startScrollTop + (this.dragState.maxScrollTop * scrollRatio)
 
-    this.viewportTarget.scrollTop = nextScrollTop
+    this.viewportTarget.scrollTop = Math.min(Math.max(nextScrollTop, 0), this.dragState.maxScrollTop)
     this.updateScrollbar()
   }
 

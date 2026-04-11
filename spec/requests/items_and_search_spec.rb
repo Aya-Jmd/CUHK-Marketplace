@@ -75,5 +75,24 @@ RSpec.describe "Items and Search", type: :request do
       expect(response.body).to include(matching.title)
       expect(response.body).not_to include(non_matching.title)
     end
+
+    it "renders the custom filter sidebar scrollbar shell" do
+      college = create_college(name: "New Asia")
+      buyer = create_user(email: "search_sidebar@cuhk.edu.hk", college:)
+      seller = create_user(email: "search_sidebar_seller@cuhk.edu.hk", college:)
+      category = Category.create!(name: "Books")
+      create_item(user: seller, title: "Montegrappa Fountain Pen", category:)
+
+      sign_in buyer
+      get search_path, params: { category_id: category.id }
+
+      document = Nokogiri::HTML.parse(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(document.at_css(".search-results-page__sidebar-card[data-controller='filter-state custom-scrollbar']")).to be_present
+      expect(document.at_css(".search-results-page__sidebar-scroll[data-custom-scrollbar-target='viewport']")).to be_present
+      expect(document.at_css(".search-results-page__custom-scrollbar[data-custom-scrollbar-target='track']")).to be_present
+      expect(document.at_css(".search-results-page__custom-scrollbar-thumb[data-custom-scrollbar-target='thumb']")).to be_present
+    end
   end
 end
