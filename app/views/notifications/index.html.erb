@@ -3,8 +3,6 @@
 <div class="market-page market-page--soft notification-page">
   <section class="market-page__hero">
     <div class="market-page__hero-inner">
-      <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-back-link" %>
-      <p class="market-page__eyebrow">Notifications</p>
       <h1 class="market-page__title">Activity and alerts</h1>
       <p class="market-page__lede">
         Review offer updates, moderation actions, and marketplace activity in one place without changing how notifications behave.
@@ -14,33 +12,35 @@
 
   <div class="market-page__body">
     <section class="market-surface-card notification-page__controls">
-      <div class="notification-page__toolbar">
-        <%= form_with url: notifications_path, method: :get, local: true, class: "notification-page__toggle-form" do %>
-          <%= hidden_field_tag :category, @selected_category %>
-          <%= hidden_field_tag :show_unread, "0" %>
-          <label class="notification-page__toggle">
-            <%= check_box_tag :show_unread, "1", @show_unread_only, id: "notifications_show_unread", onchange: "this.form.requestSubmit()" %>
-            <span>Show only unread</span>
-          </label>
-        <% end %>
-
-        <% if @has_unread_notifications %>
-          <%= button_to "Mark all as read",
-              mark_all_as_read_notifications_path(notification_filter_params(category: @selected_category, show_unread_only: @show_unread_only)),
-              method: :patch,
-              class: "market-button market-button--secondary market-button--compact notification-page__mark-all" %>
-        <% end %>
-      </div>
-
       <section class="items-category-strip notification-page__tabs-strip" aria-label="Notification categories">
-        <div class="items-category-strip__grid notification-page__tabs">
-        <% notification_categories.each do |category, label| %>
-          <%= link_to notifications_path(notification_filter_params(category: category, show_unread_only: @show_unread_only)),
-              class: class_names("items-category-strip__item notification-page__tab", { "is-active" => @selected_category == category }) do %>
-            <span><%= label %></span>
-            <span class="notification-page__tab-count"><%= @category_counts[category] || 0 %></span>
+        <div class="notification-page__tabs-row">
+          <div class="items-category-strip__grid notification-page__tabs">
+          <% notification_categories.each do |category, label| %>
+            <%= link_to notifications_path(notification_filter_params(category: category, show_unread_only: @show_unread_only)),
+                class: class_names("items-category-strip__item notification-page__tab", { "is-active" => @selected_category == category }) do %>
+              <span><%= label %></span>
+              <span class="notification-page__tab-count"><%= @category_counts[category] || 0 %></span>
+            <% end %>
           <% end %>
-        <% end %>
+          </div>
+
+          <div class="notification-page__toolbar">
+            <%= form_with url: notifications_path, method: :get, local: true, class: "notification-page__toggle-form" do %>
+              <%= hidden_field_tag :category, @selected_category %>
+              <%= hidden_field_tag :show_unread, "0" %>
+              <label class="notification-page__toggle">
+                <%= check_box_tag :show_unread, "1", @show_unread_only, id: "notifications_show_unread", onchange: "this.form.requestSubmit()" %>
+                <span>Show only unread</span>
+              </label>
+            <% end %>
+
+            <% if @has_unread_notifications %>
+              <%= button_to "Mark all as read",
+                  mark_all_as_read_notifications_path(notification_filter_params(category: @selected_category, show_unread_only: @show_unread_only)),
+                  method: :patch,
+                  class: "market-button market-button--secondary market-button--compact notification-page__mark-all" %>
+            <% end %>
+          </div>
         </div>
       </section>
     </section>

@@ -1,51 +1,44 @@
 <% content_for :title, "Chat" %>
 
 <div class="market-page market-page--soft chat-page">
+  <%= turbo_stream_from current_user, :conversation_inbox %>
   <section class="market-page__hero">
     <div class="market-page__hero-inner market-page__hero-inner--wide">
-      <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-back-link" %>
-      <p class="market-page__eyebrow">Messages</p>
       <h1 class="market-page__title">Messages</h1>
-      <p class="market-page__lede">
-        Continue buyer and seller conversations in one place. The message flow and access rules remain unchanged.
-      </p>
     </div>
   </section>
 
   <div class="market-page__body market-page__body--wide">
     <div class="chat-page__layout">
-      <aside class="market-surface-card chat-page__threads">
+      <aside class="market-surface-card chat-page__threads"
+             data-controller="conversation-filter"
+             data-conversation-filter-current-conversation-id-value="<%= @current_conversation&.id %>">
         <div class="chat-page__threads-head">
           <h2 class="chat-page__section-title">Conversations</h2>
-          <span class="chat-page__thread-count"><%= pluralize(@conversations.size, "thread") %></span>
+          <%= render "thread_count", user: current_user %>
         </div>
 
         <% if @conversations.any? %>
-          <div class="chat-page__thread-list">
-            <% @conversations.each do |conversation| %>
-              <% last_message = conversation.last_message %>
-              <% other_user = conversation.other_user_for(current_user) %>
-              <% selected = conversation == @current_conversation %>
-
-              <%= link_to conversations_path(conversation_id: conversation.id),
-                  class: class_names("chat-page__thread-link", { "is-active" => selected }) do %>
-                <div class="chat-page__thread-top">
-                  <strong><%= other_user.display_name %></strong>
-                  <% if last_message.present? %>
-                    <span><%= last_message.created_at.strftime("%H:%M") %></span>
-                  <% end %>
-                </div>
-                <p class="chat-page__thread-item"><%= conversation.item.title %></p>
-                <p class="chat-page__thread-preview">
-                  <% if last_message.present? %>
-                    <%= "#{last_message.user.display_name}: #{truncate(last_message.content, length: 70)}" %>
-                  <% else %>
-                    No messages yet.
-                  <% end %>
-                </p>
-              <% end %>
-            <% end %>
+          <div class="chat-page__thread-search">
+            <input type="search"
+                class="chat-page__thread-search-input"
+                placeholder="Search by person, listing, or message"
+                aria-label="Search conversations"
+                autocomplete="off"
+                data-conversation-filter-target="input"
+                data-action="input->conversation-filter#filter search->conversation-filter#filter">
           </div>
+
+          <div id="conversation_threads_<%= current_user.id %>" class="chat-page__thread-list">
+            <%= render partial: "thread",
+                collection: @conversations,
+                as: :conversation,
+                locals: { current_user: current_user, current_conversation: @current_conversation } %>
+          </div>
+
+          <p class="chat-page__thread-empty" data-conversation-filter-target="empty" hidden>
+            No conversations match that search.
+          </p>
         <% else %>
           <div class="market-empty-state">
             <p>No conversations yet.</p>
@@ -57,15 +50,35 @@
         <% if @current_conversation.present? %>
           <% other_user = @current_conversation.other_user_for(current_user) %>
           <div class="chat-page__panel-head">
-            <div>
-              <p class="market-section-eyebrow">Active conversation</p>
-              <h2 class="chat-page__section-title"><%= other_user.display_name %></h2>
+            <div class="chat-page__panel-copy">
+              <h2 class="chat-page__section-title">
+                <%= link_to other_user.display_name, user_path(other_user), class: "chat-page__person-link" %>
+              </h2>
               <p class="market-note"><%= @current_conversation.item.title %></p>
+              <%= render "offer_value", conversation: @current_conversation, offer: @current_offer %>
             </div>
 
-            <%= link_to "View listing",
-                item_path(@current_conversation.item, marketplace_base_params),
-                class: "market-button market-button--secondary market-button--compact" %>
+            <%= link_to item_path(@current_conversation.item, marketplace_base_params),
+                class: "chat-page__listing-card chat-page__listing-card--link" do %>
+              <% if @current_conversation.item.images.attached? %>
+                <%= image_tag @current_conversation.item.images.first.variant(resize_to_fill: [120, 120]),
+                    class: "chat-page__listing-media",
+                    alt: @current_conversation.item.title %>
+              <% else %>
+                <div class="chat-page__listing-placeholder" aria-hidden="true">
+                  <%= @current_conversation.item.title.first.to_s.upcase %>
+                </div>
+              <% end %>
+
+              <div class="chat-page__listing-copy">
+                <p class="chat-page__listing-eyebrow">Listing</p>
+                <strong class="chat-page__listing-title"><%= @current_conversation.item.title %></strong>
+                <div class="chat-page__listing-meta">
+                  <span class="chat-page__listing-price"><%= display_price(@current_conversation.item.price) %></span>
+                  <span class="chat-page__listing-status"><%= @current_conversation.item.status.presence&.humanize || "Available" %></span>
+                </div>
+              </div>
+            <% end %>
           </div>
 
           <%= turbo_stream_from @current_conversation %>

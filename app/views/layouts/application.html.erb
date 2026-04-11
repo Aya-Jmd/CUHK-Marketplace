@@ -53,12 +53,7 @@
   <body class="<%= class_names("page-#{controller.controller_name}", "action-#{controller.action_name}", { "is-authenticated" => user_signed_in?, "is-guest" => !user_signed_in?, "is-devise" => devise_controller? }) %>"
         data-theme="<%= marketplace_theme_name %>"
         data-current-user-id="<%= current_user&.id %>"
-        data-controller="notification"
-        data-notification-currency-code-value="<%= current_currency_code %>">
-    
-    <div data-notification-target="toast" 
-         class="hidden fixed top-4 right-4 bg-blue-600 text-white px-6 py-3 rounded shadow-lg z-50 transition-opacity duration-300">
-    </div>
+        data-controller="notification">
 
     <!-- Render the shared navigation bar everywhere, at top of page -->
     <%= render "general/header" %>

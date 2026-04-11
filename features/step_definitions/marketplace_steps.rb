@@ -81,7 +81,7 @@ end
 
 When("I submit offer price {string}") do |amount|
   fill_in "offer_price", with: amount
-  click_button "Send offer"
+  click_button(/(?:Make|Send|Update) offer/i)
 end
 
 When("I send initial chat message {string}") do |message|

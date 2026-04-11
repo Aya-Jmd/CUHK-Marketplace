@@ -61,6 +61,7 @@ class ConversationsController < ApplicationController
 
     # messages
     @messages = @current_conversation ? @current_conversation.messages.sort_by(&:created_at) : []
+    @current_offer = current_offer_for(@current_conversation)
     @message = Message.new
   end
 
@@ -72,5 +73,15 @@ class ConversationsController < ApplicationController
     return if @conversation.visible_to?(current_user)
 
     redirect_to root_path, alert: "You are not authorized to view this chat."
+  end
+
+  def current_offer_for(conversation)
+    return unless conversation.present?
+
+    Offer.find_by(
+      item: conversation.item,
+      buyer: conversation.buyer,
+      seller: conversation.seller
+    )
   end
 end

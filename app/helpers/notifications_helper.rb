@@ -153,17 +153,12 @@ module NotificationsHelper
   end
 
   def notification_destination_path(notification)
-    offer = notification.notifiable if notification.notifiable.is_a?(Offer)
-    item = notification.notifiable if notification.notifiable.is_a?(Item)
     report = notification.notifiable if notification.notifiable.is_a?(ItemReport)
 
     case notification.action
-    when "offer_created", "offer_updated", "offer_accepted", "offer_declined", "offer_completed"
-      profile_path
-    when "offer_cancelled"
-      offer&.item.present? ? item_path(offer.item) : profile_path
-    when "offer_withdrawn"
-      item.present? ? item_path(item) : profile_path
+    when "offer_created", "offer_updated", "offer_accepted", "offer_declined",
+         "offer_completed", "offer_cancelled", "offer_withdrawn"
+      profile_path(anchor: "dashboard")
     when "item_report_created"
       report&.item.present? ? item_path(report.item) : profile_path
     when "item_report_resolved"
@@ -179,6 +174,10 @@ module NotificationsHelper
 
   def notification_mark_as_read_redirect_path(notification, destination)
     mark_as_read_notification_path(notification, redirect_to: destination)
+  end
+
+  def notification_offer_card_path(notification)
+    notification_mark_as_read_redirect_path(notification, notification_destination_path(notification))
   end
 
   def notification_actor_link(notification)

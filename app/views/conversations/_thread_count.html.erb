@@ -1,0 +1,3 @@
+<span id="conversation_thread_count_<%= user.id %>" class="chat-page__thread-count">
+  <%= pluralize(Conversation.for_user(user).count, "thread") %>
+</span>

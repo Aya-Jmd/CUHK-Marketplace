@@ -1,10 +1,17 @@
-<%= form_with model: [conversation, message], id: "new_message_form", class: "chat-compose" do |form| %>
+<%= form_with model: [conversation, message],
+    id: "new_message_form",
+    class: "chat-compose",
+    data: { controller: "textarea-autosize" } do |form| %>
   <div class="chat-compose__field">
     <%= form.text_area :content,
         placeholder: "Type a message...",
         required: true,
         rows: 1,
-        class: "chat-compose__textarea" %>
+        class: "chat-compose__textarea",
+        data: {
+          textarea_autosize_target: "input",
+          action: "input->textarea-autosize#resize"
+        } %>
   </div>
 
   <div class="chat-compose__actions">

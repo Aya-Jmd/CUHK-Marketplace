@@ -3,20 +3,16 @@
 <div class="market-page market-page--soft">
   <section class="market-page__hero">
     <div class="market-page__hero-inner">
-      <%= link_to "Back to my items", profile_path, class: "market-back-link" %>
-      <p class="market-page__eyebrow">Profile</p>
+      <p class="market-page__eyebrow">My profile</p>
       <h1 class="market-page__title">Manage your profile</h1>
-      <p class="market-page__lede">
-        Update your college and default campus location so distance-based listing details remain accurate everywhere.
-      </p>
+
     </div>
   </section>
 
   <div class="market-page__body">
     <div class="market-split market-split--profile">
       <article class="market-surface-card market-surface-card--muted">
-        <p class="market-section-eyebrow">Account summary</p>
-        <h2 class="market-section-title">Your current details</h2>
+        <h2 class="market-section-eyebrow">Your current details</h2>
 
         <dl class="market-data-list">
           <div>
@@ -40,18 +36,13 @@
 
         <%= form_with model: @user, url: profile_path, method: :patch, local: true, class: "profile-form" do |f| %>
           <div class="profile-form__field">
-            <%= f.label :college_id, "Your college" %>
-            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Select your college..." }, class: "profile-form__select" %>
-          </div>
-
-          <div class="profile-form__field">
-            <%= f.label :default_location, "Default campus location" %>
+            <%= f.label :default_location, "My campus location" %>
 
             <div data-controller="map-picker"
                  data-map-picker-initial-lat-value="<%= @user.latitude || 22.4172 %>"
                  data-map-picker-initial-lng-value="<%= @user.longitude || 114.2071 %>"
                  data-map-picker-zoom-value="15"
-                 data-map-picker-marker-popup-value="Drag to set your default location within campus"
+                 data-map-picker-marker-popup-value="Drag to set your location within campus"
                  data-map-picker-selection-label-value="Set your default location here">
 
               <div data-map-picker-target="map" class="market-map market-map--compact"></div>

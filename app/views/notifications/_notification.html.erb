@@ -32,6 +32,13 @@
   </article>
 <% elsif offer_notification?(notification) %>
   <article class="notification-card notification-card--offer <%= "notification-card--unread" if unread %>">
+    <%= link_to notification_offer_card_path(notification),
+        data: { turbo_method: :patch },
+        class: "notification-card__overlay-link",
+        aria: { label: "Open this offer notification in your dashboard" } do %>
+      <span class="notification-card__overlay-label">Open in dashboard</span>
+    <% end %>
+
     <div class="notification-card__header">
       <div class="notification-card__message"><%= notification_offer_message(notification) %></div>
       <% if notification_offer_badge_label(notification).present? %>

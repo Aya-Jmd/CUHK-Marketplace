@@ -11,7 +11,9 @@
 
 
   <!-- variable to store top 3 most recent non read notifications for hover display -->
-  <% recent_notifications = current_user.notifications.includes(:actor, :notifiable).order(created_at: :desc).where(read_at: nil).limit(3) %>
+  <% unread_notifications = current_user.notifications.where(read_at: nil) %>
+  <% unread_notifications_count = unread_notifications.count %>
+  <% recent_notifications = unread_notifications.includes(:actor, :notifiable).order(created_at: :desc).limit(3) %>
 
 
   <div class="site-header site-header--minimal" data-controller="glass-header">
@@ -93,8 +95,16 @@
 
 
     <div class="site-header__notification-shell">
-      <%= link_to notifications_path, class: "site-header__icon-link", aria: { label: "Notifications" } do %>
+      <%= link_to notifications_path, class: "site-header__icon-link site-header__notification-link", aria: { label: "Notifications" } do %>
         <%= image_tag "nav_bell.svg", alt: "NOTIFICATIONS", class: "site-header__icon-image" %>
+        <% if !unread_notifications_count.zero?  %>
+          <span
+            data-notification-target="badge"
+            class="site-header__notification-badge"
+            <%= "hidden" if unread_notifications_count.zero? %>>
+            <%= unread_notifications_count > 99 ? "99+" : unread_notifications_count %>
+          </span>
+        <% end %>
       <% end %>
 
       <!-- FOR HOVER MECHANISM (DISPLAYS 3 MOST RECENTS NOTIFS WHEN HOVERING ON BELL) -->

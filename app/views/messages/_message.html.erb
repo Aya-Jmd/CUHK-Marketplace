@@ -1,12 +1,23 @@
-<div class="chat-message"
-     data-controller="chat-message"
-     data-message-user-id="<%= message.user_id %>">
-  <div class="chat-message__meta">
-    <strong><%= message.user.display_name %></strong>
-    <time datetime="<%= message.created_at.iso8601 %>" title="<%= message.created_at.strftime("%B %d, %Y %H:%M") %>">
-      <%= message.created_at.strftime("%H:%M") %>
-    </time>
-  </div>
+<% if message.offer_update_notice? %>
+  <article class="chat-offer-notice">
+    <p class="chat-offer-notice__text">
+      <strong><%= message.user.display_name %></strong>
+      made a
+      <strong><%= display_price(message.offer_update_amount_hkd) %></strong>
+      offer.
+    </p>
+  </article>
+<% else %>
+  <div class="chat-message"
+       data-controller="chat-message"
+       data-message-user-id="<%= message.user_id %>">
+    <div class="chat-message__meta">
+      <strong><%= message.user.display_name %></strong>
+      <time datetime="<%= message.created_at.iso8601 %>" title="<%= message.created_at.strftime("%B %d, %Y %H:%M") %>">
+        <%= message.created_at.strftime("%H:%M") %>
+      </time>
+    </div>
 
-  <div class="chat-message__body"><%= message.content %></div>
-</div>
+    <div class="chat-message__body"><%= message.content %></div>
+  </div>
+<% end %>

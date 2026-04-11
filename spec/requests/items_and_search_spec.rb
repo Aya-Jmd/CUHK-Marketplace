@@ -27,6 +27,37 @@ RSpec.describe "Items and Search", type: :request do
     end
   end
 
+  describe "GET /items/:id" do
+    it "hides seller sidebar cards when the seller views their own item" do
+      seller = create_user(email: "owner_show@cuhk.edu.hk")
+      item = create_item(user: seller, title: "Owner Item")
+
+      sign_in seller
+      get item_path(item)
+
+      document = Nokogiri::HTML.parse(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(document.css(".item-show__seller-card")).to be_empty
+      expect(response.body).not_to include("You are the seller")
+    end
+
+    it "does not render a login button inside the distance card for guests" do
+      seller = create_user(email: "distance_seller@cuhk.edu.hk")
+      item = create_item(user: seller, title: "Distance Item", latitude: 22.4196, longitude: 114.2068)
+
+      get item_path(item)
+
+      document = Nokogiri::HTML.parse(response.body)
+      distance_card = document.at_css(".item-show__distance-card")
+
+      expect(response).to have_http_status(:ok)
+      expect(distance_card).to be_present
+      expect(distance_card.text).to include("Sign in to see distance")
+      expect(distance_card.css("a").map(&:text)).not_to include("Log in")
+    end
+  end
+
   describe "GET /search" do
     it "filters by keyword and category" do
       college = create_college(name: "Shaw")

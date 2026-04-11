@@ -49,6 +49,7 @@ class OffersController < ApplicationController
 
     if @offer.save
       Notification.create(recipient: @offer.seller, actor: current_user, action: "offer_updated", notifiable: @offer)
+      sync_offer_update_to_conversation(@offer)
       redirect_to @offer.item, notice: "Your offer was updated to #{helpers.display_price(@offer.price)}."
     else
       redirect_to @offer.item, alert: @offer.errors.full_messages.to_sentence
@@ -132,5 +133,22 @@ class OffersController < ApplicationController
 
   def offer_params
     params.require(:offer).permit(:price)
+  end
+
+  def sync_offer_update_to_conversation(offer)
+    conversation = Conversation.find_by(item: offer.item, buyer: offer.buyer, seller: offer.seller)
+    return if conversation.blank?
+
+    conversation.messages.create(
+      user: offer.buyer,
+      content: Message.offer_update_notice_content(offer.price)
+    )
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      conversation,
+      target: view_context.dom_id(conversation, :offer_value),
+      partial: "conversations/offer_value",
+      locals: { conversation: conversation, offer: offer }
+    )
   end
 end

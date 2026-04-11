@@ -1,0 +1,9 @@
+<%= turbo_stream.remove dom_id(conversation, :thread) %>
+
+<%= turbo_stream.prepend "conversation_threads_#{user.id}" do %>
+  <%= render "conversations/thread", conversation: conversation, current_user: user, current_conversation: nil %>
+<% end %>
+
+<%= turbo_stream.replace "conversation_thread_count_#{user.id}" do %>
+  <%= render "conversations/thread_count", user: user %>
+<% end %>

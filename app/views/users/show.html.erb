@@ -1,5 +1,5 @@
 <% profile_owner = current_user == @user %>
-<% display_name = profile_owner ? "My Dashboard" : @user.display_name %>
+<% display_name = @user.display_name %>
 <% active_items = @user.items.where(status: ["available", "pending_dropoff"]).order(created_at: :desc) %>
 <% pending_bids = profile_owner ? @user.offers_made.where(status: "pending").order(created_at: :desc) : Offer.none %>
 <% accepted_bids = profile_owner ? @user.offers_made.where(status: "accepted").order(created_at: :desc) : Offer.none %>
@@ -17,7 +17,6 @@
 
       <div class="profile-show__hero-card">
         <div class="profile-show__hero-copy">
-          <p class="market-page__eyebrow"><%= profile_owner ? "My Items" : "Seller profile" %></p>
           <h1 class="market-page__title"><%= profile_owner ? "My listings and buyer hub" : "#{display_name}'s listings" %></h1>
           <p class="market-page__lede">
             <%= profile_owner ? "Manage items you posted for sale and track the offers you made, without changing any of the underlying marketplace flows." : "Browse the items this seller currently has available on the CUHK marketplace." %>
@@ -45,7 +44,7 @@
           <div class="profile-show__hero-avatar" aria-hidden="true"><%= @user.display_name.first.to_s.upcase %></div>
           <div class="profile-show__hero-panel-copy">
             <p class="profile-show__hero-panel-label"><%= profile_owner ? "Profile owner" : "Seller" %></p>
-            <h2 class="profile-show__hero-panel-title"><%= display_name %></h2>
+            <h2 class="profile-show__hero-panel-title"><%= @user.display_name %></h2>
             <p class="profile-show__hero-panel-subtitle"><%= @user.email %></p>
           </div>
 
@@ -71,24 +70,11 @@
   </section>
 
   <div class="item-show__shell profile-show__content">
-    <div class="market-summary-grid <%= "market-summary-grid--triple" if profile_owner %>">
-      <article class="market-surface-card market-surface-card--muted market-summary-card">
-        <p class="market-summary-card__label">College</p>
-        <strong class="market-summary-card__value"><%= @user.college&.name || "Not specified" %></strong>
-      </article>
-
-      <article class="market-surface-card market-surface-card--muted market-summary-card">
-        <p class="market-summary-card__label"><%= profile_owner ? "Seller Hub" : "Listings" %></p>
-        <strong class="market-summary-card__value"><%= pluralize(active_items.size, "item") %></strong>
-      </article>
-
-      <% if profile_owner %>
-        <article class="market-surface-card market-surface-card--muted market-summary-card">
-          <p class="market-summary-card__label">Buyer Hub</p>
-          <strong class="market-summary-card__value"><%= pluralize(pending_bids.size + accepted_bids.size, "offer") %></strong>
-        </article>
-      <% end %>
-    </div>
+    <% if profile_owner %>
+      <div class="profile-show__dashboard-header" id="dashboard">
+        <h2 class="profile-show__dashboard-title">My Dashboard</h2>
+      </div>
+    <% end %>
 
     <div class="<%= class_names("profile-show__sections", { "profile-show__sections--dashboard" => profile_owner }) %>">
       <section class="market-surface-card profile-show__section">

@@ -33,4 +33,8 @@ class Conversation < ApplicationRecord
       messages.order(created_at: :desc).first
     end
   end
+
+  def participants
+    [ buyer, seller ].compact.uniq
+  end
 end

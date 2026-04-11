@@ -1,0 +1,29 @@
+<% last_message = conversation.last_message %>
+<% other_user = conversation.other_user_for(current_user) %>
+<% selected = current_conversation == conversation %>
+<% preview = conversation_thread_preview(conversation) %>
+
+<%= link_to conversations_path(conversation_id: conversation.id),
+    id: dom_id(conversation, :thread),
+    class: class_names("chat-page__thread-link", { "is-active" => selected }),
+    data: {
+      conversation_filter_target: "thread",
+      conversation_id: conversation.id,
+      search_content: conversation_thread_search_content(conversation, current_user)
+    } do %>
+  <div class="chat-page__thread-top">
+    <strong class="chat-page__thread-name"><%= other_user.display_name %></strong>
+    <% if last_message.present? %>
+      <span class="chat-page__thread-time"><%= last_message.created_at.strftime("%H:%M") %></span>
+    <% end %>
+  </div>
+  <p class="chat-page__thread-preview">
+    <span class="chat-page__thread-topic"><%= conversation.item.title %></span>
+    <span class="chat-page__thread-divider" aria-hidden="true">&middot;</span>
+    <% if last_message.present? %>
+      <span><%= "#{last_message.user.display_name}: #{preview}" %></span>
+    <% else %>
+      <span>No messages yet.</span>
+    <% end %>
+  </p>
+<% end %>
