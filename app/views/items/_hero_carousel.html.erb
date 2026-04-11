@@ -1,0 +1,203 @@
+<% scope_name = marketplace_scope_label(@scope) %>
+<% promo_slides = [
+  {
+    key: "chat",
+    eyebrow: "Real-time chat",
+    title: "Negotiate safely in one place",
+    copy: "Message buyers, confirm details, and plan pickup without leaving the marketplace.",
+    cta_label: "Open chat",
+    cta_path: conversations_path,
+    secondary_label: "Browse listings",
+    secondary_path: items_path(browse_state)
+  },
+  {
+    key: "analytics",
+    eyebrow: "Market analytics",
+    title: "Price with more confidence",
+    copy: "Use category trends and price history to help buyers spot fair value faster.",
+    cta_label: "View analytics",
+    cta_path: analytics_path,
+    secondary_label: "See categories",
+    secondary_path: items_path(browse_state)
+  },
+  {
+    key: "sell",
+    eyebrow: "Easy selling",
+    title: "List fast and start getting offers",
+    copy: "Create a campus-ready listing in minutes with the details buyers care about most.",
+    cta_label: "Sell an item",
+    cta_path: new_item_path,
+    secondary_label: "View live listings",
+    secondary_path: items_path(browse_state)
+  },
+  {
+    key: "search",
+    eyebrow: "Smart discovery",
+    title: "Help students find the right item faster",
+    copy: "Fuzzy search and scope-aware browsing keep great listings easy to discover across #{scope_name}.",
+    cta_label: "Explore listings",
+    cta_path: items_path(browse_state),
+    secondary_label: "Check notifications",
+    secondary_path: notifications_path
+  }
+] %>
+<% brand_icons = [
+  { key: "book", asset: "hero-object-book.svg", side: "left", delay: "0.05s" },
+  { key: "bottle", asset: "hero-object-bottle.svg", side: "left", delay: "0.14s" },
+  { key: "camera", asset: "hero-object-camera.svg", side: "left", delay: "0.22s" },
+  { key: "mug", asset: "hero-object-mug.svg", side: "left", delay: "0.3s" },
+  { key: "headphones", asset: "hero-object-headset.svg", side: "right", delay: "0.08s" },
+  { key: "laptop", asset: "hero-object-device-laptop.svg", side: "right", delay: "0.16s" },
+  { key: "lamp", asset: "hero-object-lamp.svg", side: "right", delay: "0.24s" },
+  { key: "calculator", asset: "hero-object-calculator.svg", side: "right", delay: "0.32s" }
+] %>
+
+<section class="items-hero-title" aria-label="CUHK Marketplace">
+  <div class="items-hero-title__inner">
+    <div class="items-hero-brand">
+      <% brand_icons.each do |icon| %>
+        <span class="items-hero-brand__icon items-hero-brand__icon--<%= icon[:key] %> items-hero-brand__icon--from-<%= icon[:side] %>"
+            aria-hidden="true"
+            style="--brand-icon-delay: <%= icon[:delay] %>;">
+          <%= image_tag icon[:asset], alt: "", class: "items-hero-brand__icon-image" %>
+        </span>
+      <% end %>
+
+      <div class="items-hero-brand__core">
+        <h1 class="items-hero-brand__title">CUHK MARKETPLACE</h1>
+        <p class="items-hero-brand__subtitle">Buy, sell, and discover everyday student finds across CUHK.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="items-hero items-hero--carousel"
+    aria-label="Marketplace highlights"
+    data-controller="hero-carousel"
+    data-hero-carousel-interval-value="6800"
+    data-action="mouseenter->hero-carousel#pause mouseleave->hero-carousel#resume">
+  <div class="items-hero__inner items-hero__inner--carousel">
+    <div class="items-hero-carousel">
+      <h2 class="items-hero-carousel__sr-only">Marketplace feature highlights</h2>
+
+      <div class="items-hero-carousel__viewport">
+        <% promo_slides.each_with_index do |slide, index| %>
+          <article class="items-hero-banner items-hero-banner--<%= slide[:key] %> <%= "is-active" if index.zero? %>"
+              data-hero-carousel-target="slide"
+              aria-hidden="<%= index.zero? ? "false" : "true" %>">
+            <div class="items-hero-banner__content">
+              <p class="items-hero-banner__eyebrow"><%= slide[:eyebrow] %></p>
+              <h2 class="items-hero-banner__title"><%= slide[:title] %></h2>
+              <p class="items-hero-banner__copy"><%= slide[:copy] %></p>
+
+              <div class="items-hero-banner__actions">
+                <%= link_to slide[:cta_label], slide[:cta_path], class: "items-hero-banner__cta" %>
+                <%= link_to slide[:secondary_label], slide[:secondary_path], class: "items-hero-banner__secondary" %>
+              </div>
+            </div>
+
+            <div class="items-hero-banner__visual" aria-hidden="true">
+              <% case slide[:key] %>
+              <% when "chat" %>
+                <div class="items-hero-showcase items-hero-showcase--chat">
+                  <div class="items-hero-chat-bubble items-hero-chat-bubble--incoming">Is the desk lamp still available tonight?</div>
+                  <div class="items-hero-chat-bubble items-hero-chat-bubble--outgoing">Yes, and I can meet near Shaw after 8 PM.</div>
+                  <div class="items-hero-chat-card">
+                    <span class="items-hero-chat-card__label">Conversation status</span>
+                    <strong>Offer discussed in one thread</strong>
+                    <p>Every reply stays inside the marketplace, from first message to meetup.</p>
+                  </div>
+                </div>
+              <% when "analytics" %>
+                <div class="items-hero-showcase items-hero-showcase--analytics">
+                  <div class="items-hero-chart-card">
+                    <span class="items-hero-chart-card__eyebrow">Average sold prices</span>
+                    <div class="items-hero-chart-card__bars">
+                      <span style="--bar-height: 48%;"></span>
+                      <span style="--bar-height: 72%;"></span>
+                      <span style="--bar-height: 60%;"></span>
+                      <span style="--bar-height: 82%;"></span>
+                      <span style="--bar-height: 67%;"></span>
+                    </div>
+                    <div class="items-hero-chart-card__axis">
+                      <span>Books</span>
+                      <span>Electronics</span>
+                    </div>
+                  </div>
+
+                  <div class="items-hero-insight-card">
+                    <span class="items-hero-insight-card__label">Best-performing category</span>
+                    <strong>Electronics leads the board</strong>
+                    <p>Students can instantly compare categories before sending an offer.</p>
+                  </div>
+                </div>
+              <% when "sell" %>
+                <div class="items-hero-showcase items-hero-showcase--sell">
+                  <div class="items-hero-checklist-card">
+                    <span class="items-hero-checklist-card__eyebrow">Listing checklist</span>
+                    <ul role="list">
+                      <li>Clear title and category</li>
+                      <li>Pickup point on campus</li>
+                      <li>Price and condition ready</li>
+                    </ul>
+                  </div>
+
+                  <div class="items-hero-listing-card">
+                    <span class="items-hero-listing-card__pill">Live in under a minute</span>
+                    <strong>New listing ready to publish</strong>
+                    <p>Upload photos, set a price, and make it visible to the right buyers fast.</p>
+                  </div>
+                </div>
+              <% when "search" %>
+                <div class="items-hero-showcase items-hero-showcase--search">
+                  <div class="items-hero-search-card">
+                    <div class="items-hero-search-card__bar">Search: calculator, monitor, bike</div>
+                    <div class="items-hero-search-card__chips">
+                      <span>Fuzzy matching</span>
+                      <span><%= scope_name %></span>
+                      <span>Price filters</span>
+                    </div>
+                  </div>
+
+                  <div class="items-hero-alert-card">
+                    <span class="items-hero-alert-card__eyebrow">Marketplace signal</span>
+                    <strong>Stay current while listings move fast</strong>
+                    <p>Live notifications and better discovery keep buyers close to the right items.</p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+
+      <div class="items-hero-carousel__controls">
+        <button type="button"
+            class="items-hero-carousel__arrow"
+            aria-label="Show previous banner"
+            data-action="hero-carousel#prev">
+          <span aria-hidden="true">&lsaquo;</span>
+        </button>
+
+        <div class="items-hero-carousel__dots" aria-label="Homepage feature banners">
+          <% promo_slides.each_with_index do |slide, index| %>
+            <button type="button"
+                class="items-hero-carousel__dot <%= "is-active" if index.zero? %>"
+                data-hero-carousel-target="dot"
+                data-index="<%= index %>"
+                data-action="hero-carousel#goTo"
+                aria-label="Go to banner <%= index + 1 %>: <%= slide[:eyebrow] %>"
+                aria-pressed="<%= index.zero? %>"></button>
+          <% end %>
+        </div>
+
+        <button type="button"
+            class="items-hero-carousel__arrow"
+            aria-label="Show next banner"
+            data-action="hero-carousel#next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

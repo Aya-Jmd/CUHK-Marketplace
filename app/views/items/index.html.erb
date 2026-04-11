@@ -7,16 +7,7 @@
 <% end %>
 
 <div class="items-index <%= "items-index--floating-nav" if user_signed_in? %>">
-
-  <section class="items-hero" aria-label="Welcome">
-    <div class="items-hero__inner">
-      <h1 class="items-hero__title">Campus marketplace</h1>
-      <p class="items-hero__lede">
-        Browse student listings, compare prices quickly, and keep campus buying and selling in one place.
-      </p>
-      <%= link_to "Sell an item", new_item_path, class: "items-hero__cta" %>
-    </div>
-  </section>
+  <%= render "items/hero_carousel", browse_state: browse_state %>
 
   <div class="items-main">
     <p class="items-index-strip">Shop by category</p>
