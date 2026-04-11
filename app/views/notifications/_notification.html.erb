@@ -3,19 +3,7 @@
 
 <% if actionable_report_notification?(notification) %>
   <article class="notification-card notification-card--actionable <%= "notification-card--unread" if unread %>">
-    <div class="notification-card__rail">
-      <%= link_to "View listing",
-          notification_mark_as_read_path(notification),
-          data: { turbo_method: :patch },
-          class: "market-button market-button--secondary market-button--compact" %>
-      <%= button_to "Delete item", delete_item_admin_item_report_path(notification.notifiable), method: :patch,
-          data: { turbo_confirm: "Remove this item from the marketplace?" },
-          class: "market-button market-button--danger market-button--compact" %>
-      <%= button_to "Ignore report", ignore_admin_item_report_path(notification.notifiable), method: :patch,
-          class: "market-button market-button--secondary market-button--compact" %>
-    </div>
-
-    <div class="notification-card__content">
+    <div class="notification-card__content notification-card__content--actionable">
       <div class="notification-card__header">
         <div class="notification-card__message">
           <%= notification_report_message(notification) %>
@@ -27,7 +15,21 @@
         <p class="notification-card__detail"><%= notification_detail_message(notification) %></p>
       <% end %>
 
-      <p class="notification-card__timestamp"><%= short_timestamp %></p>
+      <div class="notification-card__footer">
+        <p class="notification-card__timestamp"><%= short_timestamp %></p>
+
+        <div class="notification-card__rail">
+          <%= link_to "View listing",
+              notification_mark_as_read_path(notification),
+              data: { turbo_method: :patch },
+              class: "market-button market-button--secondary market-button--compact" %>
+          <%= button_to "Delete item", delete_item_admin_item_report_path(notification.notifiable), method: :patch,
+              data: { turbo_confirm: "Remove this item from the marketplace?" },
+              class: "market-button market-button--danger market-button--compact" %>
+          <%= button_to "Ignore report", ignore_admin_item_report_path(notification.notifiable), method: :patch,
+              class: "market-button market-button--secondary market-button--compact" %>
+        </div>
+      </div>
     </div>
   </article>
 <% elsif offer_notification?(notification) %>

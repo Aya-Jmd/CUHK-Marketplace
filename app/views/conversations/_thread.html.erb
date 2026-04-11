@@ -12,14 +12,16 @@
       search_content: conversation_thread_search_content(conversation, current_user)
     } do %>
   <div class="chat-page__thread-top">
-    <strong class="chat-page__thread-name"><%= other_user.display_name %></strong>
+    <div class="chat-page__thread-heading">
+      <strong class="chat-page__thread-name"><%= other_user.display_name %></strong>
+      <span class="chat-page__thread-name-divider" aria-hidden="true">|</span>
+      <span class="chat-page__thread-item-inline"><%= conversation.item.title %></span>
+    </div>
     <% if last_message.present? %>
       <span class="chat-page__thread-time"><%= last_message.created_at.strftime("%H:%M") %></span>
     <% end %>
   </div>
   <p class="chat-page__thread-preview">
-    <span class="chat-page__thread-topic"><%= conversation.item.title %></span>
-    <span class="chat-page__thread-divider" aria-hidden="true">&middot;</span>
     <% if last_message.present? %>
       <span><%= "#{last_message.user.display_name}: #{preview}" %></span>
     <% else %>

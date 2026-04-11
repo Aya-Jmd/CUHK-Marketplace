@@ -26,36 +26,6 @@
       <% end %>
     </div>
 
-    <% if current_user.admin? %>
-      <div class="site-header__scope-switch">
-        <%= form_with url: scope_form_url, method: :get, local: true, class: "site-header__scope-form" do %>
-          <%= hidden_field_tag :q, params[:q] if params[:q].present? %>
-          <%= hidden_field_tag :category_id, params[:category_id] if params[:category_id].present? %>
-          <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
-          <%= hidden_field_tag :price_currency, params[:price_currency] if params[:price_currency].present? %>
-          <%= hidden_field_tag :min_price, params[:min_price] if params[:min_price].present? %>
-          <%= hidden_field_tag :max_price, params[:max_price] if params[:max_price].present? %>
-
-          <%= select_tag :college_scope_id,
-              options_for_select(college_options, params[:college_scope_id]),
-              class: "site-header__scope-select",
-              onchange: "this.form.requestSubmit()" %>
-        <% end %>
-      </div>
-    <% else %>
-      <nav class="site-header__scope-switch" aria-label="Marketplace scope">
-        <%= link_to marketplace_scope_switch_path(next_scope),
-            class: class_names("site-header__scope-toggle", { "is-college" => current_scope == "college" }),
-            aria: { label: "Switch marketplace scope to #{next_scope_label}" },
-            title: "Switch to #{next_scope_label}" do %>
-          <span class="site-header__scope-toggle-text"><%= current_scope_label %></span>
-          <span class="site-header__scope-toggle-track" aria-hidden="true">
-            <span class="site-header__scope-toggle-thumb"></span>
-          </span>
-        <% end %>
-      </nav>
-    <% end %>
-
     <% currency_codes = %w[HKD USD EUR] %>
     <div class="site-header__hover-shell site-header__currency-shell">
       <button type="button" class="site-header__currency-select">

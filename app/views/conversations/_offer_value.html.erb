@@ -1,5 +1,6 @@
 <p class="chat-page__panel-price" id="<%= dom_id(conversation, :offer_value) %>">
-  User offer :
+  <span class="chat-page__panel-price-label chat-page__panel-price-label--buyer">Your offer :</span>
+  <span class="chat-page__panel-price-label chat-page__panel-price-label--seller">Seller's offer :</span>
   <% if offer.present? %>
     <strong><%= display_price(offer.price) %></strong>
   <% else %>

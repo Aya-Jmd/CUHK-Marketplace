@@ -25,30 +25,31 @@
         <span class="item-show__crumb-divider" aria-hidden="true">/</span>
         <span class="item-show__crumb"><%= college_name %></span>
       </nav>
-
-      <div class="item-show__headline">
-        <div class="item-show__headline-main">
-          <h1 class="item-show__title"><%= @item.title %></h1>
-          <% unless viewer_is_seller %>
-            <p class="item-show__subline">
-              Listed by
-              <%= link_to @item.user.display_name, user_path(@item.user), class: "item-show__inline-link" %>
-            </p>
-          <% end %>
-        </div>
-
-        <aside class="item-show__price-card">
-          <span class="item-show__price-label">Asking price</span>
-          <strong class="item-show__price-value"><%= display_price(@item.price) %></strong>
-          <span class="item-show__price-status"><%= @item.status.presence&.humanize || "Available" %></span>
-        </aside>
-      </div>
     </div>
   </section>
 
   <div class="item-show__shell item-show__content">
     <div class="item-show__layout">
       <div class="item-show__main">
+        <section class="item-show__headline item-show__headline-card">
+          <div class="item-show__headline-main">
+            <div class="item-show__headline-copy">
+              <h1 class="item-show__title"><%= @item.title %></h1>
+              <% unless viewer_is_seller %>
+                <p class="item-show__subline">
+                  Listed by
+                  <%= link_to @item.user.display_name, user_path(@item.user), class: "item-show__inline-link" %>
+                </p>
+              <% end %>
+            </div>
+
+            <aside class="item-show__price-card">
+              <span class="item-show__price-label">Asking price</span>
+              <strong class="item-show__price-value"><%= display_price(@item.price) %></strong>
+            </aside>
+          </div>
+        </section>
+
         <section class="item-show__surface item-show__media-card">
           <% if @item.images.attached? %>
             <div class="item-show__gallery" data-controller="gallery">

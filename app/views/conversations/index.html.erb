@@ -49,12 +49,12 @@
       <section class="market-surface-card chat-page__panel">
         <% if @current_conversation.present? %>
           <% other_user = @current_conversation.other_user_for(current_user) %>
+          <% viewer_role = current_user == @current_conversation.buyer ? "buyer" : "seller" %>
           <div class="chat-page__panel-head">
-            <div class="chat-page__panel-copy">
+            <div class="chat-page__panel-copy" data-conversation-role="<%= viewer_role %>">
               <h2 class="chat-page__section-title">
                 <%= link_to other_user.display_name, user_path(other_user), class: "chat-page__person-link" %>
               </h2>
-              <p class="market-note"><%= @current_conversation.item.title %></p>
               <%= render "offer_value", conversation: @current_conversation, offer: @current_offer %>
             </div>
 
