@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   MAX_PRICE_HKD = 9_999_999
+  MAX_DESCRIPTION_LENGTH = 1000
 
   belongs_to :user
   belongs_to :college
@@ -13,6 +14,7 @@ class Item < ApplicationRecord
 
   # We can add validations later to make sure items always have a title and price!
   validates :title, :price, presence: true
+  validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
   validates :price, numericality: {
     greater_than: 0,
     less_than_or_equal_to: MAX_PRICE_HKD

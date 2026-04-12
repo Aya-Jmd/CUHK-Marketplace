@@ -152,7 +152,13 @@ class ItemsController < ApplicationController
     def ensure_item_visible!
       return if @item.visible_to?(current_user)
 
-      redirect_to items_path, alert: "This item is no longer available."
+      redirect_to items_path, alert: item_visibility_alert
+    end
+
+    def item_visibility_alert
+      return "This item is no longer available." if @item.removed? || @item.user&.banned?
+
+      "This item is not available."
     end
 
     # PRIVATE METHOD FOR PRICE NORMALIZATION

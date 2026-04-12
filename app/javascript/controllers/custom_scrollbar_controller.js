@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["viewport", "track", "thumb"]
+  static values = { axis: String }
 
   connect() {
     this.handleScroll = this.updateScrollbar.bind(this)
@@ -60,40 +61,56 @@ export default class extends Controller {
     const viewport = this.viewportTarget
     const track = this.trackTarget
     const thumb = this.thumbTarget
-    const maxScrollTop = Math.max(viewport.scrollHeight - viewport.clientHeight, 0)
-    const hasOverflow = maxScrollTop > 0
+    const horizontal = this.isHorizontal()
+    const maxScrollPosition = horizontal ?
+      Math.max(viewport.scrollWidth - viewport.clientWidth, 0) :
+      Math.max(viewport.scrollHeight - viewport.clientHeight, 0)
+    const hasOverflow = maxScrollPosition > 0
 
     this.element.classList.toggle("is-scrollable", hasOverflow)
     track.hidden = !hasOverflow
 
     if (!hasOverflow) {
+      thumb.style.width = ""
       thumb.style.height = ""
       thumb.style.transform = ""
       return
     }
 
-    const trackHeight = track.clientHeight
-    const thumbHeight = Math.max((viewport.clientHeight / viewport.scrollHeight) * trackHeight, 28)
-    const maxThumbOffset = Math.max(trackHeight - thumbHeight, 0)
-    const scrollRatio = maxScrollTop === 0 ? 0 : viewport.scrollTop / maxScrollTop
+    const trackSize = horizontal ? track.clientWidth : track.clientHeight
+    const viewportSize = horizontal ? viewport.clientWidth : viewport.clientHeight
+    const contentSize = horizontal ? viewport.scrollWidth : viewport.scrollHeight
+    const thumbSize = Math.max((viewportSize / contentSize) * trackSize, 28)
+    const maxThumbOffset = Math.max(trackSize - thumbSize, 0)
+    const scrollPosition = horizontal ? viewport.scrollLeft : viewport.scrollTop
+    const scrollRatio = maxScrollPosition === 0 ? 0 : scrollPosition / maxScrollPosition
     const thumbOffset = maxThumbOffset * scrollRatio
 
-    thumb.style.height = `${thumbHeight}px`
-    thumb.style.transform = `translateY(${thumbOffset}px)`
+    thumb.style.width = horizontal ? `${thumbSize}px` : ""
+    thumb.style.height = horizontal ? "" : `${thumbSize}px`
+    thumb.style.transform = horizontal ? `translateX(${thumbOffset}px)` : `translateY(${thumbOffset}px)`
   }
 
   thumbPointerDown(event) {
     event.preventDefault()
     event.stopPropagation()
 
-    const thumbHeight = this.thumbTarget.getBoundingClientRect().height
+    const horizontal = this.isHorizontal()
+    const thumbSize = horizontal ?
+      this.thumbTarget.getBoundingClientRect().width :
+      this.thumbTarget.getBoundingClientRect().height
 
     this.dragState = {
       pointerId: event.pointerId,
-      startClientY: event.clientY,
-      startScrollTop: this.viewportTarget.scrollTop,
-      maxScrollTop: Math.max(this.viewportTarget.scrollHeight - this.viewportTarget.clientHeight, 0),
-      maxThumbOffset: Math.max(this.trackTarget.clientHeight - thumbHeight, 0)
+      horizontal,
+      startClientPosition: horizontal ? event.clientX : event.clientY,
+      startScrollPosition: horizontal ? this.viewportTarget.scrollLeft : this.viewportTarget.scrollTop,
+      maxScrollPosition: horizontal ?
+        Math.max(this.viewportTarget.scrollWidth - this.viewportTarget.clientWidth, 0) :
+        Math.max(this.viewportTarget.scrollHeight - this.viewportTarget.clientHeight, 0),
+      maxThumbOffset: horizontal ?
+        Math.max(this.trackTarget.clientWidth - thumbSize, 0) :
+        Math.max(this.trackTarget.clientHeight - thumbSize, 0)
     }
 
     this.thumbTarget.setPointerCapture?.(event.pointerId)
@@ -109,14 +126,26 @@ export default class extends Controller {
 
     event.preventDefault()
 
+    const horizontal = this.isHorizontal()
     const trackRect = this.trackTarget.getBoundingClientRect()
-    const thumbHeight = this.thumbTarget.getBoundingClientRect().height
-    const maxThumbOffset = Math.max(trackRect.height - thumbHeight, 0)
-    const targetOffset = Math.min(Math.max(event.clientY - trackRect.top - thumbHeight / 2, 0), maxThumbOffset)
-    const maxScrollTop = Math.max(this.viewportTarget.scrollHeight - this.viewportTarget.clientHeight, 0)
+    const thumbSize = horizontal ?
+      this.thumbTarget.getBoundingClientRect().width :
+      this.thumbTarget.getBoundingClientRect().height
+    const trackSize = horizontal ? trackRect.width : trackRect.height
+    const trackStart = horizontal ? trackRect.left : trackRect.top
+    const pointerPosition = horizontal ? event.clientX : event.clientY
+    const maxThumbOffset = Math.max(trackSize - thumbSize, 0)
+    const targetOffset = Math.min(Math.max(pointerPosition - trackStart - thumbSize / 2, 0), maxThumbOffset)
+    const maxScrollPosition = horizontal ?
+      Math.max(this.viewportTarget.scrollWidth - this.viewportTarget.clientWidth, 0) :
+      Math.max(this.viewportTarget.scrollHeight - this.viewportTarget.clientHeight, 0)
     const scrollRatio = maxThumbOffset === 0 ? 0 : targetOffset / maxThumbOffset
 
-    this.viewportTarget.scrollTop = maxScrollTop * scrollRatio
+    if (horizontal) {
+      this.viewportTarget.scrollLeft = maxScrollPosition * scrollRatio
+    } else {
+      this.viewportTarget.scrollTop = maxScrollPosition * scrollRatio
+    }
     this.updateScrollbar()
   }
 
@@ -127,11 +156,16 @@ export default class extends Controller {
 
     event.preventDefault()
 
-    const deltaY = event.clientY - this.dragState.startClientY
-    const scrollRatio = this.dragState.maxThumbOffset === 0 ? 0 : deltaY / this.dragState.maxThumbOffset
-    const nextScrollTop = this.dragState.startScrollTop + (this.dragState.maxScrollTop * scrollRatio)
+    const pointerPosition = this.dragState.horizontal ? event.clientX : event.clientY
+    const delta = pointerPosition - this.dragState.startClientPosition
+    const scrollRatio = this.dragState.maxThumbOffset === 0 ? 0 : delta / this.dragState.maxThumbOffset
+    const nextScrollPosition = this.dragState.startScrollPosition + (this.dragState.maxScrollPosition * scrollRatio)
 
-    this.viewportTarget.scrollTop = Math.min(Math.max(nextScrollTop, 0), this.dragState.maxScrollTop)
+    if (this.dragState.horizontal) {
+      this.viewportTarget.scrollLeft = Math.min(Math.max(nextScrollPosition, 0), this.dragState.maxScrollPosition)
+    } else {
+      this.viewportTarget.scrollTop = Math.min(Math.max(nextScrollPosition, 0), this.dragState.maxScrollPosition)
+    }
     this.updateScrollbar()
   }
 
@@ -145,5 +179,9 @@ export default class extends Controller {
     window.removeEventListener("pointermove", this.handlePointerMove)
     window.removeEventListener("pointerup", this.handlePointerUp)
     window.removeEventListener("pointercancel", this.handlePointerUp)
+  }
+
+  isHorizontal() {
+    return this.hasAxisValue && this.axisValue === "horizontal"
   }
 }

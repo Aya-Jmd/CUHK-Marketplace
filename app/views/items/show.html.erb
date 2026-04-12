@@ -289,13 +289,18 @@
               Need to ask something to the seller? Write a message.
             </p>
 
-            <%= form_with url: conversations_path, method: :post, local: true, class: "item-show__offer-form" do %>
+            <%= form_with url: conversations_path,
+                method: :post,
+                local: true,
+                class: "item-show__offer-form",
+                data: { controller: "message-compose" } do %>
               <%= hidden_field_tag :item_id, @item.id %>
               <%= text_area_tag "message[content]", nil,
                   rows: 4,
                   required: true,
                   placeholder: "Write your first message...",
-                  class: "item-show__textarea" %>
+                  class: "item-show__textarea",
+                  data: { action: "keydown->message-compose#submitOnEnter" } %>
               <%= submit_tag "Send message", class: "item-show__primary-button" %>
             <% end %>
           </section>

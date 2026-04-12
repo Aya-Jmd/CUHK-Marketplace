@@ -50,7 +50,7 @@ class LocationService
     return nil if distance_km.nil?
     return 0 if distance_km.zero?
 
-    [(distance_km / WALKING_SPEED_KMPH * 60).round, 1].max
+    [ (distance_km / WALKING_SPEED_KMPH * 60).round, 1 ].max
   end
 
   def self.location_options

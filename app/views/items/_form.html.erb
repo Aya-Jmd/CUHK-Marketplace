@@ -30,7 +30,12 @@
 
   <div class="market-form-field">
     <%= form.label :description, "Description" %>
-    <%= form.text_area :description, rows: 6, class: "market-input market-input--textarea", placeholder: "Describe condition, included accessories, and anything buyers should know." %>
+    <%= form.text_area :description,
+        rows: 6,
+        maxlength: Item::MAX_DESCRIPTION_LENGTH,
+        class: "market-input market-input--textarea",
+        placeholder: "Describe condition, included accessories, and anything buyers should know." %>
+    <p class="market-note">Maximum description length: <%= Item::MAX_DESCRIPTION_LENGTH %> characters.</p>
   </div>
 
   <div class="listing-form__grid">

@@ -25,6 +25,20 @@ RSpec.describe Item, type: :model do
     expect(item.errors[:price]).to include("must be less than or equal to #{Item::MAX_PRICE_HKD}")
   end
 
+  it "rejects descriptions longer than the maximum length" do
+    user = create_user(email: "seller_item_description_cap@cuhk.edu.hk")
+    item = Item.new(
+      user:,
+      college: user.college,
+      title: "Desk Organizer",
+      price: 120,
+      description: "a" * (Item::MAX_DESCRIPTION_LENGTH + 1)
+    )
+
+    expect(item).not_to be_valid
+    expect(item.errors[:description]).to include("is too long (maximum is #{Item::MAX_DESCRIPTION_LENGTH} characters)")
+  end
+
   it "returns only available items in available scope" do
     user = create_user(email: "scope_seller@cuhk.edu.hk")
     available_item = create_item(user:, title: "Desk Lamp", status: "available")

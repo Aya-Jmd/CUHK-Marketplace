@@ -83,13 +83,15 @@
         </div>
 
         <% if profile_owner ? seller_offer_rows.any? : public_items.any? %>
-          <div class="<%= class_names("profile-show__rows", { "profile-show__rows--dashboard-flat profile-show__rows--dashboard-selling" => profile_owner }) %>"
-               role="list"
-               <% if profile_owner %>data-controller="dashboard-slider" data-dashboard-slider-visible-count-value="5"<% end %>>
+          <div class="profile-scroll-shell" data-controller="custom-scrollbar">
+            <div class="<%= class_names("profile-show__rows", { "profile-show__rows--dashboard-flat profile-show__rows--dashboard-selling" => profile_owner }) %>"
+                 role="list"
+                 data-custom-scrollbar-target="viewport"
+                 <% if profile_owner %>data-controller="dashboard-slider" data-dashboard-slider-visible-count-value="5"<% end %>>
             <% if profile_owner %>
               <% seller_offer_rows.each do |item, offer| %>
-                <article class="<%= class_names("profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable", { "profile-item-row--pin-card profile-item-row--seller-accepted" => offer.accepted? }) %>" role="listitem">
-                  <% if offer.pending? %>
+                <% if offer.pending? %>
+                  <article class="profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable" role="listitem">
                     <div class="profile-item-row__top">
                       <div class="profile-item-row__identity">
                         <div class="profile-item-row__title-line">
@@ -116,71 +118,13 @@
                         <%= button_to "Refuse", decline_offer_path(offer), method: :patch, class: "market-button market-button--secondary market-button--compact", form: { class: "profile-action-form" } %>
                       </div>
                     </div>
-                  <% else %>
-                    <div class="profile-item-row__top profile-item-row__top--pin-card">
-                      <div class="profile-item-row__pin-panel">
-                        <div class="profile-item-row__pin-header">
-                          <div class="profile-item-row__title-line">
-                            <h3 class="profile-item-row__title profile-item-row__title--pin-panel"><%= item.title %></h3>
-                            <span class="profile-item-row__counterparty profile-item-row__counterparty--pin-card">, <%= offer.buyer.display_name %></span>
-                            <span class="profile-item-row__counterparty profile-item-row__counterparty--pin-card">, <%= offer.created_at.strftime("%b %d, %Y") %></span>
-                          </div>
-                        </div>
-
-                        <%= form_with url: complete_offer_path(offer), method: :patch, id: "complete-offer-#{offer.id}", class: "profile-pin-entry-form", data: { controller: "pin-input", action: "submit->pin-input#handleSubmit" } do %>
-                          <div class="profile-pin-entry-form__group">
-                            <p class="profile-item-row__summary-line profile-item-row__summary-line--label">Meetup PIN</p>
-                            <%= hidden_field_tag :meetup_code, nil, data: { pin_input_target: "hidden" } %>
-                            <div class="profile-pin-code profile-pin-code--entry" role="group" aria-label="Enter the 4-digit meetup PIN">
-                              <% 4.times do |digit_index| %>
-                                <input
-                                  type="text"
-                                  maxlength="1"
-                                  inputmode="numeric"
-                                  pattern="[0-9]*"
-                                  autocomplete="<%= digit_index.zero? ? "one-time-code" : "off" %>"
-                                  aria-label="Meetup PIN digit <%= digit_index + 1 %>"
-                                  class="profile-pin-code__digit profile-pin-code__digit--input"
-                                  data-pin-input-target="digit"
-                                  data-action="input->pin-input#handleInput keydown->pin-input#handleKeydown paste->pin-input#handlePaste focus->pin-input#handleFocus"
-                                  required
-                                >
-                              <% end %>
-                            </div>
-                          </div>
-                          <%= button_tag "Complete sale", type: "submit", class: "market-button market-button--compact profile-pin-entry-form__submit", aria: { label: "Complete sale for #{item.title}" } %>
-                        <% end %>
-                      </div>
-
-                      <div class="profile-item-row__identity profile-item-row__identity--pin-card">
-                        <div class="profile-item-row__price-meta">
-                          <div class="profile-item-row__summary profile-item-row__summary--tooltip">
-                            <button type="button" class="profile-item-row__info-trigger" aria-label="Show sale help">
-                              ?
-                              <span class="profile-item-row__info-popover" role="tooltip">Ask the buyer for their meetup PIN to complete the sale.</span>
-                            </button>
-                          </div>
-
-                          <div class="profile-item-row__price-block profile-item-row__price-block--dashboard profile-item-row__price-block--pin-card">
-                            <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="profile-item-row__footer profile-item-row__footer--pin-card">
-                      <div class="profile-item-row__summary profile-item-row__summary--tooltip profile-item-row__summary--pin-help">
-                      </div>
-
-                      <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-footer">
-                        <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
-                      </div>
-                    </div>
-                  <% end %>
-                  <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
-                    <span class="item-show__screen-reader">View <%= item.title %></span>
-                  <% end %>
-                </article>
+                    <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
+                      <span class="item-show__screen-reader">View <%= item.title %></span>
+                    <% end %>
+                  </article>
+                <% else %>
+                  <%= render "users/dashboard_seller_pin_offer", item: item, offer: offer %>
+                <% end %>
               <% end %>
             <% else %>
               <% public_items.each do |item| %>
@@ -212,6 +156,17 @@
                 </article>
               <% end %>
             <% end %>
+            </div>
+
+            <div class="profile-scrollbar"
+                 data-custom-scrollbar-target="track"
+                 data-action="pointerdown->custom-scrollbar#trackPointerDown"
+                 hidden
+                 aria-hidden="true">
+              <div class="profile-scrollbar__thumb"
+                   data-custom-scrollbar-target="thumb"
+                   data-action="pointerdown->custom-scrollbar#thumbPointerDown"></div>
+            </div>
           </div>
         <% elsif !profile_owner && @user.banned? %>
           <div class="market-empty-state">
@@ -235,14 +190,16 @@
               </p>
             </div>
 
-            <%= link_to "Browse items", items_path(marketplace_base_params), class: "market-button market-button--light" %>
+            <%= link_to "Browse items", items_path(marketplace_base_params), class: "market-button market-button--light profile-show__section-action" %>
           </div>
 
           <% if pending_bids.any? || accepted_bids.any? %>
-            <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-live"
-                 role="list"
-                 data-controller="dashboard-slider"
-                 data-dashboard-slider-visible-count-value="5">
+            <div class="profile-scroll-shell" data-controller="custom-scrollbar">
+              <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-live"
+                   role="list"
+                   data-controller="dashboard-slider"
+                   data-dashboard-slider-visible-count-value="10"
+                   data-custom-scrollbar-target="viewport">
               <% pending_bids.each do |offer| %>
                 <article class="profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
@@ -335,6 +292,17 @@
                   <% end %>
                 </article>
               <% end %>
+              </div>
+
+              <div class="profile-scrollbar"
+                   data-custom-scrollbar-target="track"
+                   data-action="pointerdown->custom-scrollbar#trackPointerDown"
+                   hidden
+                   aria-hidden="true">
+                <div class="profile-scrollbar__thumb"
+                     data-custom-scrollbar-target="thumb"
+                     data-action="pointerdown->custom-scrollbar#thumbPointerDown"></div>
+              </div>
             </div>
           <% else %>
             <div class="market-empty-state">
@@ -357,10 +325,12 @@
           </div>
 
           <% if seller_items_without_active_offers.any? %>
-            <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-buying"
-                 role="list"
-                 data-controller="dashboard-slider"
-                 data-dashboard-slider-visible-count-value="10">
+            <div class="profile-scroll-shell" data-controller="custom-scrollbar">
+              <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-buying"
+                   role="list"
+                   data-controller="dashboard-slider"
+                   data-dashboard-slider-visible-count-value="5"
+                   data-custom-scrollbar-target="viewport">
               <% seller_items_without_active_offers.each do |item| %>
                 <article class="profile-item-row profile-item-row--flat profile-item-row--inventory-card profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
@@ -396,6 +366,17 @@
                   <% end %>
                 </article>
               <% end %>
+              </div>
+
+              <div class="profile-scrollbar"
+                   data-custom-scrollbar-target="track"
+                   data-action="pointerdown->custom-scrollbar#trackPointerDown"
+                   hidden
+                   aria-hidden="true">
+                <div class="profile-scrollbar__thumb"
+                     data-custom-scrollbar-target="thumb"
+                     data-action="pointerdown->custom-scrollbar#thumbPointerDown"></div>
+              </div>
             </div>
           <% else %>
             <div class="market-empty-state">

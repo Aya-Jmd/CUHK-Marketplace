@@ -1,6 +1,13 @@
 require "rails_helper"
 
 RSpec.describe "Currency and Analytics", type: :request do
+  it "updates selected currency for guests" do
+    patch currency_path, params: { currency: "USD" }
+
+    expect(response).to redirect_to(root_path)
+    expect(session[:currency_code]).to eq("USD")
+  end
+
   it "updates selected currency when code is valid" do
     user = create_user(email: "currency_valid@cuhk.edu.hk")
     sign_in user

@@ -89,6 +89,10 @@ RSpec.describe "Items and Search", type: :request do
       get item_path(item)
 
       expect(response).to redirect_to(items_path)
+
+      follow_redirect!
+
+      expect(response.body).to include("This item is not available.")
     end
 
     it "hides seller sidebar cards when the seller views their own item" do

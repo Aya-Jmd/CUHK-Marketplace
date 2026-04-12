@@ -10,8 +10,22 @@
   </div>
 
   <% if favorite_items.any? %>
-    <div class="profile-favorites__scroller">
-      <%= render "items/market_grid", items: favorite_items, favorite_context: "dashboard_favorites", grid_class: "profile-favorites__grid" %>
+    <div class="profile-favorites__scroll-shell"
+         data-controller="custom-scrollbar"
+         data-custom-scrollbar-axis-value="horizontal">
+      <div class="profile-favorites__scroller" data-custom-scrollbar-target="viewport">
+        <%= render "items/market_grid", items: favorite_items, favorite_context: "dashboard_favorites", grid_class: "profile-favorites__grid" %>
+      </div>
+
+      <div class="profile-scrollbar profile-scrollbar--horizontal"
+           data-custom-scrollbar-target="track"
+           data-action="pointerdown->custom-scrollbar#trackPointerDown"
+           hidden
+           aria-hidden="true">
+        <div class="profile-scrollbar__thumb"
+             data-custom-scrollbar-target="thumb"
+             data-action="pointerdown->custom-scrollbar#thumbPointerDown"></div>
+      </div>
     </div>
   <% else %>
     <div class="market-empty-state">
