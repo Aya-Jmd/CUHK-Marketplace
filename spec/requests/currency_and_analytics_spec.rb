@@ -39,4 +39,18 @@ RSpec.describe "Currency and Analytics", type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("Price Analytics")
   end
+
+  it "renders analytics with no category selected by default" do
+    user = create_user(email: "analytics_empty_state@cuhk.edu.hk")
+    Category.create!(name: "Books")
+    Category.create!(name: "Electronics")
+    sign_in user
+
+    get analytics_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("No selected category. Select one, or multiple, to plot data.")
+    expect(response.body).to include('"categories":[]')
+    expect(response.body).not_to include('checked="checked"')
+  end
 end

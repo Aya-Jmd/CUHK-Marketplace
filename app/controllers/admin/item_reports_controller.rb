@@ -9,16 +9,8 @@ class Admin::ItemReportsController < Admin::BaseController
   end
 
   def delete_item
-    pending_reports = @item_report.item.item_reports.pending.to_a
-
-    ItemReport.transaction do
-      @item_report.item.update!(status: "removed")
-      pending_reports.each do |report|
-        report.resolve!(resolver: current_user, resolution: :item_deleted)
-      end
-    end
-
-    redirect_back fallback_location: notifications_path, notice: "Item removed from the marketplace."
+    @item_report.item.destroy!
+    redirect_back fallback_location: notifications_path, notice: "Item deleted."
   end
 
   private

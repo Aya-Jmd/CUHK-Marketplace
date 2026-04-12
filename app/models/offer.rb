@@ -2,6 +2,7 @@ class Offer < ApplicationRecord
   belongs_to :item
   belongs_to :buyer, class_name: "User"
   belongs_to :seller, class_name: "User"
+  has_many :notifications, as: :notifiable, dependent: :destroy
 
   scope :not_declined, -> { where.not(status: "declined") }
 

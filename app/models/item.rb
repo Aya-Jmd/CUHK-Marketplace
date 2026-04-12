@@ -6,8 +6,10 @@ class Item < ApplicationRecord
   belongs_to :college
   belongs_to :category, optional: true
   has_many :offers, dependent: :destroy
+  has_many :conversations, dependent: :destroy
   has_many :item_reports, dependent: :destroy
   has_many :favorites, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :favorited_by_users, through: :favorites, source: :user
 
   has_many_attached :images
@@ -92,7 +94,25 @@ class Item < ApplicationRecord
     status == "removed"
   end
 
+  def reserved_for_transaction?
+    status == "pending_dropoff"
+  end
+
+  def active_transaction_offer
+    return @active_transaction_offer if defined?(@active_transaction_offer)
+
+    @active_transaction_offer =
+      if reserved_for_transaction?
+        offers.accepted.includes(:buyer).order(updated_at: :desc).first
+      end
+  end
+
+  def reserved_transaction_buyer
+    active_transaction_offer&.buyer
+  end
+
   def visible_to?(viewer)
+    return reserved_viewable_by?(viewer) if reserved_for_transaction?
     return true if viewer == user
     return true if viewer&.admin?
     return true if viewer&.college_admin? && viewer.college_id == college_id
@@ -101,5 +121,14 @@ class Item < ApplicationRecord
     return is_global? if viewer.blank? || viewer.college_id.blank?
 
     is_global? || viewer.college_id == college_id
+  end
+
+  def reserved_viewable_by?(viewer)
+    return true if viewer == user
+    return true if viewer == reserved_transaction_buyer
+    return true if viewer&.admin?
+    return true if viewer&.college_admin? && viewer.college_id == college_id
+
+    false
   end
 end

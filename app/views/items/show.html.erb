@@ -5,7 +5,8 @@
 <% current_scope = marketplace_scope %>
 <% item_initials = item_placeholder_initials(@item) %>
 <% viewer_is_seller = user_signed_in? && current_user == @item.user %>
-<% manage_item = user_signed_in? && (current_user == @item.user || current_user.admin? || (current_user.college_admin? && current_user.college_id == @item.college_id)) %>
+<% can_edit_item = viewer_is_seller %>
+<% can_delete_item = user_signed_in? && (viewer_is_seller || current_user.admin? || (current_user.college_admin? && current_user.college_id == @item.college_id)) %>
 <% can_make_offer = user_signed_in? && current_user != @item.user %>
 <% can_report_item = can_make_offer && !(current_user.admin? || current_user.college_admin?) && !(@item.user.admin? || @item.user.college_admin?) %>
 <% existing_offer_price = @existing_offer.present? ? Currency.convert_from_hkd(@existing_offer.price, current_currency.code) : nil %>
@@ -14,6 +15,11 @@
 <% offer_form_url = @existing_offer.present? ? offer_path(@existing_offer) : item_offers_path(@item) %>
 <% offer_form_method = @existing_offer.present? ? :patch : :post %>
 <% offer_form_dom_id = @existing_offer.present? ? "item-offer-form-#{@existing_offer.id}" : "item-offer-form-new" %>
+<% item_sold = @item.status == "sold" %>
+<% reserved_item = @item.reserved_for_transaction? %>
+<% reserved_transaction_buyer = @active_transaction_offer&.buyer %>
+<% viewer_is_reserved_buyer = user_signed_in? && current_user == reserved_transaction_buyer %>
+<% viewer_is_authorized_admin = user_signed_in? && (current_user.admin? || (current_user.college_admin? && current_user.college_id == @item.college_id)) %>
 
 <div class="market-page market-page--item item-show-page">
   <section class="item-show__hero">
@@ -194,218 +200,262 @@
       </div>
 
       <aside class="item-show__sidebar">
-        <% unless viewer_is_seller %>
-          <section class="item-show__surface item-show__seller-card">
-            <div class="item-show__seller-head">
-              <div class="item-show__seller-avatar" aria-hidden="true"><%= seller_handle.first.upcase %></div>
-              <div class="item-show__seller-copy">
-                <p class="item-show__eyebrow">Seller</p>
-                <h2 class="item-show__seller-name"><%= seller_handle %></h2>
-                <p class="item-show__seller-subtitle"><%= @item.user.email %></p>
-              </div>
-            </div>
-
-            <div class="item-show__seller-stats">
-              <span class="item-show__seller-stat"><%= pluralize(@seller_live_items_count, "live item") %></span>
-              <span class="item-show__seller-stat"><%= college_name %></span>
-            </div>
-
-            <%= link_to "View seller profile", user_path(@item.user), class: "item-show__secondary-link" %>
-          </section>
-        <% end %>
-
-        <% if manage_item && viewer_is_seller %>
-          <section class="item-show__surface item-show__action-card">
-            <p class="item-show__eyebrow">Manage listing</p>
-            <h2 class="item-show__section-title">Manage this listing</h2>
-            <p class="item-show__section-note">
-              Keep the details current while the item stays visible to buyers.
-            </p>
-
-            <div class="item-show__button-stack">
-              <%= link_to "Edit item", edit_item_path(@item), class: "item-show__primary-button" %>
-              <%= button_to "Delete item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { class: "item-show__button-form" }, class: "item-show__danger-button" %>
-            </div>
-          </section>
-        <% end %>
-
-        <% if can_make_offer %>
-          <section class="item-show__surface item-show__action-card item-show__offer-card">
-            <div id="item-show-offer"></div>
-            <p class="item-show__eyebrow"><%= @existing_offer.present? ? "Update your offer" : "Make an offer" %></p>
-            <% if offer_locked %>
-              <div class="item-show__empty-state">
-                <% if @existing_offer.accepted? %>
-                  <p>Your offer is already accepted. Check your dashboard for the meetup PIN.</p>
-                <% elsif @existing_offer.completed? %>
-                  <p>This transaction is already completed.</p>
-                <% else %>
-                  <p>This item is not accepting changes to your existing offer right now.</p>
-                <% end %>
-              </div>
+        <% if reserved_item %>
+          <section class="item-show__surface item-show__support-card">
+            <p class="item-show__eyebrow">Item status</p>
+            <h2 class="item-show__section-title">Reserved for transaction</h2>
+            <% if viewer_is_seller %>
+              <p class="item-show__section-note">Your item is currently reserved for a transaction. Check your dashboard.</p>
+            <% elsif viewer_is_reserved_buyer %>
+              <p class="item-show__section-note">This item is reserved for you. Check your dashboard for the transaction PIN.</p>
+            <% elsif viewer_is_authorized_admin && reserved_transaction_buyer.present? %>
+              <p class="item-show__section-note">
+                This item is reserved for a transaction between
+                <%= link_to @item.user.display_name, user_path(@item.user), class: "item-show__inline-link" %>
+                and
+                <%= link_to reserved_transaction_buyer.display_name, user_path(reserved_transaction_buyer), class: "item-show__inline-link" %>.
+              </p>
             <% else %>
-              <div class="item-show__offer-inline-layout">
-                <%= form_with url: offer_form_url,
-                    method: offer_form_method,
-                    scope: :offer,
-                    local: true,
-                    html: { id: offer_form_dom_id },
-                    class: "item-show__offer-form item-show__offer-form--inline" do |form| %>
-                <%= hidden_field_tag :offer_currency, current_currency_code %>
+              <p class="item-show__section-note">This item is currently reserved for an active transaction.</p>
+            <% end %>
+          </section>
 
-                  <div class="item-show__form-field item-show__offer-field">
-                    <%= form.label :price, "Offer amount (#{current_currency_code})", class: "item-show__screen-reader" %>
-                    <%= form.number_field :price,
-                        step: "any",
-                        placeholder: "Offer amount (#{current_currency_code})",
-                        required: true,
-                        value: existing_offer_price,
-                        class: "item-show__input" %>
-                  </div>
-                <% end %>
+          <% if viewer_is_authorized_admin %>
+            <section class="item-show__surface item-show__action-card item-show__action-card--final">
+              <p class="item-show__eyebrow">Manage item</p>
+              <p class="item-show__section-note">
+                Permanently delete this listing and every related offer, conversation, and report.
+              </p>
 
-                <div class="item-show__offer-actions <%= "item-show__offer-actions--single" unless offer_withdrawable %>">
-                  <%= button_tag @existing_offer.present? ? "Update" : "Make offer",
-                      type: :submit,
-                      form: offer_form_dom_id,
-                      class: "item-show__primary-button item-show__offer-action-button" %>
-
-                  <% if offer_withdrawable %>
-                    <%= button_to "Cancel", offer_path(@existing_offer), method: :delete,
-                        data: { turbo_confirm: "Withdraw this offer?" },
-                        form: { class: "item-show__button-form item-show__offer-action-form" },
-                        class: "item-show__danger-button item-show__offer-action-button" %>
-                  <% end %>
+              <div class="item-show__button-stack">
+                <%= button_to "Delete item", @item, method: :delete,
+                    data: { turbo_confirm: "Are you sure? This will permanently delete the item and every related record." },
+                    form: { class: "item-show__button-form" },
+                    class: "item-show__danger-button" %>
+              </div>
+            </section>
+          <% end %>
+        <% else %>
+          <% unless viewer_is_seller %>
+            <section class="item-show__surface item-show__seller-card">
+              <div class="item-show__seller-head">
+                <div class="item-show__seller-avatar" aria-hidden="true"><%= seller_handle.first.upcase %></div>
+                <div class="item-show__seller-copy">
+                  <p class="item-show__eyebrow">Seller</p>
+                  <h2 class="item-show__seller-name"><%= seller_handle %></h2>
+                  <p class="item-show__seller-subtitle"><%= @item.user.email %></p>
                 </div>
               </div>
+
+              <div class="item-show__seller-stats">
+                <span class="item-show__seller-stat"><%= pluralize(@seller_live_items_count, "live item") %></span>
+                <span class="item-show__seller-stat"><%= college_name %></span>
+              </div>
+
+              <%= link_to "View seller profile", user_path(@item.user), class: "item-show__secondary-link" %>
+            </section>
+          <% end %>
+
+          <% if item_sold %>
+            <section class="item-show__surface item-show__support-card">
+              <p class="item-show__eyebrow">Item status</p>
+              <h2 class="item-show__section-title">This item has been sold</h2>
+            </section>
+          <% else %>
+            <% if can_edit_item %>
+              <section class="item-show__surface item-show__action-card">
+                <p class="item-show__eyebrow">Manage listing</p>
+                <h2 class="item-show__section-title">Manage this listing</h2>
+                <p class="item-show__section-note">
+                  Keep the details current while the item stays visible to buyers.
+                </p>
+
+                <div class="item-show__button-stack">
+                  <%= link_to "Edit item", edit_item_path(@item), class: "item-show__primary-button" %>
+                  <%= button_to "Delete item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { class: "item-show__button-form" }, class: "item-show__danger-button" %>
+                </div>
+              </section>
             <% end %>
-          </section>
 
-          <section class="item-show__surface item-show__support-card">
-            <div id="item-show-message"></div>
-            <p class="item-show__eyebrow">Message seller</p>
-            <h2 class="item-show__section-title">Start the discussion</h2>
-            <p class="item-show__section-note">
-              Need to ask something to the seller? Write a message.
-            </p>
-
-            <%= form_with url: conversations_path,
-                method: :post,
-                local: true,
-                class: "item-show__offer-form",
-                data: { controller: "message-compose" } do %>
-              <%= hidden_field_tag :item_id, @item.id %>
-              <%= text_area_tag "message[content]", nil,
-                  rows: 4,
-                  required: true,
-                  placeholder: "Write your first message...",
-                  class: "item-show__textarea",
-                  data: { action: "keydown->message-compose#submitOnEnter" } %>
-              <%= submit_tag "Send message", class: "item-show__primary-button" %>
-            <% end %>
-          </section>
-        <% elsif !viewer_is_seller %>
-          <section class="item-show__surface item-show__action-card">
-            <p class="item-show__eyebrow">Want this item?</p>
-            <h2 class="item-show__section-title">Sign in to make an offer</h2>
-            <p class="item-show__section-note">
-              Sign in first, then you can send an offer and message the seller directly.
-            </p>
-
-            <%= link_to "Sign in", new_user_session_path, class: "item-show__primary-button" %>
-          </section>
-
-          <section class="item-show__surface item-show__support-card">
-            <p class="item-show__eyebrow">Message seller</p>
-            <h2 class="item-show__section-title">Sign in to start chatting</h2>
-            <p class="item-show__section-note">
-              Sign in to ask questions about condition, availability, or pickup details.
-            </p>
-
-            <%= link_to "Sign in to message", new_user_session_path, class: "item-show__secondary-link" %>
-          </section>
-        <% end %>
-
-        <% unless viewer_is_seller %>
-          <section class="item-show__surface item-show__support-card item-show__distance-card">
-            <p class="item-show__eyebrow">Distance</p>
-            <% if user_signed_in? && current_user.has_location? && @walking_distance %>
-              <h2 class="item-show__section-title">Estimated walk from your default location</h2>
-              <div class="item-show__distance-value"><%= number_with_precision(@walking_distance, precision: 2) %> km</div>
-              <p class="item-show__section-note">
-                About <%= @walking_time_minutes %> min on foot. Straight-line distance: <%= number_with_precision(@distance, precision: 2) %> km.
-              </p>
-            <% elsif user_signed_in? %>
-              <h2 class="item-show__section-title">Set your default location</h2>
-              <p class="item-show__section-note">
-                Save your usual campus area to see walking estimates for listings automatically.
-              </p>
-              <%= link_to "Update location", profile_path, class: "item-show__secondary-link" %>
-            <% else %>
-              <h2 class="item-show__section-title">Sign in to see distance</h2>
-              <p class="item-show__section-note">
-                Sign in and save your default location to compare walking distance for listings.
-              </p>
-            <% end %>
-          </section>
-        <% end %>
-
-        <% if can_report_item || (manage_item && !viewer_is_seller) %>
-          <section class="item-show__surface item-show__action-card item-show__action-card--final">
-            <p class="item-show__eyebrow">Manage item</p>
-         
-            <p class="item-show__section-note">
-              <% if manage_item && !viewer_is_seller %>
-                
-              <% else %>
-                Report the listing if it looks inaccurate, unsafe, or inappropriate.
-              <% end %>
-            </p>
-
-            <div class="item-show__button-stack">
-              <% if can_report_item %>
-                <div data-controller="modal">
-                  <div class="item-show__button-stack">
-                    <button type="button" data-action="modal#open" class="item-show__danger-button">
-                      Report item
-                    </button>
-                  </div>
-
-                  <dialog class="site-modal"
-                          data-modal-target="dialog"
-                          data-action="click->modal#closeOnBackdrop">
-                    <div class="site-modal__card">
-                      <div class="item-show__modal-head">
-                        <div>
-                          <h3 class="item-show__modal-title">Report this item</h3>
-                          <p class="item-show__section-note">Explain why this listing should be reviewed by moderators.</p>
-                        </div>
-                        <button type="button" data-action="modal#close" class="item-show__modal-close">x</button>
-                      </div>
-
-                      <%= form_with model: [@item, ItemReport.new], local: true do |form| %>
-                        <%= form.text_area :message,
-                            rows: 6,
-                            required: true,
-                            maxlength: 1500,
-                            placeholder: "Describe the issue with this item...",
-                            class: "item-show__textarea" %>
-
-                        <div class="site-modal__actions">
-                          <button type="button" data-action="modal#close" class="item-show__secondary-link">Cancel</button>
-                          <%= form.submit "Submit report", class: "item-show__primary-button item-show__primary-button--inline" %>
-                        </div>
+            <% if can_make_offer %>
+                <section class="item-show__surface item-show__action-card item-show__offer-card">
+                  <div id="item-show-offer"></div>
+                  <p class="item-show__eyebrow"><%= @existing_offer.present? ? "Update your offer" : "Make an offer" %></p>
+                  <% if offer_locked %>
+                    <div class="item-show__empty-state">
+                      <% if @existing_offer.accepted? %>
+                        <p>Your offer is already accepted. Check your dashboard for the meetup PIN.</p>
+                      <% elsif @existing_offer.completed? %>
+                        <p>This transaction is already completed.</p>
+                      <% else %>
+                        <p>This item is not accepting changes to your existing offer right now.</p>
                       <% end %>
                     </div>
-                  </dialog>
-                </div>
-              <% end %>
+                  <% else %>
+                    <div class="item-show__offer-inline-layout">
+                      <%= form_with url: offer_form_url,
+                          method: offer_form_method,
+                          scope: :offer,
+                          local: true,
+                          html: { id: offer_form_dom_id },
+                          class: "item-show__offer-form item-show__offer-form--inline" do |form| %>
+                      <%= hidden_field_tag :offer_currency, current_currency_code %>
 
-              <% if manage_item && !viewer_is_seller %>
-                <%= button_to "Delete item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { class: "item-show__button-form" }, class: "item-show__danger-button" %>
-              <% end %>
-            </div>
-          </section>
+                        <div class="item-show__form-field item-show__offer-field">
+                          <%= form.label :price, "Offer amount (#{current_currency_code})", class: "item-show__screen-reader" %>
+                          <%= form.number_field :price,
+                              step: "any",
+                              placeholder: "Offer amount (#{current_currency_code})",
+                              required: true,
+                              value: existing_offer_price,
+                              class: "item-show__input" %>
+                        </div>
+                      <% end %>
+
+                      <div class="item-show__offer-actions <%= "item-show__offer-actions--single" unless offer_withdrawable %>">
+                        <%= button_tag @existing_offer.present? ? "Update" : "Make offer",
+                            type: :submit,
+                            form: offer_form_dom_id,
+                            class: "item-show__primary-button item-show__offer-action-button" %>
+
+                        <% if offer_withdrawable %>
+                          <%= button_to "Cancel", offer_path(@existing_offer), method: :delete,
+                              data: { turbo_confirm: "Withdraw this offer?" },
+                              form: { class: "item-show__button-form item-show__offer-action-form" },
+                              class: "item-show__danger-button item-show__offer-action-button" %>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                </section>
+
+                <section class="item-show__surface item-show__support-card">
+                  <div id="item-show-message"></div>
+                  <p class="item-show__eyebrow">Message seller</p>
+                  <h2 class="item-show__section-title">Start the discussion</h2>
+                  <p class="item-show__section-note">
+                    Need to ask something to the seller? Write a message.
+                  </p>
+
+                  <%= form_with url: conversations_path,
+                      method: :post,
+                      local: true,
+                      class: "item-show__offer-form",
+                      data: { controller: "message-compose" } do %>
+                    <%= hidden_field_tag :item_id, @item.id %>
+                    <%= text_area_tag "message[content]", nil,
+                        rows: 4,
+                        required: true,
+                        placeholder: "Write your first message...",
+                        class: "item-show__textarea",
+                        data: { action: "keydown->message-compose#submitOnEnter" } %>
+                    <%= submit_tag "Send message", class: "item-show__primary-button" %>
+                  <% end %>
+                </section>
+            <% elsif !viewer_is_seller %>
+                <section class="item-show__surface item-show__action-card">
+                  <p class="item-show__eyebrow">Want this item?</p>
+                  <h2 class="item-show__section-title">Sign in to make an offer</h2>
+                  <p class="item-show__section-note">
+                    Sign in first, then you can send an offer and message the seller directly.
+                  </p>
+
+                  <%= link_to "Sign in", new_user_session_path, class: "item-show__primary-button" %>
+                </section>
+
+                <section class="item-show__surface item-show__support-card">
+                  <p class="item-show__eyebrow">Message seller</p>
+                  <h2 class="item-show__section-title">Sign in to start chatting</h2>
+                  <p class="item-show__section-note">
+                    Sign in to ask questions about condition, availability, or pickup details.
+                  </p>
+
+                  <%= link_to "Sign in to message", new_user_session_path, class: "item-show__secondary-link" %>
+                </section>
+            <% end %>
+
+            <% unless viewer_is_seller %>
+                <section class="item-show__surface item-show__support-card item-show__distance-card">
+                  <p class="item-show__eyebrow">Distance</p>
+                  <% if user_signed_in? && current_user.has_location? && @walking_distance %>
+                    <h2 class="item-show__section-title">Estimated walk from your default location</h2>
+                    <div class="item-show__distance-value"><%= number_with_precision(@walking_distance, precision: 2) %> km</div>
+                    <p class="item-show__section-note">
+                      About <%= @walking_time_minutes %> min on foot. Straight-line distance: <%= number_with_precision(@distance, precision: 2) %> km.
+                    </p>
+                  <% elsif user_signed_in? %>
+                    <h2 class="item-show__section-title">Set your default location</h2>
+                    <p class="item-show__section-note">
+                      Save your usual campus area to see walking estimates for listings automatically.
+                    </p>
+                    <%= link_to "Update location", profile_path, class: "item-show__secondary-link" %>
+                  <% else %>
+                    <h2 class="item-show__section-title">Sign in to see distance</h2>
+                    <p class="item-show__section-note">
+                      Sign in and save your default location to compare walking distance for listings.
+                    </p>
+                  <% end %>
+                </section>
+            <% end %>
+
+            <% if can_report_item || (can_delete_item && !viewer_is_seller) %>
+                <section class="item-show__surface item-show__action-card item-show__action-card--final">
+                  <p class="item-show__eyebrow"><%= can_delete_item && !viewer_is_seller ? "Moderation" : "Manage item" %></p>
+
+                  <p class="item-show__section-note">
+                    <% if can_delete_item && !viewer_is_seller %>
+                      Remove this listing from the marketplace when moderation is required.
+                    <% else %>
+                      Report the listing if it looks inaccurate, unsafe, or inappropriate.
+                    <% end %>
+                  </p>
+
+                  <div class="item-show__button-stack">
+                    <% if can_report_item %>
+                      <div data-controller="modal">
+                        <div class="item-show__button-stack">
+                          <button type="button" data-action="modal#open" class="item-show__danger-button">
+                            Report item
+                          </button>
+                        </div>
+
+                        <dialog class="site-modal"
+                                data-modal-target="dialog"
+                                data-action="click->modal#closeOnBackdrop">
+                          <div class="site-modal__card">
+                            <div class="item-show__modal-head">
+                              <div>
+                                <h3 class="item-show__modal-title">Report this item</h3>
+                                <p class="item-show__section-note">Explain why this listing should be reviewed by moderators.</p>
+                              </div>
+                              <button type="button" data-action="modal#close" class="item-show__modal-close">x</button>
+                            </div>
+
+                            <%= form_with model: [@item, ItemReport.new], local: true do |form| %>
+                              <%= form.text_area :message,
+                                  rows: 6,
+                                  required: true,
+                                  maxlength: 1500,
+                                  placeholder: "Describe the issue with this item...",
+                                  class: "item-show__textarea" %>
+
+                              <div class="site-modal__actions">
+                                <button type="button" data-action="modal#close" class="item-show__secondary-link">Cancel</button>
+                                <%= form.submit "Submit report", class: "item-show__primary-button item-show__primary-button--inline" %>
+                              </div>
+                            <% end %>
+                          </div>
+                        </dialog>
+                      </div>
+                    <% end %>
+
+                    <% if can_delete_item && !viewer_is_seller %>
+                      <%= button_to "Delete item", @item, method: :delete, data: { turbo_confirm: "Are you sure?" }, form: { class: "item-show__button-form" }, class: "item-show__danger-button" %>
+                    <% end %>
+                  </div>
+                </section>
+            <% end %>
+          <% end %>
         <% end %>
       </aside>
     </div>

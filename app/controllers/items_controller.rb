@@ -2,7 +2,8 @@ class ItemsController < ApplicationController
   before_action :authenticate_user!, except: %i[ index show ]
   before_action :set_item, only: %i[ show edit update destroy ]
   before_action :ensure_item_visible!, only: :show
-  before_action :authorize_item_owner!, only: %i[ edit update destroy ]
+  before_action :authorize_item_editor!, only: %i[ edit update ]
+  before_action :authorize_item_deletion!, only: :destroy
 
   # GET /items or /items.json
   def index
@@ -37,6 +38,7 @@ class ItemsController < ApplicationController
 
   # GET /items/1 or /items/1.json
   def show
+    @active_transaction_offer = @item.active_transaction_offer if @item.reserved_for_transaction?
     @existing_offer = current_user.offers_made.not_declined.find_by(item: @item) if user_signed_in? && current_user != @item.user
     @seller_live_items_count = @item.user.items.available.count
 
@@ -135,18 +137,31 @@ class ItemsController < ApplicationController
       params.require(:item).permit(*permitted_attributes)
     end
 
-    def authorize_item_owner!
-      # 1. The owner can always edit their own item
-      return if @item.user == current_user
+    def authorize_item_editor!
+      if item_owner? && @item.reserved_for_transaction?
+        redirect_to @item, alert: "You can't edit an item involved in a transaction!"
+        return
+      end
 
-      # 2. A Global Admin can edit/delete ANY item
-      return if current_user.admin?
+      return if item_owner?
 
-      # 3. A College Admin can edit/delete items that belong to their specific college
-      return if current_user.college_admin? && @item.college_id == current_user.college_id
+      redirect_to @item, alert: "Only the seller can edit this item."
+    end
 
-      # If they fail all 3 checks, kick them out!
-      redirect_to @item, alert: "You are not allowed to modify this item."
+    def authorize_item_deletion!
+      return if can_delete_item?
+
+      redirect_to @item, alert: "You are not allowed to delete this item."
+    end
+
+    def item_owner?
+      @item.user == current_user
+    end
+
+    def can_delete_item?
+      item_owner? ||
+        current_user.admin? ||
+        (current_user.college_admin? && @item.college_id == current_user.college_id)
     end
 
     def ensure_item_visible!

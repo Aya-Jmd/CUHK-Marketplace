@@ -66,17 +66,21 @@ RSpec.describe "Item reports", type: :request do
     expect(Notification.where(action: "item_report_created", notifiable: report).pluck(:recipient_id)).to match_array(expected_reviewer_ids)
   end
 
-  it "marks report notifications resolved and removes the item when an admin deletes it" do
+  it "hard deletes the item and its report notifications when an admin deletes it" do
     report = ItemReport.create!(item: item, reporter: reporter, message: "Please remove this.")
+    created_notification_ids = Notification.where(action: "item_report_created", notifiable: report).pluck(:id)
 
     sign_in admin
 
     patch delete_item_admin_item_report_path(report)
 
     expect(response).to redirect_to(notifications_path)
-    expect(item.reload.status).to eq("removed")
-    expect(report.reload).to be_item_deleted
-    expect(Notification.where(action: "item_report_created", notifiable: report).pluck(:read_at)).to all(be_present)
-    expect(Notification.where(action: "item_report_resolved", notifiable: report).pluck(:recipient_id)).to match_array(expected_reviewer_ids)
+    expect(Item.exists?(item.id)).to be(false)
+    expect(ItemReport.exists?(report.id)).to be(false)
+    expect(Notification.where(id: created_notification_ids)).to be_empty
+
+    get item_path(item.id)
+
+    expect(response).to have_http_status(:not_found)
   end
 end

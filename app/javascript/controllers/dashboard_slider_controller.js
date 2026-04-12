@@ -21,15 +21,21 @@ export default class extends Controller {
 
   updateMaxHeight() {
     const items = Array.from(this.element.children).filter((child) => child.offsetParent !== null)
-    const visibleCount = this.visibleCountValue || items.length
+    const hasVisibleCount = this.hasVisibleCountValue
+    const visibleCount = hasVisibleCount ? this.visibleCountValue : items.length
 
-    if (items.length <= visibleCount) {
+    if (items.length === 0) {
+      this.element.style.maxHeight = ""
+      return
+    }
+
+    if (!hasVisibleCount) {
       this.element.style.maxHeight = ""
       return
     }
 
     const gap = parseFloat(window.getComputedStyle(this.element).rowGap || window.getComputedStyle(this.element).gap || "0")
-    const visibleItems = items.slice(0, visibleCount)
+    const visibleItems = items.slice(0, Math.min(items.length, visibleCount))
     const totalHeight = visibleItems.reduce((sum, item) => sum + item.getBoundingClientRect().height, 0) + (Math.max(visibleItems.length - 1, 0) * gap)
 
     this.element.style.maxHeight = `${Math.ceil(totalHeight)}px`

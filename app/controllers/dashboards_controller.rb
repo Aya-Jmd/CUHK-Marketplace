@@ -69,9 +69,7 @@ class DashboardsController < ApplicationController
   def selected_category_ids(categories)
     requested_ids = Array(params[:category_ids]).reject(&:blank?).map(&:to_i)
     available_ids = categories.map(&:id)
-    selected_ids = requested_ids & available_ids
-
-    selected_ids.presence || available_ids.first(1)
+    requested_ids & available_ids
   end
 
   def selected_category_summary(categories)

@@ -111,6 +111,11 @@
         averages: dashboard.querySelector('[data-empty-mode="averages"]'),
         exact: dashboard.querySelector('[data-empty-mode="exact"]')
       };
+      var emptyMessages = {
+        noSelection: "No selected category. Select one, or multiple, to plot data.",
+        averages: "No data found for the selected categories in the selected date range.",
+        exact: "No exact price data found for the selected categories in the selected date range."
+      };
       var canvases = {
         averages: document.getElementById("category-prices-averages-chart"),
         exact: document.getElementById("category-prices-exact-chart")
@@ -196,9 +201,13 @@
         chartInstances[mode] = null;
       }
 
-      function toggleEmptyState(mode, isEmpty) {
-        emptyStates[mode].hidden = !isEmpty;
-        chartPanels[mode].classList.toggle("is-empty", isEmpty);
+      function toggleEmptyState(mode, messageKey) {
+        var isVisible = Boolean(messageKey);
+        var emptyState = emptyStates[mode];
+
+        emptyState.hidden = !isVisible;
+        if (isVisible) emptyState.textContent = emptyMessages[messageKey];
+        chartPanels[mode].classList.toggle("is-empty", isVisible);
       }
 
       function createYAxis() {
@@ -582,10 +591,18 @@
       }
 
       function renderChart(mode, buildConfig) {
+        if (!hasCategorySelection()) {
+          destroyChart(mode);
+          toggleEmptyState(mode, "noSelection");
+
+          if (currentMode === mode) renderLegend(mode);
+          return;
+        }
+
         var config = buildConfig();
 
         destroyChart(mode);
-        toggleEmptyState(mode, config.empty);
+        toggleEmptyState(mode, config.empty ? mode : null);
 
         if (config.empty) {
           if (currentMode === mode) renderLegend(mode);
@@ -626,17 +643,8 @@
       }
 
       function submitFilters() {
-        if (!hasCategorySelection()) return;
-
         filterForm.requestSubmit();
       }
-
-      filterForm.addEventListener("submit", function(event) {
-        if (hasCategorySelection()) return;
-
-        event.preventDefault();
-        window.alert("Select at least one category.");
-      });
 
       categoryInputs.forEach(function(input) {
         input.addEventListener("change", function() {

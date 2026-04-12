@@ -86,4 +86,13 @@ class CurrencyDisplayTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "10.16"
     assert_includes response.body, "31.75"
   end
+
+  test "analytics dashboard renders the no-selection empty state by default" do
+    get category_prices_dashboard_url
+
+    assert_response :success
+    assert_includes response.body, "No selected category. Select one, or multiple, to plot data."
+    assert_includes response.body, '"categories":[]'
+    assert_not_includes response.body, 'checked="checked"'
+  end
 end

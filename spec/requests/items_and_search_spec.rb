@@ -124,6 +124,25 @@ RSpec.describe "Items and Search", type: :request do
       expect(distance_card.css("a").map(&:text)).not_to include("Log in")
     end
 
+    it "replaces sold item sidebar actions with a status card" do
+      college = create_college(name: "United College")
+      seller = create_user(email: "sold_item_seller@cuhk.edu.hk", college:)
+      viewer = create_user(email: "sold_item_viewer@cuhk.edu.hk", college:)
+      item = create_item(user: seller, title: "Sold Watch", college:, status: "sold")
+
+      sign_in viewer
+      get item_path(item)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Item status")
+      expect(response.body).to include("This item has been sold")
+      expect(response.body).not_to include("Make an offer")
+      expect(response.body).not_to include("Update your offer")
+      expect(response.body).not_to include("Message seller")
+      expect(response.body).not_to include("Distance")
+      expect(response.body).not_to include("Manage item")
+    end
+
     it "shows an estimated walk in the pickup area for signed-in users with a saved location" do
       seller = create_user(email: "pickup_walk_seller@cuhk.edu.hk")
       buyer = create_user(email: "pickup_walk_buyer@cuhk.edu.hk")
