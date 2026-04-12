@@ -135,11 +135,11 @@ module ApplicationHelper
   def marketplace_hero_title
     if current_user&.admin? && params[:college_scope_id].present?
       college = College.find_by(id: params[:college_scope_id])
-      return "#{college.name} Marketplace" if college.present?
+      return "#{college.name.delete_suffix(" College")} Marketplace" if college.present?
     end
     
     if current_user && marketplace_scope == "college" && current_user.college.present?
-      return "#{current_user.college.name} Marketplace"
+      return "#{current_user.college.name.delete_suffix(" College")} Marketplace"
     end
     
     "CUHK Marketplace"
