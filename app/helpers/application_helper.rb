@@ -137,11 +137,11 @@ module ApplicationHelper
       college = College.find_by(id: params[:college_scope_id])
       return "#{college.name.delete_suffix(" College")} Marketplace" if college.present?
     end
-    
+
     if current_user && marketplace_scope == "college" && current_user.college.present?
       return "#{current_user.college.name.delete_suffix(" College")} Marketplace"
     end
-    
+
     "CUHK Marketplace"
   end
 end

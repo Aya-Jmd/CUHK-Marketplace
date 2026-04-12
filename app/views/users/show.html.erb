@@ -154,30 +154,40 @@
                               <% end %>
                             </div>
                           </div>
+                          <%= button_tag "submit", type: "submit", class: "market-button market-button--compact profile-pin-entry-form__submit" %>
                         <% end %>
                       </div>
 
                       <div class="profile-item-row__identity profile-item-row__identity--pin-card">
-                        <div class="profile-item-row__price-block">
-                          <p class="profile-item-row__price-label">Price</p>
-                          <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                        <div class="profile-item-row__price-meta">
+                          <div class="profile-item-row__summary profile-item-row__summary--tooltip">
+                            <button type="button" class="profile-item-row__info-trigger" aria-label="Show sale help">
+                              ?
+                              <span class="profile-item-row__info-popover" role="tooltip">Ask the buyer for their meetup PIN to complete the sale.</span>
+                            </button>
+                          </div>
+
+                          <div class="profile-item-row__price-block">
+                            <p class="profile-item-row__price-label">Price</p>
+                            <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                          </div>
                         </div>
 
                         <p class="profile-item-row__summary-line profile-item-row__summary-line--headline">
                           With <span class="profile-item-row__inline-emphasis"><%= offer.buyer.display_name %></span>
                         </p>
+                        <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-side">
+                          <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
+                        </div>
                       </div>
                     </div>
 
                     <div class="profile-item-row__footer profile-item-row__footer--pin-card">
-                      <div class="profile-item-row__summary">
-                        <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
-                          Ask the buyer for their meetup PIN to complete the sale.
-                        </p>
+                      <div class="profile-item-row__summary profile-item-row__summary--tooltip profile-item-row__summary--pin-help">
                       </div>
 
                       <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-footer">
-                        <%= button_tag "Complete sale", type: "submit", form: "complete-offer-#{offer.id}", class: "market-button market-button--compact" %>
+                        <%= button_tag "✔", type: "submit", form: "complete-offer-#{offer.id}", class: "market-button market-button--compact" %>
                         <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
                       </div>
                     </div>
@@ -299,18 +309,23 @@
                       </div>
                     </div>
 
-                    <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">Price</p>
-                      <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                    <div class="profile-item-row__price-meta">
+                      <div class="profile-item-row__summary profile-item-row__summary--tooltip">
+                        <button type="button" class="profile-item-row__info-trigger" aria-label="Show offer status help">
+                          ?
+                          <span class="profile-item-row__info-popover" role="tooltip">The seller has not responded yet. You can still cancel this offer.</span>
+                        </button>
+                      </div>
+
+                      <div class="profile-item-row__price-block">
+                        <p class="profile-item-row__price-label">Price</p>
+                        <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                      </div>
                     </div>
                   </div>
 
                   <div class="profile-item-row__footer profile-item-row__footer--tracking-card">
-                    <div class="profile-item-row__summary">
-                      <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
-                        The seller has not responded yet. You can still cancel this offer.
-                      </p>
-                    </div>
+                    <div class="profile-item-row__summary profile-item-row__summary--pin-help"></div>
                     <div class="profile-item-row__action-bar profile-item-row__action-bar--tracking">
                       <%= button_to "Cancel offer", offer_path(offer), method: :delete, data: { turbo_confirm: "Cancel this bid?" }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
                     </div>
@@ -338,9 +353,18 @@
                       </div>
                     </div>
 
-                    <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">Price</p>
-                      <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                    <div class="profile-item-row__price-meta">
+                      <div class="profile-item-row__summary profile-item-row__summary--tooltip">
+                        <button type="button" class="profile-item-row__info-trigger" aria-label="Show meetup PIN help">
+                          ?
+                          <span class="profile-item-row__info-popover" role="tooltip">Show this code to the seller when you meet up to receive the item.</span>
+                        </button>
+                      </div>
+
+                      <div class="profile-item-row__price-block">
+                        <p class="profile-item-row__price-label">Price</p>
+                        <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                      </div>
                     </div>
                   </div>
 
@@ -354,9 +378,6 @@
                           <span class="profile-pin-code__digit profile-pin-code__digit--filled"><%= digit %></span>
                         <% end %>
                       </div>
-                      <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
-                        Show this code to the seller when you meet up to receive the item.
-                      </p>
                     </div>
 
                     <div class="profile-item-row__action-bar profile-item-row__action-bar--tracking">
