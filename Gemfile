@@ -66,6 +66,7 @@ group :test do
   gem "capybara", require: false
   gem "selenium-webdriver", require: false
   gem "database_cleaner-active_record"
+  gem "simplecov", require: false
 end
 
 gem "cucumber-rails", require: false

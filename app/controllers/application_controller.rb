@@ -23,9 +23,11 @@ class ApplicationController < ActionController::Base
 
   # Adds college_id to the allowed list for signing up and updating accounts
   def configure_permitted_parameters
-    additional_user_keys = [ :college_id, :default_location, :latitude, :longitude ]
-    devise_parameter_sanitizer.permit(:sign_up, keys: additional_user_keys)
-    devise_parameter_sanitizer.permit(:account_update, keys: additional_user_keys)
+    sign_up_keys = [ :college_id, :default_location, :latitude, :longitude ]
+    account_update_keys = [ :default_location, :latitude, :longitude ]
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: sign_up_keys)
+    devise_parameter_sanitizer.permit(:account_update, keys: account_update_keys)
   end
   # Devise looks for this method to know where to send a user after login
   def after_sign_in_path_for(resource)

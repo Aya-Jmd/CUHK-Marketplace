@@ -1,4 +1,5 @@
 require "rails_helper"
+require "cgi"
 
 RSpec.describe "Reserved item access", type: :request do
   let!(:college) { create_college(name: "United College") }
@@ -90,7 +91,7 @@ RSpec.describe "Reserved item access", type: :request do
 
     follow_redirect!
 
-    expect(response.body).to include("You can't edit an item involved in a transaction!")
+    expect(CGI.unescapeHTML(response.body)).to include("You can't edit an item involved in a transaction!")
     expect(response.body).not_to include("Update your item")
   end
 

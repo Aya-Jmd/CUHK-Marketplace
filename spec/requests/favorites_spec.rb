@@ -53,4 +53,36 @@ RSpec.describe "Favorites", type: :request do
     expect(response.body).to include("Saved Chair")
     expect(response.body).not_to include("Removed Chair")
   end
+
+  it "renders the item-page favorite toggle as a turbo stream" do
+    seller = create_user(email: "favorite_turbo_seller@cuhk.edu.hk")
+    buyer = create_user(email: "favorite_turbo_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Turbo Favorite Lamp")
+
+    sign_in buyer
+    post item_favorite_path(item), params: { context: "item_show" }, as: :turbo_stream
+
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq(Mime[:turbo_stream].to_s)
+    expect(response.body).to include("turbo-stream")
+    expect(response.body).to include("favorite_button_item_show_item_#{item.id}")
+  end
+
+  it "refreshes the dashboard favorites section as a turbo stream" do
+    seller = create_user(email: "favorite_dashboard_stream_seller@cuhk.edu.hk")
+    buyer = create_user(email: "favorite_dashboard_stream_buyer@cuhk.edu.hk")
+    kept_item = create_item(user: seller, title: "Kept Favorite")
+    removed_item = create_item(user: seller, title: "Removed Favorite")
+    Favorite.create!(user: buyer, item: kept_item)
+    Favorite.create!(user: buyer, item: removed_item)
+
+    sign_in buyer
+    delete item_favorite_path(removed_item), params: { context: "dashboard_favorites" }, as: :turbo_stream
+
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq(Mime[:turbo_stream].to_s)
+    expect(response.body).to include("dashboard_favorite_items_section")
+    expect(response.body).to include("Kept Favorite")
+    expect(response.body).not_to include("Removed Favorite")
+  end
 end

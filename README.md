@@ -125,7 +125,26 @@ To run this project locally on your machine:
 
 ## SimpleCov report
 
-Insert the SimpleCov screenshot below before submission.
+Generate the coverage report with:
+
+```bash
+bundle exec rspec
+bundle exec cucumber
+```
+
+After the suite finishes, open:
+
+```bash
+coverage/all_files_simplecov_report/index.html
+```
+
+This report is generated with `SimpleCov` and can be screenshotted for submission evidence.
+The configured report merges `RSpec` and `Cucumber` into the same SimpleCov output and includes all application files.
+
+Latest local run:
+
+* **Line coverage:** `83.61%` (`1250 / 1495`)
+* **Branch coverage:** `62.90%` (`473 / 752`)
 
 ![SimpleCov report screenshot]()
 

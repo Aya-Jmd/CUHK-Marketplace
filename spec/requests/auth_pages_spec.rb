@@ -1,4 +1,5 @@
 require "rails_helper"
+require "cgi"
 
 RSpec.describe "Authentication pages", type: :request do
   it "renders sign-in without the shared header or footer" do
@@ -47,5 +48,23 @@ RSpec.describe "Authentication pages", type: :request do
     expect(user.default_location).to eq("shaw")
     expect(user.latitude).to eq(22.4179)
     expect(user.longitude).to eq(114.2065)
+  end
+
+  it "does not allow users to change college through account settings" do
+    old_college = create_college(name: "Old College")
+    new_college = create_college(name: "New College")
+    user = create_user(email: "account_settings_user@cuhk.edu.hk", college: old_college, password: "password123")
+
+    sign_in user
+    put user_registration_path, params: {
+      user: {
+        email: user.email,
+        college_id: new_college.id,
+        current_password: "password123"
+      }
+    }
+
+    expect(response).to redirect_to(root_path)
+    expect(user.reload.college_id).to eq(old_college.id)
   end
 end

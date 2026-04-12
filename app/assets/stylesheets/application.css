@@ -12951,6 +12951,22 @@ body a {
   justify-content: flex-end;
 }
 
+.profile-show-page--dashboard .profile-show__rows--dashboard-selling,
+.profile-show-page--dashboard .profile-show__rows--dashboard-live,
+.profile-show-page--dashboard .profile-show__rows--dashboard-buying {
+  padding-right: 0.3rem;
+}
+
+@media (max-width: 900px) {
+  .profile-show__sections--dashboard {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "selling"
+      "live"
+      "buying";
+  }
+}
+
 .profile-edit-page .market-page__title {
   color: var(--chat-text, #16233d);
   font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
