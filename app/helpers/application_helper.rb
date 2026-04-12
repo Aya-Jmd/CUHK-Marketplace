@@ -130,4 +130,18 @@ module ApplicationHelper
 
     college.try(:slug).presence || college.name.to_s.parameterize.delete_suffix("-college")
   end
+
+  # Hero title that changes based on selected college
+  def marketplace_hero_title
+    if current_user&.admin? && params[:college_scope_id].present?
+      college = College.find_by(id: params[:college_scope_id])
+      return "#{college.name} Marketplace" if college.present?
+    end
+    
+    if current_user && marketplace_scope == "college" && current_user.college.present?
+      return "#{current_user.college.name} Marketplace"
+    end
+    
+    "CUHK Marketplace"
+  end
 end
