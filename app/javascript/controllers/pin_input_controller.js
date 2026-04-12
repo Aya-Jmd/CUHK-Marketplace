@@ -1,65 +1,115 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  // 'digit' targets are the 4 visible boxes. 'hidden' is the real form field.
   static targets = ["digit", "hidden"]
 
+  connect() {
+    this.updateHiddenField()
+  }
+
   handleInput(event) {
-    const input = event.target;
-    const index = this.digitTargets.indexOf(input);
-    const value = input.value;
+    const input = event.target
+    const index = this.digitTargets.indexOf(input)
+    const numbers = this.extractDigits(input.value, this.digitTargets.length - index)
 
-    // 1. Force numeric only (clear it if they type a letter)
-    if (!/^\d$/.test(value)) {
-      input.value = "";
-      this.updateHiddenField();
-      return;
+    if (numbers.length === 0) {
+      input.value = ""
+      this.updateHiddenField()
+      return
     }
 
-    // 2. Auto-advance to the next box if a number was typed
-    if (index < this.digitTargets.length - 1 && value !== "") {
-      this.digitTargets[index + 1].focus();
-    }
-
-    this.updateHiddenField();
+    this.fillDigitsFrom(index, numbers)
+    this.focusNextField(index + numbers.length)
+    this.updateHiddenField()
   }
 
   handleKeydown(event) {
-    const input = event.target;
-    const index = this.digitTargets.indexOf(input);
+    const input = event.target
+    const index = this.digitTargets.indexOf(input)
 
-    // 3. Handle Backspace: Go back to the previous box if the current one is empty
     if (event.key === "Backspace" && input.value === "") {
       if (index > 0) {
-        this.digitTargets[index - 1].focus();
-        this.digitTargets[index - 1].value = "";
+        event.preventDefault()
+        this.digitTargets[index - 1].value = ""
+        this.digitTargets[index - 1].focus()
       }
-      // Use setTimeout to ensure the value clears before updating the hidden field
-      setTimeout(() => this.updateHiddenField(), 0);
+      this.updateHiddenField()
+      return
+    }
+
+    if (event.key === "ArrowLeft" && index > 0) {
+      event.preventDefault()
+      this.digitTargets[index - 1].focus()
+      return
+    }
+
+    if (event.key === "ArrowRight" && index < this.digitTargets.length - 1) {
+      event.preventDefault()
+      this.digitTargets[index + 1].focus()
+      return
+    }
+
+    if (event.key === "Backspace" || event.key === "Delete") {
+      setTimeout(() => this.updateHiddenField(), 0)
     }
   }
 
   handlePaste(event) {
-    event.preventDefault();
-    // Get pasted data and strip out anything that isn't a number
-    const pasteData = (event.clipboardData || window.clipboardData).getData('text');
-    const numbers = pasteData.replace(/\D/g, '').split(''); 
+    event.preventDefault()
+    const index = this.digitTargets.indexOf(event.target)
+    const pasteData = (event.clipboardData || window.clipboardData).getData("text")
+    const numbers = this.extractDigits(pasteData, this.digitTargets.length - index)
 
-    // Fill the boxes sequentially
-    this.digitTargets.forEach((input, index) => {
-      input.value = numbers[index] || "";
-    });
+    if (numbers.length === 0) {
+      return
+    }
 
-    // Focus the next empty box (or the last box)
-    const nextIndex = Math.min(numbers.length, this.digitTargets.length - 1);
-    this.digitTargets[nextIndex].focus();
+    this.fillDigitsFrom(index, numbers)
+    this.focusNextField(index + numbers.length)
+    this.updateHiddenField()
+  }
 
-    this.updateHiddenField();
+  handleFocus(event) {
+    event.target.select()
+  }
+
+  handleSubmit(event) {
+    this.updateHiddenField()
+
+    if (!new RegExp(`^\\d{${this.digitTargets.length}}$`).test(this.hiddenTarget.value)) {
+      event.preventDefault()
+      this.focusNextField(0)
+    }
   }
 
   updateHiddenField() {
-    // Combine all 4 boxes into a single string (e.g., "5", "8", "3", "0" -> "5830")
-    const pin = this.digitTargets.map(input => input.value).join('');
-    this.hiddenTarget.value = pin;
+    const pin = this.digitTargets.map((input) => input.value).join("")
+    this.hiddenTarget.value = pin
+  }
+
+  extractDigits(value, limit) {
+    return value.replace(/\D/g, "").slice(0, limit).split("")
+  }
+
+  fillDigitsFrom(startIndex, numbers) {
+    numbers.forEach((digit, offset) => {
+      const input = this.digitTargets[startIndex + offset]
+
+      if (input) {
+        input.value = digit
+      }
+    })
+  }
+
+  focusNextField(preferredIndex) {
+    const nextEmptyIndex = this.digitTargets.findIndex(
+      (input, index) => index >= preferredIndex && input.value === ""
+    )
+    const targetIndex = nextEmptyIndex === -1 ? Math.min(preferredIndex, this.digitTargets.length - 1) : nextEmptyIndex
+    const target = this.digitTargets[targetIndex]
+
+    if (target) {
+      target.focus()
+    }
   }
 }

@@ -3,12 +3,21 @@ module ConversationsHelper
     last_message = conversation.last_message
     return "No messages yet." if last_message.blank?
 
-    if last_message.offer_update_notice?
-      "Offer updated to #{display_price(last_message.offer_update_amount_hkd)}"
+    if last_message.offer_amount_notice?
+      case last_message.marketplace_notice_type
+      when "offer_created"
+        "Offer made at #{display_price(last_message.offer_notice_amount_hkd)}"
+      when "offer_updated"
+        "Offer updated to #{display_price(last_message.offer_notice_amount_hkd)}"
+      end
     elsif last_message.marketplace_notice?
       case last_message.marketplace_notice_type
       when "offer_accepted"
         "Offer accepted"
+      when "offer_declined"
+        "Offer declined"
+      when "offer_withdrawn"
+        "Offer cancelled"
       when "offer_cancelled"
         "Transaction cancelled"
       when "offer_completed"

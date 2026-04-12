@@ -25,7 +25,7 @@ RSpec.describe "Offers and Notifications", type: :request do
     sign_in seller
     patch complete_offer_path(offer), params: { meetup_code: "1234" }
 
-    expect(response).to redirect_to(profile_path)
+    expect(response).to redirect_to(dashboard_path)
     expect(offer.reload.status).to eq("completed")
     expect(item.reload.status).to eq("sold")
     expect(item.offers.where(status: "pending")).to be_empty

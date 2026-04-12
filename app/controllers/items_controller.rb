@@ -36,7 +36,7 @@ class ItemsController < ApplicationController
 
   # GET /items/1 or /items/1.json
   def show
-    @existing_offer = current_user.offers_made.find_by(item: @item) if user_signed_in? && current_user != @item.user
+    @existing_offer = current_user.offers_made.not_declined.find_by(item: @item) if user_signed_in? && current_user != @item.user
     @seller_live_items_count = @item.user.items.available.count
 
     # Calculate distance if user is signed in and has location
@@ -112,9 +112,10 @@ class ItemsController < ApplicationController
   # DELETE /items/1 or /items/1.json
   def destroy
     @item.destroy!
+    redirect_target = params[:return_to] == "dashboard" ? dashboard_path : items_path
 
     respond_to do |format|
-      format.html { redirect_to items_path, notice: "Item was successfully destroyed.", status: :see_other }
+      format.html { redirect_to redirect_target, notice: "Item was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end

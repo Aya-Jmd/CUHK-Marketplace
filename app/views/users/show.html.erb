@@ -84,75 +84,112 @@
           <div class="profile-show__rows <%= "profile-show__rows--dashboard-flat" if profile_owner %>" role="list">
             <% if profile_owner %>
               <% seller_offer_rows.each do |item, offer| %>
-                <article class="profile-item-row profile-item-row--flat" role="listitem">
-                  <div class="profile-item-row__top">
-                    <div class="profile-item-row__identity">
-                      <p class="profile-item-row__meta">
-                        <span><%= offer.pending? ? "Incoming offer" : "Accepted offer" %></span>
-                        <span><%= item.category&.name || "Uncategorized" %></span>
-                        <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
-                      </p>
+                <article class="<%= class_names("profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable", { "profile-item-row--pin-card profile-item-row--seller-accepted" => offer.accepted? }) %>" role="listitem">
+                  <% if offer.pending? %>
+                    <div class="profile-item-row__top">
+                      <div class="profile-item-row__identity">
+                        <p class="profile-item-row__meta">
+                          <span>Incoming offer</span>
+                          <span><%= item.category&.name || "Uncategorized" %></span>
+                          <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
+                        </p>
 
-                      <h3 class="profile-item-row__title">
-                        <%= link_to item.title, item_path(item), class: "profile-item-row__title-link" %>
-                      </h3>
+                        <h3 class="profile-item-row__title"><%= item.title %></h3>
 
-                      <div class="profile-item-row__badges">
-                        <span class="profile-status-badge <%= offer.pending? ? "profile-status-badge--pending" : "profile-status-badge--live" %>">
-                          <%= offer.pending? ? "PENDING" : "ACCEPTED" %>
-                        </span>
-                        <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
+                        <div class="profile-item-row__badges">
+                          <span class="profile-status-badge profile-status-badge--pending">PENDING</span>
+                          <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
+                        </div>
+                      </div>
+
+                      <div class="profile-item-row__price-block">
+                        <p class="profile-item-row__price-label">Price</p>
+                        <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
                       </div>
                     </div>
 
-                    <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">Offer</p>
-                      <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
-                      <%= link_to "View listing", item_path(item), class: "profile-item-row__link" %>
-                    </div>
-                  </div>
-
-                  <div class="profile-item-row__footer">
-                    <div class="profile-item-row__summary">
-                      <p class="profile-item-row__summary-line">
-                        <strong><%= offer.buyer.display_name %></strong>
-                        <%= offer.pending? ? "sent an offer for this listing." : "has an accepted offer on this listing." %>
-                      </p>
-                      <% if offer.accepted? %>
-                        <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
-                          Ask the buyer for their meetup PIN to complete the sale.
+                    <div class="profile-item-row__footer">
+                      <div class="profile-item-row__summary">
+                        <p class="profile-item-row__summary-line">
+                          <strong><%= offer.buyer.display_name %></strong>
+                          sent an offer for this listing.
                         </p>
-                      <% end %>
-                    </div>
+                      </div>
 
-                    <% if offer.pending? %>
                       <div class="profile-item-row__action-bar">
                         <%= button_to "Accept", accept_offer_path(offer), method: :patch, class: "market-button market-button--compact", form: { class: "profile-action-form" } %>
                         <%= button_to "Refuse", decline_offer_path(offer), method: :patch, class: "market-button market-button--secondary market-button--compact", form: { class: "profile-action-form" } %>
                       </div>
-                    <% else %>
-                      <div class="profile-item-row__action-bar profile-item-row__action-bar--wrap">
-                        <%= form_with url: complete_offer_path(offer), method: :patch, class: "profile-pin-inline-form" do %>
-                          <%= text_field_tag :meetup_code, nil,
-                              maxlength: 4,
-                              inputmode: "numeric",
-                              pattern: "[0-9]*",
-                              autocomplete: "one-time-code",
-                              placeholder: "Enter meetup PIN",
-                              class: "profile-pin-inline-input",
-                              required: true %>
-                          <%= submit_tag "Complete sale", class: "market-button market-button--compact" %>
-                        <% end %>
+                    </div>
+                  <% else %>
+                    <div class="profile-item-row__top profile-item-row__top--pin-card">
+                      <div class="profile-item-row__pin-panel">
+                        <div class="profile-item-row__pin-header">
+                          <p class="profile-item-row__meta profile-item-row__meta--pin-panel">
+                            <span>Accepted offer</span>
+                            <span><%= item.category&.name || "Uncategorized" %></span>
+                            <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
+                          </p>
+                          <h3 class="profile-item-row__title profile-item-row__title--pin-panel"><%= item.title %></h3>
+                        </div>
 
-                        <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--secondary market-button--compact", form: { class: "profile-action-form" } %>
+                        <%= form_with url: complete_offer_path(offer), method: :patch, id: "complete-offer-#{offer.id}", class: "profile-pin-entry-form", data: { controller: "pin-input", action: "submit->pin-input#handleSubmit" } do %>
+                          <div class="profile-pin-entry-form__group">
+                            <p class="profile-item-row__summary-line profile-item-row__summary-line--label">Meetup PIN</p>
+                            <%= hidden_field_tag :meetup_code, nil, data: { pin_input_target: "hidden" } %>
+                            <div class="profile-pin-code profile-pin-code--entry" role="group" aria-label="Enter the 4-digit meetup PIN">
+                              <% 4.times do |digit_index| %>
+                                <input
+                                  type="text"
+                                  maxlength="1"
+                                  inputmode="numeric"
+                                  pattern="[0-9]*"
+                                  autocomplete="<%= digit_index.zero? ? "one-time-code" : "off" %>"
+                                  aria-label="Meetup PIN digit <%= digit_index + 1 %>"
+                                  class="profile-pin-code__digit profile-pin-code__digit--input"
+                                  data-pin-input-target="digit"
+                                  data-action="input->pin-input#handleInput keydown->pin-input#handleKeydown paste->pin-input#handlePaste focus->pin-input#handleFocus"
+                                  required
+                                >
+                              <% end %>
+                            </div>
+                          </div>
+                        <% end %>
                       </div>
-                    <% end %>
-                  </div>
+
+                      <div class="profile-item-row__identity profile-item-row__identity--pin-card">
+                        <div class="profile-item-row__price-block">
+                          <p class="profile-item-row__price-label">Price</p>
+                          <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
+                        </div>
+
+                        <p class="profile-item-row__summary-line profile-item-row__summary-line--headline">
+                          With <span class="profile-item-row__inline-emphasis"><%= offer.buyer.display_name %></span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="profile-item-row__footer profile-item-row__footer--pin-card">
+                      <div class="profile-item-row__summary">
+                        <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
+                          Ask the buyer for their meetup PIN to complete the sale.
+                        </p>
+                      </div>
+
+                      <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-footer">
+                        <%= button_tag "Complete sale", type: "submit", form: "complete-offer-#{offer.id}", class: "market-button market-button--compact" %>
+                        <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
+                      </div>
+                    </div>
+                  <% end %>
+                  <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
+                    <span class="item-show__screen-reader">View <%= item.title %></span>
+                  <% end %>
                 </article>
               <% end %>
 
               <% seller_items_without_active_offers.each do |item| %>
-                <article class="profile-item-row" role="listitem">
+                <article class="profile-item-row profile-item-row--flat profile-item-row--inventory-card profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
                     <div class="profile-item-row__identity">
                       <p class="profile-item-row__meta">
@@ -160,9 +197,7 @@
                         <span><%= item.created_at.strftime("%b %d, %Y") %></span>
                       </p>
 
-                      <h3 class="profile-item-row__title">
-                        <%= link_to item.title, item_path(item), class: "profile-item-row__title-link" %>
-                      </h3>
+                      <h3 class="profile-item-row__title"><%= item.title %></h3>
 
                       <div class="profile-item-row__badges">
                         <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
@@ -175,9 +210,19 @@
                     <div class="profile-item-row__price-block">
                       <p class="profile-item-row__price-label">Price</p>
                       <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
-                      <%= link_to "View listing", item_path(item), class: "profile-item-row__link" %>
                     </div>
                   </div>
+
+                  <div class="profile-item-row__footer profile-item-row__footer--inventory-card">
+                    <% if item.status == "available" %>
+                      <div class="profile-item-row__action-bar profile-item-row__action-bar--inventory">
+                        <%= button_to "Remove item", item_path(item, return_to: "dashboard"), method: :delete, data: { turbo_confirm: "Remove this live item from the marketplace?" }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
+                    <span class="item-show__screen-reader">View <%= item.title %></span>
+                  <% end %>
                 </article>
               <% end %>
             <% else %>
@@ -239,7 +284,7 @@
           <% if pending_bids.any? || accepted_bids.any? %>
             <div class="profile-show__rows profile-show__rows--dashboard-flat" role="list">
               <% pending_bids.each do |offer| %>
-                <article class="profile-item-row profile-item-row--flat" role="listitem">
+                <article class="profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
                     <div class="profile-item-row__identity">
                       <p class="profile-item-row__meta">
@@ -247,9 +292,7 @@
                         <span><%= offer.item.category&.name || "Uncategorized" %></span>
                         <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
                       </p>
-                      <h3 class="profile-item-row__title">
-                        <%= link_to offer.item.title, item_path(offer.item), class: "profile-item-row__title-link" %>
-                      </h3>
+                      <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
                       <div class="profile-item-row__badges">
                         <span class="profile-status-badge profile-status-badge--pending">PENDING</span>
                         <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
@@ -257,27 +300,30 @@
                     </div>
 
                     <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">My offer</p>
+                      <p class="profile-item-row__price-label">Price</p>
                       <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
-                      <%= link_to "View listing", item_path(offer.item), class: "profile-item-row__link" %>
                     </div>
                   </div>
 
-                  <div class="profile-item-row__footer">
+                  <div class="profile-item-row__footer profile-item-row__footer--tracking-card">
                     <div class="profile-item-row__summary">
                       <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
                         The seller has not responded yet. You can still cancel this offer.
                       </p>
                     </div>
-                    <div class="profile-item-row__action-bar">
+                    <div class="profile-item-row__action-bar profile-item-row__action-bar--tracking">
                       <%= button_to "Cancel offer", offer_path(offer), method: :delete, data: { turbo_confirm: "Cancel this bid?" }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
                     </div>
                   </div>
+                  <%= link_to item_path(offer.item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{offer.item.title}" } do %>
+                    <span class="item-show__screen-reader">View <%= offer.item.title %></span>
+                  <% end %>
                 </article>
               <% end %>
 
               <% accepted_bids.each do |offer| %>
-                <article class="profile-item-row profile-item-row--flat" role="listitem">
+                <% meetup_digits = offer.meetup_code.to_s.rjust(4, "0").chars.first(4) %>
+                <article class="profile-item-row profile-item-row--flat profile-item-row--pin-card profile-item-row--buyer-accepted profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
                     <div class="profile-item-row__identity">
                       <p class="profile-item-row__meta">
@@ -285,9 +331,7 @@
                         <span><%= offer.item.category&.name || "Uncategorized" %></span>
                         <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
                       </p>
-                      <h3 class="profile-item-row__title">
-                        <%= link_to offer.item.title, item_path(offer.item), class: "profile-item-row__title-link" %>
-                      </h3>
+                      <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
                       <div class="profile-item-row__badges">
                         <span class="profile-status-badge profile-status-badge--live">ACCEPTED</span>
                         <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
@@ -295,22 +339,33 @@
                     </div>
 
                     <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">My offer</p>
+                      <p class="profile-item-row__price-label">Price</p>
                       <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
-                      <%= link_to "View listing", item_path(offer.item), class: "profile-item-row__link" %>
                     </div>
                   </div>
 
-                  <div class="profile-item-row__footer">
+                  <div class="profile-item-row__footer profile-item-row__footer--tracking-card">
                     <div class="profile-item-row__summary">
-                      <p class="profile-item-row__summary-line">
-                        Meetup PIN <strong class="profile-item-row__pin-value"><%= offer.meetup_code %></strong>
+                      <p class="profile-item-row__summary-line profile-item-row__summary-line--label">
+                        Meetup PIN
                       </p>
+                      <div class="profile-pin-code profile-pin-code--display" role="img" aria-label="Meetup PIN <%= offer.meetup_code %>">
+                        <% meetup_digits.each do |digit| %>
+                          <span class="profile-pin-code__digit profile-pin-code__digit--filled"><%= digit %></span>
+                        <% end %>
+                      </div>
                       <p class="profile-item-row__summary-line profile-item-row__summary-line--muted">
                         Show this code to the seller when you meet up to receive the item.
                       </p>
                     </div>
+
+                    <div class="profile-item-row__action-bar profile-item-row__action-bar--tracking">
+                      <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Cancel this transaction? The item will go back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
+                    </div>
                   </div>
+                  <%= link_to item_path(offer.item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{offer.item.title}" } do %>
+                    <span class="item-show__screen-reader">View <%= offer.item.title %></span>
+                  <% end %>
                 </article>
               <% end %>
             </div>

@@ -62,4 +62,39 @@ RSpec.describe "Chat and Profiles", type: :request do
     expect(user.reload.college_id).to eq(college_b.id)
     expect(user.default_location).to eq("new_asia")
   end
+
+  it "renders accepted seller and buyer cards with segmented meetup pin UI" do
+    owner = create_user(email: "dashboard_owner@cuhk.edu.hk")
+    buyer = create_user(email: "dashboard_buyer@cuhk.edu.hk")
+    other_seller = create_user(email: "dashboard_other_seller@cuhk.edu.hk")
+    selling_item = create_item(user: owner, title: "Shoes")
+    buying_item = create_item(user: other_seller, title: "Feather")
+
+    selling_offer = Offer.create!(item: selling_item, buyer:, seller: owner, price: 999, status: "accepted")
+    selling_offer.update_column(:meetup_code, "2569")
+
+    buying_offer = Offer.create!(item: buying_item, buyer: owner, seller: other_seller, price: 9, status: "accepted")
+    buying_offer.update_column(:meetup_code, "4831")
+
+    sign_in owner
+    get dashboard_path
+
+    document = Nokogiri::HTML.parse(response.body)
+    seller_card = document.at_css(".profile-item-row--seller-accepted")
+    buyer_card = document.at_css(".profile-item-row--buyer-accepted")
+
+    expect(response).to have_http_status(:ok)
+    expect(seller_card).to be_present
+    expect(seller_card.at_css(".profile-item-row__listing-shortcut")).to be_present
+    expect(seller_card.text).to include("Accepted by")
+    expect(seller_card.text).not_to include(selling_item.title)
+    expect(seller_card.at_css("a[href='#{user_path(buyer)}']")).to be_present
+    expect(seller_card.at_css("[data-controller='pin-input']")).to be_present
+    expect(seller_card.css(".profile-pin-code__digit--input").size).to eq(4)
+
+    expect(buyer_card).to be_present
+    expect(buyer_card.text).to include("Meetup PIN")
+    expect(buyer_card.text).not_to include(buying_offer.created_at.strftime("%b %d, %Y"))
+    expect(buyer_card.css(".profile-pin-code__digit--filled").map(&:text)).to eq(%w[4 8 3 1])
+  end
 end

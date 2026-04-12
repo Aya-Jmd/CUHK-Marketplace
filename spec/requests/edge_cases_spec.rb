@@ -24,7 +24,22 @@ RSpec.describe "Edge Case Guards", type: :request do
     sign_in seller
     patch complete_offer_path(offer), params: { meetup_code: "9999" }
 
-    expect(response).to redirect_to(profile_path)
+    expect(response).to redirect_to(dashboard_path)
+    expect(offer.reload.status).to eq("accepted")
+    expect(item.reload.status).to eq("available")
+  end
+
+  it "rejects meetup codes that are not exactly four digits" do
+    seller = create_user(email: "pin_format_seller@cuhk.edu.hk")
+    buyer = create_user(email: "pin_format_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Desk Lamp")
+    offer = Offer.create!(item:, buyer:, seller:, price: 90, status: "accepted")
+    offer.update_column(:meetup_code, "1234")
+
+    sign_in seller
+    patch complete_offer_path(offer), params: { meetup_code: "12a4" }
+
+    expect(response).to redirect_to(dashboard_path)
     expect(offer.reload.status).to eq("accepted")
     expect(item.reload.status).to eq("available")
   end

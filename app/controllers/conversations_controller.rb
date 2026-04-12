@@ -78,7 +78,7 @@ class ConversationsController < ApplicationController
   def current_offer_for(conversation)
     return unless conversation.present?
 
-    Offer.find_by(
+    Offer.not_declined.find_by(
       item: conversation.item,
       buyer: conversation.buyer,
       seller: conversation.seller

@@ -2,6 +2,7 @@ class Message < ApplicationRecord
   MARKETPLACE_NOTICE_PREFIX = "__marketplace_notice__:".freeze
   OFFER_UPDATE_NOTICE_PREFIX = "__marketplace_offer_notice__:".freeze
   NOTICE_DELIMITER = "::".freeze
+  OFFER_AMOUNT_NOTICE_TYPES = %w[offer_created offer_updated].freeze
 
   belongs_to :conversation, touch: true
   belongs_to :user
@@ -12,8 +13,11 @@ class Message < ApplicationRecord
   after_create_commit -> { broadcast_append_to self.conversation, target: "messages" }
   after_create_commit :broadcast_inbox_updates
 
-  def self.offer_update_notice_content(amount_hkd)
-    "#{MARKETPLACE_NOTICE_PREFIX}offer_updated#{NOTICE_DELIMITER}#{amount_hkd.to_d.to_s("F")}"
+  def self.offer_amount_notice_content(type, amount_hkd)
+    notice_type = type.to_s
+    raise ArgumentError, "unsupported offer notice type" unless OFFER_AMOUNT_NOTICE_TYPES.include?(notice_type)
+
+    "#{MARKETPLACE_NOTICE_PREFIX}#{notice_type}#{NOTICE_DELIMITER}#{amount_hkd.to_d.to_s("F")}"
   end
 
   def self.offer_status_notice_content(status)
@@ -36,8 +40,12 @@ class Message < ApplicationRecord
     marketplace_notice_type == "offer_updated"
   end
 
-  def offer_update_amount_hkd
-    return unless offer_update_notice?
+  def offer_amount_notice?
+    OFFER_AMOUNT_NOTICE_TYPES.include?(marketplace_notice_type)
+  end
+
+  def offer_notice_amount_hkd
+    return unless offer_amount_notice?
 
     raw_amount =
       if content.to_s.start_with?(MARKETPLACE_NOTICE_PREFIX)

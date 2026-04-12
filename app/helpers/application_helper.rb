@@ -38,7 +38,7 @@ module ApplicationHelper
     when "offer_withdrawn"
       "#{notification.actor.display_name} has cancelled their offer of #{display_price(offer_amount_hkd)} for item #{item_name}."
     when "offer_declined", "declined your offer for"
-      "#{notification.actor.display_name} rejected your offer for the item #{item_name}."
+      "#{notification.actor.display_name} declined the offer."
     when "offer_accepted", "accepted your offer for"
       "#{notification.actor.display_name} accepted your offer for the item #{item_name}. See your dashboard for the confirmation pin!"
     when "offer_cancelled", "cancelled the transaction for"

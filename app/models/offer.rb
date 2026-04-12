@@ -3,6 +3,8 @@ class Offer < ApplicationRecord
   belongs_to :buyer, class_name: "User"
   belongs_to :seller, class_name: "User"
 
+  scope :not_declined, -> { where.not(status: "declined") }
+
   # ADD THIS EXACT LINE: It tells Rails about our state machine!
   enum :status, { pending: "pending", accepted: "accepted", declined: "declined", completed: "completed", failed: "failed" }
 

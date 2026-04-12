@@ -1,23 +1,6 @@
 <% if message.marketplace_notice? %>
   <article class="chat-offer-notice">
-    <p class="chat-offer-notice__text">
-      <% case message.marketplace_notice_type %>
-      <% when "offer_updated" %>
-        <strong><%= message.user.display_name %></strong>
-        made a
-        <strong><%= display_price(message.offer_update_amount_hkd) %></strong>
-        offer.
-      <% when "offer_accepted" %>
-        <strong><%= message.user.display_name %></strong>
-        accepted the offer for this item.
-      <% when "offer_cancelled" %>
-        <strong><%= message.user.display_name %></strong>
-        cancelled the transaction. The item may be available again.
-      <% when "offer_completed" %>
-        <strong><%= message.user.display_name %></strong>
-        completed the transaction. This item is sold.
-      <% end %>
-    </p>
+    <p class="chat-offer-notice__text"><%= marketplace_notice_text(message) %></p>
   </article>
 <% else %>
   <div class="chat-message"

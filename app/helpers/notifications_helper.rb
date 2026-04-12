@@ -61,7 +61,7 @@ module NotificationsHelper
     when "offer_withdrawn"
       safe_join([ actor_segment, " has cancelled their offer of ", amount_segment, " for ", item_segment, "." ])
     when "offer_declined"
-      safe_join([ actor_segment, " rejected your offer for ", item_segment, "." ])
+      safe_join([ actor_segment, " declined the offer." ])
     when "offer_accepted"
       safe_join([ actor_segment, " accepted your offer for ", item_segment, "." ])
     when "offer_cancelled"
@@ -80,7 +80,7 @@ module NotificationsHelper
     when "offer_accepted"
       "Check your buyer hub for the meetup PIN."
     when "offer_declined"
-      "You can submit another offer if the listing is still available."
+      "You can make a fresh offer if the listing is still available."
     when "offer_cancelled"
       "The transaction was cancelled and the listing may be available again."
     when "offer_completed"
