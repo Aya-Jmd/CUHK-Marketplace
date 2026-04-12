@@ -1,6 +1,6 @@
 <div class="auth-links">
   <%- if controller_name != 'sessions' %>
-    <p class="auth-links__item"><%= link_to "Log in", new_session_path(resource_name), class: "auth-links__link" %></p>
+    <p class="auth-links__item"><%= link_to "Sign in", new_session_path(resource_name), class: "auth-links__link" %></p>
   <% end %>
 
   <%- if devise_mapping.registerable? && controller_name != 'registrations' %>

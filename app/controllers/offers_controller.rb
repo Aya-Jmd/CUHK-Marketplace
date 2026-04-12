@@ -5,6 +5,11 @@ class OffersController < ApplicationController
   def create
     @item = Item.find(params[:item_id])
 
+    unless @item.visible_to?(current_user)
+      redirect_to items_path, alert: "This item is no longer available."
+      return
+    end
+
     if @item.user == current_user
       redirect_to @item, alert: "You cannot make an offer on your own item."
       return
@@ -79,25 +84,41 @@ class OffersController < ApplicationController
   end
 
   def accept
-    return unless current_user == @offer.seller
+    return redirect_to(dashboard_path, alert: "You are not allowed to manage this offer.") unless current_user == @offer.seller
 
-    if @offer.update(status: "accepted")
-      @offer.item.update(status: "pending_dropoff")
+    error_message = nil
 
-      Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_accepted", notifiable: @offer)
-      sync_offer_notice_to_conversation(
-        item: @offer.item,
-        buyer: @offer.buyer,
-        seller: @offer.seller,
-        actor: current_user,
-        notice_type: "offer_accepted"
-      )
-      redirect_to dashboard_path, notice: "Offer accepted! Item reserved. Waiting for the buyer's PIN."
+    Offer.transaction do
+      @offer.lock!
+      item = @offer.item
+      item.lock!
+
+      error_message = acceptance_error_for(@offer, item)
+      raise ActiveRecord::Rollback if error_message
+
+      @offer.update!(status: "accepted")
+      item.update!(status: "pending_dropoff")
     end
+
+    if error_message
+      redirect_to dashboard_path, alert: error_message, status: :see_other
+      return
+    end
+
+    Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_accepted", notifiable: @offer)
+    sync_offer_notice_to_conversation(
+      item: @offer.item,
+      buyer: @offer.buyer,
+      seller: @offer.seller,
+      actor: current_user,
+      notice_type: "offer_accepted"
+    )
+    redirect_to dashboard_path, notice: "Offer accepted! Item reserved. Waiting for the buyer's PIN."
   end
 
   def decline
-    return unless current_user == @offer.seller
+    return redirect_to(dashboard_path, alert: "You are not allowed to manage this offer.") unless current_user == @offer.seller
+    return redirect_to(dashboard_path, alert: "This offer can no longer be declined.", status: :see_other) unless @offer.pending?
 
     if @offer.update(status: "declined")
       Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_declined", notifiable: @offer)
@@ -113,10 +134,27 @@ class OffersController < ApplicationController
   end
 
   def cancel
-    return unless current_user == @offer.seller || current_user == @offer.buyer
+    return redirect_to(dashboard_path, alert: "You are not allowed to manage this offer.") unless current_user == @offer.seller || current_user == @offer.buyer
 
-    @offer.update(status: "failed")
-    @offer.item.update(status: "available")
+    error_message = nil
+
+    Offer.transaction do
+      @offer.lock!
+      item = @offer.item
+      item.lock!
+
+      error_message = cancellation_error_for(@offer, item)
+      raise ActiveRecord::Rollback if error_message
+
+      @offer.update!(status: "failed")
+      next_item_status = item.offers.where(status: "accepted").where.not(id: @offer.id).exists? ? "pending_dropoff" : "available"
+      item.update!(status: next_item_status)
+    end
+
+    if error_message
+      redirect_to dashboard_path, alert: error_message, status: :see_other
+      return
+    end
 
     cancellation_recipient = current_user == @offer.seller ? @offer.buyer : @offer.seller
 
@@ -132,7 +170,7 @@ class OffersController < ApplicationController
   end
 
   def complete
-    return unless current_user == @offer.seller
+    return redirect_to(dashboard_path, alert: "You are not allowed to manage this offer.") unless current_user == @offer.seller
 
     submitted_meetup_code = params[:meetup_code].to_s
 
@@ -141,23 +179,42 @@ class OffersController < ApplicationController
       return
     end
 
-    if ActiveSupport::SecurityUtils.secure_compare(submitted_meetup_code, @offer.meetup_code)
-      @offer.update(status: "completed")
-      @offer.item.update(status: "sold", sold_at: Time.current)
-      @offer.item.offers.where(status: "pending").update_all(status: "declined")
+    error_message = nil
 
-      Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_completed", notifiable: @offer)
-      sync_offer_notice_to_conversation(
-        item: @offer.item,
-        buyer: @offer.buyer,
-        seller: @offer.seller,
-        actor: current_user,
-        notice_type: "offer_completed"
-      )
-      redirect_to dashboard_path, notice: "Transaction Complete! Item officially sold.", status: :see_other
-    else
-      redirect_to dashboard_path, alert: "Incorrect PIN. Please try again.", status: :see_other
+    Offer.transaction do
+      @offer.lock!
+      item = @offer.item
+      item.lock!
+
+      error_message = completion_error_for(@offer, item)
+      raise ActiveRecord::Rollback if error_message
+
+      stored_meetup_code = @offer.meetup_code.to_s
+      unless stored_meetup_code.match?(/\A\d{4}\z/) &&
+          ActiveSupport::SecurityUtils.secure_compare(submitted_meetup_code, stored_meetup_code)
+        error_message = "Incorrect PIN. Please try again."
+        raise ActiveRecord::Rollback
+      end
+
+      @offer.update!(status: "completed")
+      item.update!(status: "sold", sold_at: Time.current)
+      item.offers.where.not(id: @offer.id).where(status: %w[ pending accepted ]).update_all(status: "declined", updated_at: Time.current)
     end
+
+    if error_message
+      redirect_to dashboard_path, alert: error_message, status: :see_other
+      return
+    end
+
+    Notification.create(recipient: @offer.buyer, actor: current_user, action: "offer_completed", notifiable: @offer)
+    sync_offer_notice_to_conversation(
+      item: @offer.item,
+      buyer: @offer.buyer,
+      seller: @offer.seller,
+      actor: current_user,
+      notice_type: "offer_completed"
+    )
+    redirect_to dashboard_path, notice: "Transaction Complete! Item officially sold.", status: :see_other
   end
 
   def destroy
@@ -230,5 +287,27 @@ class OffersController < ApplicationController
         offer: Offer.not_declined.find_by(item:, buyer:, seller:)
       }
     )
+  end
+
+  def acceptance_error_for(offer, item)
+    return "This offer can no longer be accepted." unless offer.pending?
+    return "This item is not accepting offers right now." unless item.status == "available" && !item.removed? && !offer.seller&.banned?
+    return "Another offer is already in progress for this item." if item.offers.where(status: "accepted").where.not(id: offer.id).exists?
+
+    nil
+  end
+
+  def cancellation_error_for(offer, item)
+    return "Only accepted transactions can be cancelled." unless offer.accepted?
+    return "This item can no longer be updated." if item.removed? || item.status == "sold"
+
+    nil
+  end
+
+  def completion_error_for(offer, item)
+    return "Only accepted transactions can be completed." unless offer.accepted?
+    return "This item can no longer be completed." if item.removed? || item.status == "sold"
+
+    nil
   end
 end

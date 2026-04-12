@@ -20,6 +20,16 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(response).to redirect_to(edit_admin_setup_path)
   end
 
+  it "forces incomplete admins back to setup even on non-admin pages" do
+    admin = create_user(email: "incomplete_admin_root@cuhk.edu.hk", role: :college_admin)
+    admin.update!(setup_completed: false)
+    sign_in admin
+
+    get root_path
+
+    expect(response).to redirect_to(edit_admin_setup_path)
+  end
+
   it "completes admin setup and marks account secured" do
     admin = create_user(email: "setup_patch@cuhk.edu.hk", role: :college_admin)
     admin.update!(setup_completed: false)
@@ -62,5 +72,21 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(invited.role).to eq("college_admin")
     expect(invited.college_id).to eq(target_college.id)
     expect(invited.setup_completed).to be(false)
+  end
+
+  it "renders admin setup without the shared header or footer and shows the auth scene" do
+    admin = create_user(email: "setup_page_visual@cuhk.edu.hk", role: :college_admin)
+    admin.update!(setup_completed: false)
+    sign_in admin
+
+    get edit_admin_setup_path
+
+    document = Nokogiri::HTML.parse(response.body)
+
+    expect(response).to have_http_status(:ok)
+    expect(document.at_css(".site-header")).not_to be_present
+    expect(document.at_css(".site-footer")).not_to be_present
+    expect(document.at_css(".auth-shell__background")).to be_present
+    expect(response.body).to include("responsibilities")
   end
 end

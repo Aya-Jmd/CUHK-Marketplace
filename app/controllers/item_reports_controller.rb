@@ -4,7 +4,12 @@ class ItemReportsController < ApplicationController
   def create
     @item = Item.find(params[:item_id])
 
-    unless @item.visible_to?(current_user) && current_user != @item.user
+    unless @item.visible_to?(current_user)
+      redirect_to items_path, alert: "You cannot report this item."
+      return
+    end
+
+    if current_user == @item.user
       redirect_to items_path, alert: "You cannot report this item."
       return
     end

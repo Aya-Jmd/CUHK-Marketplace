@@ -1,10 +1,10 @@
-<% content_for :title, "Chat" %>
+<% content_for :title, "Conversations" %>
 
 <div class="market-page market-page--soft chat-page">
   <%= turbo_stream_from current_user, :conversation_inbox %>
   <section class="market-page__hero">
     <div class="market-page__hero-inner market-page__hero-inner--wide">
-      <h1 class="market-page__title">Messages</h1>
+      <h1 class="market-page__title">Conversations</h1>
     </div>
   </section>
 
@@ -14,7 +14,7 @@
              data-controller="conversation-filter"
              data-conversation-filter-current-conversation-id-value="<%= @current_conversation&.id %>">
         <div class="chat-page__threads-head">
-          <h2 class="chat-page__section-title">Conversations</h2>
+          <h2 class="chat-page__section-title">All chats</h2>
           <%= render "thread_count", user: current_user %>
         </div>
 
@@ -26,7 +26,7 @@
                 aria-label="Search conversations"
                 autocomplete="off"
                 data-conversation-filter-target="input"
-                data-action="input->conversation-filter#filter search->conversation-filter#filter">
+                data-action="input->conversation-filter#filter keyup->conversation-filter#filter change->conversation-filter#filter search->conversation-filter#filter">
           </div>
 
           <div id="conversation_threads_<%= current_user.id %>" class="chat-page__thread-list">

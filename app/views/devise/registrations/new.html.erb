@@ -1,8 +1,9 @@
 <% content_for :title, "Sign up" %>
 
 <div class="auth-shell">
-  <section class="auth-card auth-card--wide">
-    <div class="auth-card__hero">
+  <%= render "devise/shared/auth_scene" %>
+  <section class="auth-card auth-card--stacked">
+    <div class="auth-card__hero auth-card__hero--banner">
       <p class="auth-card__eyebrow">CUHK Marketplace</p>
       <h1 class="auth-card__title">Create your account</h1>
       <p class="auth-card__copy">
@@ -65,7 +66,11 @@
         <%= f.submit "Create account", class: "market-button" %>
       <% end %>
 
-      <%= render "devise/shared/links" %>
+      <div class="auth-links auth-links--center">
+        <p class="auth-links__item">
+          <%= link_to "Sign in", new_session_path(resource_name), class: "auth-links__link" %>
+        </p>
+      </div>
     </div>
   </section>
 </div>

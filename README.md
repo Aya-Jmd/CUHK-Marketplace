@@ -6,15 +6,16 @@ A centralized, multi-tenant SaaS marketplace tailored specifically for the CUHK 
 
 | Student Name | Student ID | GitHub Username |
 
-| **Ben**                  | 1155214136 | [@Ben-34](https://github.com/Ben-34) |
-| **Abdulrahman Mohammed** | 1155264624 | [@JotaroLivesAlone](https://github.com/JotaroLivesAlone) | 
-| **Abous Houssameddine**  | 1155256354 | [@housss77](https://github.com/housss77) |
-| **Jmoud Aya**            | 1155256382 | [@Aya-Jmd](https://github.com/Aya-Jmd) |
-| **Bingyan Wang**         | 1155191406 | [@VincentWang0719](https://github.com/VincentWang0719) |
+* | **Ben**                  | 1155214136 | [@Ben-34](https://github.com/Ben-34) |
+* | **Abdulrahman Mohammed** | 1155264624 | [@JotaroLivesAlone](https://github.com/JotaroLivesAlone) | 
+* | **Abous Houssameddine**  | 1155256354 | [@housss77](https://github.com/housss77) |
+* | **Jmoud Aya**            | 1155256382 | [@Aya-Jmd](https://github.com/Aya-Jmd) |
+* | **Bingyan Wang**         | 1155191406 | [@VincentWang0719](https://github.com/VincentWang0719) |
 
 ##  Project Links
 * **Deployed Application:** [https://cuhk-marketplace-group-21-217132cb7477.herokuapp.com/]
 * **Repository:** [https://github.com/Aya-Jmd/CUHK-Marketplace]
+* **Demo Video:** [TODO]
 
 ---
 
@@ -29,22 +30,51 @@ We propose a centralized, **multi-tenant SaaS marketplace**. Following the SaaS 
 * **Core Workflow:** Students can list items either globally or restricted to their specific College community. The system manages the full lifecycle of an item (Available → Reserved → Sold) to prevent double-booking.
 * **SaaS Angle:** Each College acting as a tenant can have custom listing rules (e.g., expiry times) and isolated views, ensuring relevant local trading while maintaining a university-wide search capability.
 
+
 ---
 
-## Planned "N-1" Advanced Features
+
+## Advanced Features
 
 1.  **Real-Time Chat**
-    * A WebSocket-based messaging system enabling secure, in-app negotiations without exchanging personal phone numbers.
+    * In-app buyer-seller conversations are implemented inside the platform, with live-feeling message updates using Turbo Streams so users can negotiate without switching to external apps.
 2.  **Intelligent Search**
-    * Fuzzy search capability handling typos and partial matches (e.g., "Calc" matches "Calculus") to significantly improve item discoverability.
+    * Fuzzy search is implemented with `pg_search`, together with filtering and sorting options to improve item discoverability even when queries are partial or slightly inaccurate.
 3.  **Location Integration**
-    * Visualizes seller hostel locations to help buyers assess logistical difficulty (e.g., distance for carrying items).
+    * Location-aware features are implemented through `leaflet-rails`, `geocoder`, and internal location APIs so users can work with meetup and listing locations more easily.
 4.  **Price Analytics**
-    * Interactive dashboards displaying historical price trends by category, empowering users to evaluate fair market value.
+    * Category-based analytics and historical price views are implemented to help users estimate fair market value.
+5.  **In-App Notification System**
+    * Notification pages, unread/read state handling, and mark-as-read workflows are implemented to keep buyers and sellers updated on marketplace activity.
+
+
+## Additional Features
+1.  **Admin Governance and Moderation**
+    * The website is managed by users with higher privileges : College administrators who can manage items and users from their assigned college, and System administrators who can manage items and users from every college.
+2.  **Report and item management**
+    * Users can report items to College and System administrators when necessary, so administrators can review items and delete them if need be.
+3. **Secure Transactions**
+    * Accepted offers use a meetup PIN workflow for secure completion, adding guardrails to the final handoff stage of the transaction lifecycle.
+4.   **List of favorite items**
+     * Users can mark items as their favorite and manage the list in their profile, so they can easily come back to them.
+5.  **Currency conversion mechanism**
+    * Integrated mechanism to display prices in the user's preferred currency across the website, to support students with international background/familiarity.
+
+### Advanced feature ownership
+
+
+| Advanced Feature | Primary Developer | Secondary Developer | Notes |
+|---|---|---|---|
+| Real-Time Chat | Houssameddine | Aya | In-app conversations with Turbo-powered live updates, Action Cable |
+| Intelligent Search | Ben | Houssameddine | `pg_search`, keyword search, filters, and sorting |
+| Location Integration | Abdulrahman | Ben | `leaflet-rails`, `geocoder`, and location API endpoints |
+| Price Analytics | Aya | Houssameddine | Category price dashboard and historical views |
+| In-App Notification System | Vincent | Aya | Notification center with read / unread workflows, Action Cable |
+
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 * **Framework:** Ruby on Rails 8
 * **Database:** PostgreSQL
@@ -81,6 +111,7 @@ To run this project locally on your machine:
     ```bash
     rails db:create
     rails db:migrate
+    rails db:seed
     ```
 
 1.  **Start the server:**
@@ -90,3 +121,15 @@ To run this project locally on your machine:
 
 2.  **Visit the app:**
     Open your browser and go to `http://localhost:3000`
+
+
+## SimpleCov report
+
+Insert the SimpleCov screenshot below before submission.
+
+![SimpleCov report screenshot]()
+
+### NOTE 
+* The project contains a hardcoded System Administrator in the database, as seed.
+  * Administrator email : admin@link.cuhk.edu.hk
+  * Administrator password : 12345678

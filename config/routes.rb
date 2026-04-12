@@ -11,9 +11,9 @@ Rails.application.routes.draw do
   resources :users, only: [ :show ]
 
   # Private user dashboard (The logged-in user's management area)
-  get "/dashboard", to: "profiles#show", as: :dashboard
-  get "/profile", to: "profiles#edit", as: :profile
-  patch "/profile", to: "profiles#update"
+  get "/dashboard", to: "dashboards#show", as: :dashboard
+  get "/profile", to: "dashboards#edit", as: :profile
+  patch "/profile", to: "dashboards#update"
 
   # -----------------------------------------------------------------------
   # 2. PUBLIC MARKETPLACE & TENANCY
@@ -75,7 +75,6 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#index" # Renders at /admin
 
-    get "category_prices", to: "dashboard#category_prices", as: :category_prices
     post "invite", to: "dashboard#invite", as: :invite
 
     resources :users, only: [] do
@@ -103,4 +102,13 @@ Rails.application.routes.draw do
     get "locations/closest", to: "locations#closest"
     get "locations/:key", to: "locations#show"
   end
+
+  # Keep the custom 404 page for app routes, but do not swallow Active Storage
+  # requests that Rails mounts after this file is evaluated.
+  match "*unmatched",
+    to: "errors#not_found",
+    via: :all,
+    constraints: lambda { |request|
+      !request.path.start_with?("/rails/active_storage")
+    }
 end

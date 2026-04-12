@@ -4,12 +4,14 @@
 <% all_categories_state = base_state.except(:category_id) %>
 
 <% current_scope = marketplace_scope %>
+<% admin_viewer = current_user&.admin? %>
+<% signed_in_viewer = current_user.present? %>
 
 
-  <% if current_user.admin? %>
+  <% if admin_viewer %>
     <% scope_form_url = controller.controller_name == "search" && controller.action_name == "index" ? search_path : items_path %>
     <% college_options = [["CUHK Global", ""]] + College.order(:name).pluck(:name, :id) %>
-  <% else %>
+  <% elsif signed_in_viewer %>
     <% next_scope = current_scope == "college" ? "all" : "college" %>
     <% current_scope_label = marketplace_scope_label(current_scope) %>
     <% next_scope_label = marketplace_scope_label(next_scope) %>
@@ -19,7 +21,7 @@
   <section class="items-category-strip" aria-label="Browse categories">
     <div class="items-category-strip__grid">
 
-      <% if current_user.admin? %>
+      <% if admin_viewer %>
         <div class="site-header__scope-switch">
           <%= form_with url: scope_form_url, method: :get, local: true, class: "site-header__scope-form" do %>
             <%= hidden_field_tag :q, params[:q] if params[:q].present? %>
@@ -35,7 +37,7 @@
                 onchange: "this.form.requestSubmit()" %>
           <% end %>
         </div>
-      <% else %>
+      <% elsif signed_in_viewer %>
         <nav class="site-header__scope-switch" aria-label="Marketplace scope">
           <%= link_to marketplace_scope_switch_path(next_scope),
               class: class_names("site-header__scope-toggle", { "is-college" => current_scope == "college" }),

@@ -3,6 +3,11 @@ class FavoritesController < ApplicationController
   before_action :set_item
 
   def create
+    unless @item.visible_to?(current_user)
+      redirect_to items_path, alert: "This item is no longer available."
+      return
+    end
+
     current_user.favorites.create_or_find_by!(item: @item)
     respond_to_toggle("Added to favorites.")
   end

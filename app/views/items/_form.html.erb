@@ -1,4 +1,5 @@
 <%= form_with(model: item, class: "listing-form") do |form| %>
+  <% max_price_in_current_currency = Currency.convert_from_hkd(Item::MAX_PRICE_HKD, current_currency_code) %>
   <% if item.errors.any? %>
     <div class="listing-form__errors">
       <h3><%= pluralize(item.errors.count, "error") %> prevented this item from being saved:</h3>
@@ -17,7 +18,14 @@
 
   <div class="market-form-field">
     <%= form.label :price, "Price (#{current_currency_code})" %>
-    <%= form.text_field :price, step: "any", value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil, class: "market-input", placeholder: "Enter the asking price" %>
+    <%= form.number_field :price,
+        step: "0.01",
+        min: 0.01,
+        max: max_price_in_current_currency,
+        value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil,
+        class: "market-input",
+        placeholder: "Enter the asking price" %>
+    <p class="market-note">Maximum asking price: <%= display_price(Item::MAX_PRICE_HKD) %>.</p>
   </div>
 
   <div class="market-form-field">

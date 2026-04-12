@@ -3,7 +3,12 @@
 <% active_items = @user.items.where(status: ["available", "pending_dropoff"]).includes(offers: :buyer).order(created_at: :desc) %>
 <% pending_bids = profile_owner ? @user.offers_made.where(status: "pending").includes(:item).order(created_at: :desc) : Offer.none %>
 <% accepted_bids = profile_owner ? @user.offers_made.where(status: "accepted").includes(:item).order(created_at: :desc) : Offer.none %>
-<% public_items = @user.banned? ? Item.none : @user.items.where(status: "available").order(created_at: :desc) %>
+<% public_items = if @user.banned?
+    Item.none
+  else
+    @user.items.where(status: "available").includes(:college, :category, :user).order(created_at: :desc)
+      .select { |item| item.visible_to?(current_user) }
+  end %>
 <% seller_offer_rows = if profile_owner
     active_items.flat_map do |item|
       item.offers
@@ -65,56 +70,46 @@
         <%= render "users/favorite_items_section", favorite_items: @favorite_items %>
       <% end %>
 
-      <section class="market-surface-card profile-show__section">
+      <section class="<%= class_names("market-surface-card profile-show__section", { "profile-show__section--dashboard-selling" => profile_owner }) %>">
         <div class="market-section-heading profile-show__section-heading">
           <div>
             <p class="market-section-eyebrow"><%= profile_owner ? "Selling" : "Seller inventory" %></p>
-            <h2 class="market-section-title"><%= profile_owner ? "Listings and incoming offers" : "Available listings" %></h2>
+            <h2 class="market-section-title"><%= profile_owner ? "Incoming offers and transactions" : "Available listings" %></h2>
             <p class="market-note">
-              <%= profile_owner ? "Follow each listing from first offer to final completion, all in one place." : "Only items that are currently visible on the marketplace are shown here." %>
+              <%= profile_owner ? "Track offer responses and active meetups for the listings that already have buyer activity." : "Only items that are currently visible on the marketplace are shown here." %>
             </p>
           </div>
 
-          <% if profile_owner %>
-            <%= link_to "Add new item", new_item_path, class: "market-button market-button--light" %>
-          <% end %>
         </div>
 
-        <% if profile_owner ? (seller_offer_rows.any? || seller_items_without_active_offers.any?) : public_items.any? %>
-          <div class="profile-show__rows <%= "profile-show__rows--dashboard-flat" if profile_owner %>" role="list">
+        <% if profile_owner ? seller_offer_rows.any? : public_items.any? %>
+          <div class="<%= class_names("profile-show__rows", { "profile-show__rows--dashboard-flat profile-show__rows--dashboard-selling" => profile_owner }) %>"
+               role="list"
+               <% if profile_owner %>data-controller="dashboard-slider" data-dashboard-slider-visible-count-value="5"<% end %>>
             <% if profile_owner %>
               <% seller_offer_rows.each do |item, offer| %>
                 <article class="<%= class_names("profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable", { "profile-item-row--pin-card profile-item-row--seller-accepted" => offer.accepted? }) %>" role="listitem">
                   <% if offer.pending? %>
                     <div class="profile-item-row__top">
                       <div class="profile-item-row__identity">
-                        <p class="profile-item-row__meta">
-                          <span>Incoming offer</span>
-                          <span><%= item.category&.name || "Uncategorized" %></span>
-                          <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
-                        </p>
-
-                        <h3 class="profile-item-row__title"><%= item.title %></h3>
+                        <div class="profile-item-row__title-line">
+                          <h3 class="profile-item-row__title"><%= item.title %></h3>
+                          <span class="profile-item-row__counterparty">, <%= offer.buyer.display_name %></span>
+                          <span class="profile-item-row__counterparty">, <%= offer.created_at.strftime("%b %d, %Y") %></span>
+                        </div>
 
                         <div class="profile-item-row__badges">
                           <span class="profile-status-badge profile-status-badge--pending">PENDING</span>
-                          <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
                         </div>
                       </div>
 
-                      <div class="profile-item-row__price-block">
-                        <p class="profile-item-row__price-label">Price</p>
+                      <div class="profile-item-row__price-block profile-item-row__price-block--dashboard">
                         <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
                       </div>
                     </div>
 
-                    <div class="profile-item-row__footer">
-                      <div class="profile-item-row__summary">
-                        <p class="profile-item-row__summary-line">
-                          <strong><%= offer.buyer.display_name %></strong>
-                          sent an offer for this listing.
-                        </p>
-                      </div>
+                    <div class="profile-item-row__footer profile-item-row__footer--offer-card">
+                      <div class="profile-item-row__summary"></div>
 
                       <div class="profile-item-row__action-bar">
                         <%= button_to "Accept", accept_offer_path(offer), method: :patch, class: "market-button market-button--compact", form: { class: "profile-action-form" } %>
@@ -125,12 +120,11 @@
                     <div class="profile-item-row__top profile-item-row__top--pin-card">
                       <div class="profile-item-row__pin-panel">
                         <div class="profile-item-row__pin-header">
-                          <p class="profile-item-row__meta profile-item-row__meta--pin-panel">
-                            <span>Accepted offer</span>
-                            <span><%= item.category&.name || "Uncategorized" %></span>
-                            <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
-                          </p>
-                          <h3 class="profile-item-row__title profile-item-row__title--pin-panel"><%= item.title %></h3>
+                          <div class="profile-item-row__title-line">
+                            <h3 class="profile-item-row__title profile-item-row__title--pin-panel"><%= item.title %></h3>
+                            <span class="profile-item-row__counterparty profile-item-row__counterparty--pin-card">, <%= offer.buyer.display_name %></span>
+                            <span class="profile-item-row__counterparty profile-item-row__counterparty--pin-card">, <%= offer.created_at.strftime("%b %d, %Y") %></span>
+                          </div>
                         </div>
 
                         <%= form_with url: complete_offer_path(offer), method: :patch, id: "complete-offer-#{offer.id}", class: "profile-pin-entry-form", data: { controller: "pin-input", action: "submit->pin-input#handleSubmit" } do %>
@@ -154,7 +148,7 @@
                               <% end %>
                             </div>
                           </div>
-                          <%= button_tag "submit", type: "submit", class: "market-button market-button--compact profile-pin-entry-form__submit" %>
+                          <%= button_tag "Complete sale", type: "submit", class: "market-button market-button--compact profile-pin-entry-form__submit", aria: { label: "Complete sale for #{item.title}" } %>
                         <% end %>
                       </div>
 
@@ -167,17 +161,9 @@
                             </button>
                           </div>
 
-                          <div class="profile-item-row__price-block">
-                            <p class="profile-item-row__price-label">Price</p>
+                          <div class="profile-item-row__price-block profile-item-row__price-block--dashboard profile-item-row__price-block--pin-card">
                             <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
                           </div>
-                        </div>
-
-                        <p class="profile-item-row__summary-line profile-item-row__summary-line--headline">
-                          With <span class="profile-item-row__inline-emphasis"><%= offer.buyer.display_name %></span>
-                        </p>
-                        <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-side">
-                          <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
                         </div>
                       </div>
                     </div>
@@ -187,49 +173,10 @@
                       </div>
 
                       <div class="profile-item-row__action-bar profile-item-row__action-bar--pin-footer">
-                        <%= button_tag "✔", type: "submit", form: "complete-offer-#{offer.id}", class: "market-button market-button--compact" %>
                         <%= button_to "Cancel transaction", cancel_offer_path(offer), method: :patch, data: { turbo_confirm: "Are you sure? This will put the item back on the market." }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
                       </div>
                     </div>
                   <% end %>
-                  <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
-                    <span class="item-show__screen-reader">View <%= item.title %></span>
-                  <% end %>
-                </article>
-              <% end %>
-
-              <% seller_items_without_active_offers.each do |item| %>
-                <article class="profile-item-row profile-item-row--flat profile-item-row--inventory-card profile-item-row--dashboard-linkable" role="listitem">
-                  <div class="profile-item-row__top">
-                    <div class="profile-item-row__identity">
-                      <p class="profile-item-row__meta">
-                        <span><%= item.category&.name || "Uncategorized" %></span>
-                        <span><%= item.created_at.strftime("%b %d, %Y") %></span>
-                      </p>
-
-                      <h3 class="profile-item-row__title"><%= item.title %></h3>
-
-                      <div class="profile-item-row__badges">
-                        <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
-                          <%= item.status == "available" ? "LIVE" : item.status.upcase %>
-                        </span>
-                        <span class="profile-status-badge profile-status-badge--neutral"><%= item.college&.name || "CUHK" %></span>
-                      </div>
-                    </div>
-
-                    <div class="profile-item-row__price-block">
-                      <p class="profile-item-row__price-label">Price</p>
-                      <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
-                    </div>
-                  </div>
-
-                  <div class="profile-item-row__footer profile-item-row__footer--inventory-card">
-                    <% if item.status == "available" %>
-                      <div class="profile-item-row__action-bar profile-item-row__action-bar--inventory">
-                        <%= button_to "Remove item", item_path(item, return_to: "dashboard"), method: :delete, data: { turbo_confirm: "Remove this live item from the marketplace?" }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
-                      </div>
-                    <% end %>
-                  </div>
                   <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
                     <span class="item-show__screen-reader">View <%= item.title %></span>
                   <% end %>
@@ -272,13 +219,13 @@
           </div>
         <% else %>
           <div class="market-empty-state">
-            <p><%= profile_owner ? "You have no active listings right now." : "No available items right now." %></p>
+            <p><%= profile_owner ? "No incoming offers or active transactions right now." : "No available items right now." %></p>
           </div>
         <% end %>
       </section>
 
       <% if profile_owner %>
-        <section class="market-surface-card profile-show__section">
+        <section class="market-surface-card profile-show__section profile-show__section--dashboard-live">
           <div class="market-section-heading profile-show__section-heading">
             <div>
               <p class="market-section-eyebrow">Buying</p>
@@ -292,17 +239,19 @@
           </div>
 
           <% if pending_bids.any? || accepted_bids.any? %>
-            <div class="profile-show__rows profile-show__rows--dashboard-flat" role="list">
+            <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-live"
+                 role="list"
+                 data-controller="dashboard-slider"
+                 data-dashboard-slider-visible-count-value="5">
               <% pending_bids.each do |offer| %>
                 <article class="profile-item-row profile-item-row--flat profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
                     <div class="profile-item-row__identity">
-                      <p class="profile-item-row__meta">
-                        <span>Pending offer</span>
-                        <span><%= offer.item.category&.name || "Uncategorized" %></span>
-                        <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
-                      </p>
-                      <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
+                      <div class="profile-item-row__title-line">
+                        <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
+                        <span class="profile-item-row__counterparty">, <%= offer.seller.display_name %></span>
+                        <span class="profile-item-row__counterparty">, <%= offer.created_at.strftime("%b %d, %Y") %></span>
+                      </div>
                       <div class="profile-item-row__badges">
                         <span class="profile-status-badge profile-status-badge--pending">PENDING</span>
                         <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
@@ -317,8 +266,7 @@
                         </button>
                       </div>
 
-                      <div class="profile-item-row__price-block">
-                        <p class="profile-item-row__price-label">Price</p>
+                      <div class="profile-item-row__price-block profile-item-row__price-block--dashboard">
                         <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
                       </div>
                     </div>
@@ -341,12 +289,11 @@
                 <article class="profile-item-row profile-item-row--flat profile-item-row--pin-card profile-item-row--buyer-accepted profile-item-row--dashboard-linkable" role="listitem">
                   <div class="profile-item-row__top">
                     <div class="profile-item-row__identity">
-                      <p class="profile-item-row__meta">
-                        <span>Accepted offer</span>
-                        <span><%= offer.item.category&.name || "Uncategorized" %></span>
-                        <span><%= offer.created_at.strftime("%b %d, %Y") %></span>
-                      </p>
-                      <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
+                      <div class="profile-item-row__title-line">
+                        <h3 class="profile-item-row__title"><%= offer.item.title %></h3>
+                        <span class="profile-item-row__counterparty">, <%= offer.seller.display_name %></span>
+                        <span class="profile-item-row__counterparty">, <%= offer.created_at.strftime("%b %d, %Y") %></span>
+                      </div>
                       <div class="profile-item-row__badges">
                         <span class="profile-status-badge profile-status-badge--live">ACCEPTED</span>
                         <span class="profile-status-badge profile-status-badge--neutral"><%= offer.item.college&.name || "CUHK" %></span>
@@ -361,8 +308,7 @@
                         </button>
                       </div>
 
-                      <div class="profile-item-row__price-block">
-                        <p class="profile-item-row__price-label">Price</p>
+                      <div class="profile-item-row__price-block profile-item-row__price-block--dashboard">
                         <strong class="profile-item-row__price-value"><%= display_price(offer.price) %></strong>
                       </div>
                     </div>
@@ -393,6 +339,67 @@
           <% else %>
             <div class="market-empty-state">
               <p>You have no active bids right now.</p>
+            </div>
+          <% end %>
+        </section>
+
+        <section class="market-surface-card profile-show__section profile-show__section--dashboard-buying">
+          <div class="market-section-heading profile-show__section-heading">
+            <div>
+              <p class="market-section-eyebrow">Live listings</p>
+              <h2 class="market-section-title">Items currently on the marketplace</h2>
+              <p class="market-note">
+                These listings are still live and waiting for their first buyer.
+              </p>
+            </div>
+
+            <%= link_to "Add new item", new_item_path, class: "market-button market-button--light" %>
+          </div>
+
+          <% if seller_items_without_active_offers.any? %>
+            <div class="profile-show__rows profile-show__rows--dashboard-flat profile-show__rows--dashboard-buying"
+                 role="list"
+                 data-controller="dashboard-slider"
+                 data-dashboard-slider-visible-count-value="10">
+              <% seller_items_without_active_offers.each do |item| %>
+                <article class="profile-item-row profile-item-row--flat profile-item-row--inventory-card profile-item-row--dashboard-linkable" role="listitem">
+                  <div class="profile-item-row__top">
+                    <div class="profile-item-row__identity">
+                      <div class="profile-item-row__title-line">
+                        <h3 class="profile-item-row__title"><%= item.title %></h3>
+                        <span class="profile-item-row__counterparty">, <%= item.user.display_name %></span>
+                        <span class="profile-item-row__counterparty">, <%= item.created_at.strftime("%b %d, %Y") %></span>
+                      </div>
+
+                      <div class="profile-item-row__badges">
+                        <span class="profile-status-badge <%= item.status == "available" ? "profile-status-badge--live" : "profile-status-badge--reserved" %>">
+                          <%= item.status == "available" ? "LIVE" : item.status.upcase %>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-item-row__price-block profile-item-row__price-block--dashboard">
+                      <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
+                    </div>
+                  </div>
+
+                  <div class="profile-item-row__footer profile-item-row__footer--inventory-card">
+                    <div class="profile-item-row__summary"></div>
+                    <% if item.status == "available" %>
+                      <div class="profile-item-row__action-bar profile-item-row__action-bar--inventory">
+                        <%= button_to "Remove item", item_path(item, return_to: "dashboard"), method: :delete, data: { turbo_confirm: "Remove this live item from the marketplace?" }, class: "market-button market-button--danger market-button--compact", form: { class: "profile-action-form" } %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <%= link_to item_path(item), class: "profile-item-row__dashboard-overlay-link", aria: { label: "View #{item.title}" } do %>
+                    <span class="item-show__screen-reader">View <%= item.title %></span>
+                  <% end %>
+                </article>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="market-empty-state">
+              <p>You have no live listings right now.</p>
             </div>
           <% end %>
         </section>

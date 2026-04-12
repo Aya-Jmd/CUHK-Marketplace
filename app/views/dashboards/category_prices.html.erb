@@ -1,17 +1,15 @@
-<% content_for :title, "Price Dashboard" %>
+<% content_for :title, "Price Analytics" %>
 
 <div class="market-page market-page--soft analytics-page">
   <div class="market-page__body market-page__body--wide">
     <section class="dashboard-shell" id="category-price-dashboard">
+      <h1 class="analytics-page__title">Price Analytics</h1>
       <div class="dashboard-card">
         <div class="dashboard-header">
           <div class="dashboard-heading">
-            <h1>Analytics dashboard</h1>
-            <p class="dashboard-subtitle">
-              Price data for selected categories: <strong><%= @selected_category_summary %></strong>.
-            </p>
             <div class="dashboard-heading-tools">
               <div class="dashboard-toolbar dashboard-toolbar-compact">
+                <p class="analytics-page__mode-label">Compare posted and sold item prices across your selected categories and date range.</p>
                 <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
                   <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
                   <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
@@ -67,11 +65,11 @@
           </div>
 
           <div class="dashboard-empty-state" data-empty-mode="averages" hidden>
-            No posted or sold items were found for the selected categories in the selected date range.
+            No data found for the selected categories in the selected date range.
           </div>
 
           <div class="dashboard-empty-state" data-empty-mode="exact" hidden>
-            No exact posted or sold offers were found for the selected categories in the selected date range.
+            No exact price data found for the selected categories in the selected date range.
           </div>
         </div>
       </div>

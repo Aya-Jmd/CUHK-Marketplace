@@ -1,10 +1,11 @@
-<% content_for :title, "Log in" %>
+<% content_for :title, "Sign in" %>
 
 <div class="auth-shell">
+  <%= render "devise/shared/auth_scene" %>
   <section class="auth-card auth-card--narrow">
     <div class="auth-card__hero">
       <p class="auth-card__eyebrow">CUHK Marketplace</p>
-      <h1 class="auth-card__title">Log in</h1>
+      <h1 class="auth-card__title">Sign in</h1>
       <p class="auth-card__copy">
         Access listings, offers, notifications, and chat from one marketplace account.
       </p>
@@ -29,7 +30,7 @@
           </label>
         <% end %>
 
-        <%= f.submit "Log in", class: "market-button" %>
+        <%= f.submit "Sign in", class: "market-button" %>
       <% end %>
 
       <%= render "devise/shared/links" %>

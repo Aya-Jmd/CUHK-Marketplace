@@ -1,4 +1,6 @@
 class Item < ApplicationRecord
+  MAX_PRICE_HKD = 9_999_999
+
   belongs_to :user
   belongs_to :college
   belongs_to :category, optional: true
@@ -11,7 +13,10 @@ class Item < ApplicationRecord
 
   # We can add validations later to make sure items always have a title and price!
   validates :title, :price, presence: true
-  validates :price, numericality: { greater_than: 0 }
+  validates :price, numericality: {
+    greater_than: 0,
+    less_than_or_equal_to: MAX_PRICE_HKD
+  }
 
   # Add this scope so Ben's controller knows how to find available items!
   scope :available, -> { joins(:user).merge(User.active).where(status: "available") }
@@ -63,6 +68,16 @@ class Item < ApplicationRecord
     )
   end
 
+  def walking_distance_from(user_location)
+    return nil unless user_location && has_location?
+    return nil unless user_location[:lat] && user_location[:lng]
+
+    LocationService.calculate_walking_distance(
+      user_location[:lat], user_location[:lng],
+      latitude, longitude
+    )
+  end
+
   # Class method to find nearby items
   def self.nearby(lat, lng, radius_km = 2)
     where.not(latitude: nil, longitude: nil).select do |item|
@@ -80,6 +95,9 @@ class Item < ApplicationRecord
     return true if viewer&.admin?
     return true if viewer&.college_admin? && viewer.college_id == college_id
 
-    !removed? && !user&.banned?
+    return false if removed? || user&.banned?
+    return is_global? if viewer.blank? || viewer.college_id.blank?
+
+    is_global? || viewer.college_id == college_id
   end
 end

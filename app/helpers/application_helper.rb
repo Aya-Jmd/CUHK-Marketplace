@@ -144,4 +144,19 @@ module ApplicationHelper
 
     "CUHK Marketplace"
   end
+
+  def marketplace_hero_subtitle
+    "Buy, sell, and discover everyday student finds across #{marketplace_hero_scope_name}."
+  end
+
+  def marketplace_hero_scope_name
+    if current_user&.admin? && params[:college_scope_id].present?
+      college = College.find_by(id: params[:college_scope_id])
+      return college.name.delete_suffix(" College") if college.present?
+    end
+
+    return marketplace_college_label if current_user && marketplace_scope == "college" && current_user.college.present?
+
+    "CUHK"
+  end
 end

@@ -1,11 +1,30 @@
 require "rails_helper"
 
 RSpec.describe "Items and Search", type: :request do
+  describe "GET /" do
+    it "lets guests browse the public marketplace homepage" do
+      seller = create_user(email: "guest_root_seller@cuhk.edu.hk")
+      create_item(user: seller, title: "Homepage Listing")
+
+      get root_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Homepage Listing")
+      expect(response).not_to redirect_to(new_user_session_path)
+    end
+  end
+
   describe "GET /items" do
-    it "requires login because of ApplicationController guard" do
+    it "allows guests to browse public marketplace listings" do
+      seller = create_user(email: "guest_market_seller@cuhk.edu.hk")
+      create_item(user: seller, title: "Guest Visible Listing")
+
       get items_path
 
-      expect(response).to redirect_to(new_user_session_path)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Guest Visible Listing")
+      expect(response.body).to include("Sign up", "Sign in")
+      expect(response.body).not_to include("SELL")
     end
 
     it "shows own college and global items after login" do
@@ -25,9 +44,53 @@ RSpec.describe "Items and Search", type: :request do
       expect(response.body).to include(visible_local.title, visible_global.title)
       expect(response.body).not_to include(hidden_other_college.title)
     end
+
+    it "updates the hero subtitle for the selected college scope" do
+      college = create_college(name: "Lee Woo Sing College")
+      user = create_user(email: "college_scope_user@cuhk.edu.hk", college:)
+
+      sign_in user
+      get items_path, params: { scope: "college" }
+
+      expect(response.body).to include("Buy, sell, and discover everyday student finds across Lee Woo Sing.")
+    end
+  end
+
+  describe "POST /items" do
+    it "rejects asking prices above the HKD cap" do
+      seller = create_user(email: "overpriced_item_seller@cuhk.edu.hk")
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "Too Expensive Sofa",
+            price: Item::MAX_PRICE_HKD + 1,
+            description: "Way too expensive"
+          }
+        }
+      }.not_to change(Item, :count)
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to include("must be less than or equal to #{Item::MAX_PRICE_HKD}")
+    end
   end
 
   describe "GET /items/:id" do
+    it "blocks direct access to an out-of-scope local item" do
+      shaw = create_college(name: "Shaw")
+      new_asia = create_college(name: "New Asia")
+      viewer = create_user(email: "hidden_item_viewer@cuhk.edu.hk", college: shaw)
+      seller = create_user(email: "hidden_item_seller@cuhk.edu.hk", college: new_asia)
+      item = create_item(user: seller, title: "Hidden Rice Cooker", college: new_asia, is_global: false)
+
+      sign_in viewer
+      get item_path(item)
+
+      expect(response).to redirect_to(items_path)
+    end
+
     it "hides seller sidebar cards when the seller views their own item" do
       seller = create_user(email: "owner_show@cuhk.edu.hk")
       item = create_item(user: seller, title: "Owner Item")
@@ -56,9 +119,39 @@ RSpec.describe "Items and Search", type: :request do
       expect(distance_card.text).to include("Sign in to see distance")
       expect(distance_card.css("a").map(&:text)).not_to include("Log in")
     end
+
+    it "shows an estimated walk in the pickup area for signed-in users with a saved location" do
+      seller = create_user(email: "pickup_walk_seller@cuhk.edu.hk")
+      buyer = create_user(email: "pickup_walk_buyer@cuhk.edu.hk")
+      buyer.update!(default_location: "campus_central", latitude: 22.4172, longitude: 114.2071)
+      item = create_item(user: seller, title: "Pickup Walk Item", latitude: 22.4180, longitude: 114.2068)
+
+      sign_in buyer
+      get item_path(item)
+
+      document = Nokogiri::HTML.parse(response.body)
+      pickup_travel = document.at_css(".item-show__pickup-travel")
+
+      expect(response).to have_http_status(:ok)
+      expect(pickup_travel).to be_present
+      expect(pickup_travel.text).to include("Walk from your default location")
+      expect(pickup_travel.text).to match(/\d+\.\d{2}\s*km/)
+      expect(pickup_travel.text).to match(/About \d+ min on foot/)
+    end
   end
 
   describe "GET /search" do
+    it "allows guests to use search" do
+      seller = create_user(email: "guest_search_seller@cuhk.edu.hk")
+      category = Category.create!(name: "Guest Search Category")
+      create_item(user: seller, title: "Guest Search Result", category:)
+
+      get search_path, params: { q: "guest" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Guest Search Result")
+    end
+
     it "filters by keyword and category" do
       college = create_college(name: "Shaw")
       buyer = create_user(email: "searcher@cuhk.edu.hk", college:)

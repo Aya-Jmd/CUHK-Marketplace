@@ -1,6 +1,4 @@
 class SearchController < ApplicationController
-  before_action :authenticate_user!
-
   def index
     @categories = Category.sorted_for_dropdown
     @query = params[:q].to_s.strip

@@ -56,24 +56,28 @@
         data-controller="notification">
 
     <!-- Render the shared navigation bar everywhere, at top of page -->
-    <%= render "general/header" %>
+    <%= render "general/header" unless hide_global_chrome? || controller_path == "errors" %>
     
-    <div id="flash-messages" class="site-flash-stack">
-      <% if notice %>
-        <div class="site-flash site-flash--notice">
-          <span class="site-flash__icon" aria-hidden="true">OK</span>
-          <span><%= notice %></span>
-        </div>
-      <% end %>
+    <% if notice.present? || alert.present? %>
+      <div id="flash-messages" class="<%= class_names("site-flash-stack", { "site-flash-stack--immersive" => immersive_flash_page? }) %>">
+        <% if notice %>
+          <div class="site-flash site-flash--notice" data-controller="flash" role="status">
+            <span class="site-flash__icon" aria-hidden="true">OK</span>
+            <span class="site-flash__message"><%= notice %></span>
+            <button type="button" class="site-flash__dismiss" data-action="flash#dismiss" aria-label="Dismiss message">x</button>
+          </div>
+        <% end %>
 
-      <% if alert %>
-        <div class="site-flash site-flash--alert">
-          <span class="site-flash__icon" aria-hidden="true">!</span>
-          <span><%= alert %></span>
-        </div>
-      <% end %>
-    </div>
+        <% if alert %>
+          <div class="site-flash site-flash--alert" data-controller="flash" role="alert">
+            <span class="site-flash__icon" aria-hidden="true">!</span>
+            <span class="site-flash__message"><%= alert %></span>
+            <button type="button" class="site-flash__dismiss" data-action="flash#dismiss" aria-label="Dismiss alert">x</button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     <%= yield %>
-    <%= render "general/footer" %>
+    <%= render "general/footer" unless hide_global_chrome? %>
   </body>
 </html>

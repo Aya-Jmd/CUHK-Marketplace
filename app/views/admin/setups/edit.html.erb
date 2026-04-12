@@ -1,18 +1,32 @@
 <% content_for :title, "Complete Admin Setup" %>
+<% admin_role_label = @user.admin? ? "Super admin" : "College admin" %>
 
 <div class="auth-shell auth-shell--admin">
+  <%= render "devise/shared/auth_scene" %>
   <section class="auth-card auth-card--narrow">
     <div class="auth-card__hero">
       <p class="auth-card__eyebrow">Admin Access</p>
       <h1 class="auth-card__title">Secure your account</h1>
       <p class="auth-card__copy">
-        Before entering the admin panel, set a password for the invited account.
+        Before entering the admin panel, set a password for the invited account and confirm the responsibilities tied to <%= admin_role_label.downcase %> access.
       </p>
     </div>
 
     <div class="auth-card__panel">
       <%= form_with model: @user, url: admin_setup_path, method: :patch, local: true, class: "auth-form" do |f| %>
         <%= render "devise/shared/error_messages", resource: @user %>
+
+        <section class="auth-card__agreement" aria-label="<%= "#{admin_role_label} responsibilities" %>">
+          <p class="auth-card__agreement-title"><%= admin_role_label %> responsibilities</p>
+          <p class="auth-card__agreement-copy">
+            By continuing, you agree to use admin tools only for moderation, safety, and operations related to CUHK Marketplace.
+          </p>
+          <ul class="auth-card__agreement-list">
+            <li>Protect student privacy and keep account credentials confidential.</li>
+            <li>Use bans, reports, and admin actions fairly, consistently, and only when justified.</li>
+            <li>Do not share elevated access, bypass safeguards, or make changes outside your assigned scope.</li>
+          </ul>
+        </section>
 
         <div class="auth-form__field">
           <%= f.label :password, "New password" %>
@@ -26,6 +40,13 @@
 
         <%= f.submit "Secure Account & Enter Dashboard", class: "market-button" %>
       <% end %>
+
+      <div class="auth-card__signout-row">
+        <%= button_to "Sign out",
+            destroy_user_session_path,
+            method: :delete,
+            class: "auth-card__signout-button" %>
+      </div>
     </div>
   </section>
 </div>

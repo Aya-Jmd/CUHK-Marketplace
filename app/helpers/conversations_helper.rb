@@ -32,12 +32,16 @@ module ConversationsHelper
 
   def conversation_thread_search_content(conversation, user)
     last_message = conversation.last_message
+    searchable_messages = conversation.messages.last(8).map(&:content)
 
     [
       conversation.other_user_for(user)&.display_name,
       conversation.item.title,
+      conversation.item.category&.name,
+      conversation.item.status,
       last_message&.user&.display_name,
-      conversation_thread_preview(conversation)
+      conversation_thread_preview(conversation),
+      *searchable_messages
     ].compact.join(" ").squish.downcase
   end
 end

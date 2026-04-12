@@ -1,8 +1,7 @@
 class ApplicationController < ActionController::Base
-  # redirecting unsigned-in users to sign in page (except for devise's controlers)
-  before_action :authenticate_user!, unless: :devise_controller? # Devise's controllers are accessible without authentication
   before_action :reject_banned_user!, unless: :devise_controller?
-  helper_method :current_currency_code, :current_currency, :selected_marketplace_college
+  before_action :force_admin_setup_completion!, unless: :devise_controller?
+  helper_method :current_currency_code, :current_currency, :selected_marketplace_college, :hide_global_chrome?, :immersive_flash_page?
 
   rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
 
@@ -24,8 +23,9 @@ class ApplicationController < ActionController::Base
 
   # Adds college_id to the allowed list for signing up and updating accounts
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :college_id ])
-    devise_parameter_sanitizer.permit(:account_update, keys: [ :college_id ])
+    additional_user_keys = [ :college_id, :default_location, :latitude, :longitude ]
+    devise_parameter_sanitizer.permit(:sign_up, keys: additional_user_keys)
+    devise_parameter_sanitizer.permit(:account_update, keys: additional_user_keys)
   end
   # Devise looks for this method to know where to send a user after login
   def after_sign_in_path_for(resource)
@@ -51,14 +51,15 @@ class ApplicationController < ActionController::Base
   def rsrc_not_found(exception)
     case controller_name
     when "users"
-        @error_msg = "The requested user does not exist."
+        error_msg = "The requested user does not exist."
     when "items"
-        @error_msg = "The requested item does not exist."
+        error_msg = "The requested item does not exist."
     else
-        @error_msg  = "The requested data does not exist."
+        error_msg  = "The requested data does not exist."
     end
-      render "errors/not_found", status: :not_found
-    end
+
+    render_not_found(error_msg)
+  end
 
   def reject_banned_user!
     return unless current_user&.banned?
@@ -133,5 +134,31 @@ class ApplicationController < ActionController::Base
     return @favorited_item_ids = [] if item_ids.empty?
 
     @favorited_item_ids = current_user.favorites.where(item_id: item_ids).pluck(:item_id)
+  end
+
+  def hide_global_chrome?
+    devise_controller? || controller_path == "admin/setups"
+  end
+
+  def immersive_flash_page?
+    hide_global_chrome?
+  end
+
+  def force_admin_setup_completion!
+    return unless current_user&.persisted?
+    return unless current_user.admin? || current_user.college_admin?
+    return if current_user.setup_completed?
+    return if controller_path == "admin/setups"
+
+    redirect_to edit_admin_setup_path, alert: "You must secure your account before continuing."
+  end
+
+  def render_not_found(message)
+    @error_msg = message
+
+    respond_to do |format|
+      format.html { render "errors/not_found", status: :not_found, formats: :html }
+      format.any { head :not_found }
+    end
   end
 end

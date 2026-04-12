@@ -15,6 +15,11 @@ class ConversationsController < ApplicationController
     # finds item from which the conversation was started
     @item = Item.find(params[:item_id])
 
+    unless @item.visible_to?(current_user)
+      redirect_to items_path, alert: "This conversation is no longer available."
+      return
+    end
+
     if @item.user == current_user
       redirect_to @item, alert: "You cannot start a conversation on your own item."
       return

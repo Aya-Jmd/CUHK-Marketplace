@@ -50,7 +50,7 @@ RSpec.describe "Chat and Profiles", type: :request do
     expect(document.at_css(".chat-page__custom-scrollbar-thumb[data-chat-scroll-target='thumb']")).to be_present
   end
 
-  it "updates current user profile location" do
+  it "updates current user profile location without letting them change college" do
     college_a = create_college(name: "Shaw")
     college_b = create_college(name: "Morningside")
     user = create_user(email: "profile_user@cuhk.edu.hk", college: college_a)
@@ -58,9 +58,37 @@ RSpec.describe "Chat and Profiles", type: :request do
     sign_in user
     patch profile_path, params: { user: { college_id: college_b.id, default_location: "new_asia", latitude: 22.42, longitude: 114.21 } }
 
-    expect(response).to redirect_to(dashboard_path)
-    expect(user.reload.college_id).to eq(college_b.id)
+    expect(response).to redirect_to(profile_path)
+    expect(user.reload.college_id).to eq(college_a.id)
     expect(user.default_location).to eq("new_asia")
+  end
+
+  it "renders a seller profile for guests" do
+    seller = create_user(email: "public_profile_seller@cuhk.edu.hk")
+    create_item(user: seller, title: "Profile Listing")
+
+    get user_path(seller)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(seller.display_name)
+    expect(response.body).to include("Browse the items this seller currently has available")
+    expect(response.body).to include("Profile Listing")
+  end
+
+  it "hides out-of-scope local items from a seller profile" do
+    shaw = create_college(name: "Shaw")
+    new_asia = create_college(name: "New Asia")
+    seller = create_user(email: "hidden_profile_seller@cuhk.edu.hk", college: new_asia)
+    viewer = create_user(email: "hidden_profile_viewer@cuhk.edu.hk", college: shaw)
+    create_item(user: seller, title: "Visible Global Listing", college: new_asia, is_global: true)
+    create_item(user: seller, title: "Hidden Local Listing", college: new_asia, is_global: false)
+
+    sign_in viewer
+    get user_path(seller)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Visible Global Listing")
+    expect(response.body).not_to include("Hidden Local Listing")
   end
 
   it "renders accepted seller and buyer cards with segmented meetup pin UI" do
@@ -85,16 +113,17 @@ RSpec.describe "Chat and Profiles", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(seller_card).to be_present
-    expect(seller_card.at_css(".profile-item-row__listing-shortcut")).to be_present
-    expect(seller_card.text).to include("Accepted by")
-    expect(seller_card.text).not_to include(selling_item.title)
-    expect(seller_card.at_css("a[href='#{user_path(buyer)}']")).to be_present
+    expect(seller_card.at_css(".profile-item-row__dashboard-overlay-link")).to be_present
+    expect(seller_card.text).to include("Shoes")
+    expect(seller_card.text).to include(buyer.display_name)
+    expect(seller_card.text).to include("Complete sale")
+    expect(seller_card.text).to include("Cancel transaction")
     expect(seller_card.at_css("[data-controller='pin-input']")).to be_present
     expect(seller_card.css(".profile-pin-code__digit--input").size).to eq(4)
 
     expect(buyer_card).to be_present
     expect(buyer_card.text).to include("Meetup PIN")
-    expect(buyer_card.text).not_to include(buying_offer.created_at.strftime("%b %d, %Y"))
+    expect(buyer_card.at_css(".profile-item-row__dashboard-overlay-link")).to be_present
     expect(buyer_card.css(".profile-pin-code__digit--filled").map(&:text)).to eq(%w[4 8 3 1])
   end
 end

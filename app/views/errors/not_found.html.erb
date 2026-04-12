@@ -1,10 +1,24 @@
+<% content_for :title, "404 Not Found" %>
 
-<!-- CUSTOM ERROR PAGE -->
-<!-- the `flash` variable stores the alert message. -->
+<div class="auth-shell error-shell">
+  <%= render "devise/shared/auth_scene" %>
 
-<div class="error-404">
-  <h1>Error 404</h1>
-  <%= @error_msg %>
-  <br>
-  <%= link_to "Back to items", root_path %>
+  <section class="auth-card auth-card--narrow error-card">
+    <div class="auth-card__hero">
+      <p class="auth-card__eyebrow">Error 404</p>
+      <h1 class="auth-card__title">Page not found</h1>
+      <p class="auth-card__copy">
+        <%= @error_msg.presence || "The page you were looking for does not exist or may have been moved." %>
+      </p>
+    </div>
+
+    <div class="auth-card__panel error-card__actions">
+      <%= link_to "Back to marketplace", root_path, class: "market-button" %>
+      <% if user_signed_in? %>
+        <%= link_to "Go to dashboard", dashboard_path, class: "market-button market-button--secondary" %>
+      <% else %>
+        <%= link_to "Sign in", new_user_session_path, class: "market-button market-button--secondary" %>
+      <% end %>
+    </div>
+  </section>
 </div>

@@ -30,6 +30,6 @@ RSpec.describe "Currency and Analytics", type: :request do
     get analytics_path, params: { category_ids: [ category.id ], chart_mode: "averages" }
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Price dashboard")
+    expect(response.body).to include("Price Analytics")
   end
 end

@@ -1,4 +1,7 @@
 class LocationService
+  WALKING_DISTANCE_MULTIPLIER = 1.22
+  WALKING_SPEED_KMPH = 4.8
+
   CUHK_LOCATIONS = {
     "shaw" => { name: "Shaw College", lat: 22.4179, lng: 114.2065 },
     "new_asia" => { name: "New Asia College", lat: 22.4188, lng: 114.2078 },
@@ -34,6 +37,20 @@ class LocationService
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
     (earth_radius_km * c).round(2)
+  end
+
+  def self.calculate_walking_distance(lat1, lon1, lat2, lon2)
+    direct_distance = calculate_distance(lat1, lon1, lat2, lon2)
+    return 0 if direct_distance.zero?
+
+    (direct_distance * WALKING_DISTANCE_MULTIPLIER).round(2)
+  end
+
+  def self.estimate_walking_minutes(distance_km)
+    return nil if distance_km.nil?
+    return 0 if distance_km.zero?
+
+    [(distance_km / WALKING_SPEED_KMPH * 60).round, 1].max
   end
 
   def self.location_options

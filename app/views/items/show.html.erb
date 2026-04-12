@@ -146,6 +146,32 @@
                  data-map-display-location-name-value="<%= @item.location_name %>"
                  data-map-display-title-value="<%= @item.title %>">
             </div>
+
+            <% if user_signed_in? && current_user.has_location? && @walking_distance %>
+              <div class="item-show__pickup-travel">
+                <div class="item-show__pickup-travel-head">
+                  <span class="item-show__pickup-travel-label">Walk from your default location</span>
+                  <strong class="item-show__pickup-travel-value"><%= number_with_precision(@walking_distance, precision: 2) %> km</strong>
+                </div>
+                <p class="item-show__section-note">
+                  About <%= @walking_time_minutes %> min on foot. <%= @distance_text %>.
+                </p>
+              </div>
+            <% elsif user_signed_in? %>
+              <div class="item-show__pickup-travel item-show__pickup-travel--empty">
+                <p class="item-show__section-note">
+                  Set your default location to estimate the walk to this pickup point.
+                </p>
+                <%= link_to "Update location", profile_path, class: "item-show__secondary-link" %>
+              </div>
+            <% else %>
+              <div class="item-show__pickup-travel item-show__pickup-travel--empty">
+                <p class="item-show__section-note">
+                  Sign in and save your default location to estimate the walk to this pickup point.
+                </p>
+                <%= link_to "Sign in", new_user_session_path, class: "item-show__secondary-link" %>
+              </div>
+            <% end %>
           <% else %>
             <div class="item-show__empty-state">
               <p>No pickup location has been set for this listing yet.</p>
@@ -278,40 +304,42 @@
             <p class="item-show__eyebrow">Want this item?</p>
             <h2 class="item-show__section-title">Sign in to make an offer</h2>
             <p class="item-show__section-note">
-              Log in first, then you can send an offer and message the seller directly.
+              Sign in first, then you can send an offer and message the seller directly.
             </p>
 
-            <%= link_to "Log in", new_user_session_path, class: "item-show__primary-button" %>
+            <%= link_to "Sign in", new_user_session_path, class: "item-show__primary-button" %>
           </section>
 
           <section class="item-show__surface item-show__support-card">
             <p class="item-show__eyebrow">Message seller</p>
             <h2 class="item-show__section-title">Sign in to start chatting</h2>
             <p class="item-show__section-note">
-              Log in to ask questions about condition, availability, or pickup details.
+              Sign in to ask questions about condition, availability, or pickup details.
             </p>
 
-            <%= link_to "Log in to message", new_user_session_path, class: "item-show__secondary-link" %>
+            <%= link_to "Sign in to message", new_user_session_path, class: "item-show__secondary-link" %>
           </section>
         <% end %>
 
         <% unless viewer_is_seller %>
           <section class="item-show__surface item-show__support-card item-show__distance-card">
             <p class="item-show__eyebrow">Distance</p>
-            <% if user_signed_in? && current_user.has_location? && @distance %>
-              <h2 class="item-show__section-title">From your default location</h2>
-              <div class="item-show__distance-value"><%= number_with_precision(@distance, precision: 2) %> km</div>
-              <p class="item-show__section-note"><%= @distance_text %></p>
+            <% if user_signed_in? && current_user.has_location? && @walking_distance %>
+              <h2 class="item-show__section-title">Estimated walk from your default location</h2>
+              <div class="item-show__distance-value"><%= number_with_precision(@walking_distance, precision: 2) %> km</div>
+              <p class="item-show__section-note">
+                About <%= @walking_time_minutes %> min on foot. Straight-line distance: <%= number_with_precision(@distance, precision: 2) %> km.
+              </p>
             <% elsif user_signed_in? %>
               <h2 class="item-show__section-title">Set your default location</h2>
               <p class="item-show__section-note">
-                Save your usual campus area to see travel distance for listings automatically.
+                Save your usual campus area to see walking estimates for listings automatically.
               </p>
               <%= link_to "Update location", profile_path, class: "item-show__secondary-link" %>
             <% else %>
               <h2 class="item-show__section-title">Sign in to see distance</h2>
               <p class="item-show__section-note">
-                Log in and save your default location to compare travel distance for listings.
+                Sign in and save your default location to compare walking distance for listings.
               </p>
             <% end %>
           </section>

@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
   def show
     @user = User.find(params[:id])
   end
@@ -21,6 +19,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:college_id, :default_location, :latitude, :longitude)
+    params.require(:user).permit(:default_location, :latitude, :longitude)
   end
 end

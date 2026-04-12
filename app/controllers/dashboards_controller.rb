@@ -1,20 +1,29 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_user! # Security first!
 
-  def index
-    # As a Buyer: Find all the offers I have sent
-    @my_offers = current_user.offers_made.order(created_at: :desc)
+  def show
+    @user = current_user
+    @favorite_items = current_user.favorited_items.available
+      .includes(:college, :category, :user)
+      .with_attached_images
+      .order("favorites.created_at DESC")
+    preload_favorited_item_ids(@favorite_items)
+    render "users/show"
+  end
 
-    # As a Seller: Find all the offers people have sent me
-    @incoming_offers = current_user.offers_received.where(status: "pending").order(created_at: :desc)
+  def edit
+    @user = current_user
+    render "users/edit"
+  end
 
-    # As a Seller: Find my active transactions (accepted offers)
-    @active_sales = current_user.offers_received.where(status: "accepted").order(created_at: :desc)
-    # As a Seller: Find my past completed sales
-    @completed_sales = current_user.offers_received.where(status: "completed").order(updated_at: :desc)
+  def update
+    @user = current_user
 
-    # Optional: Just a quick list of my items
-    @my_items = current_user.items.order(created_at: :desc)
+    if @user.update(profile_params)
+      redirect_to profile_path, notice: "Profile updated successfully"
+    else
+      render "users/edit", status: :unprocessable_entity
+    end
   end
 
   # colors for the category
@@ -52,6 +61,10 @@ class DashboardsController < ApplicationController
   end
 
   private
+
+  def profile_params
+    params.require(:user).permit(:default_location, :latitude, :longitude)
+  end
 
   def selected_category_ids(categories)
     requested_ids = Array(params[:category_ids]).reject(&:blank?).map(&:to_i)

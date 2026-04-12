@@ -59,7 +59,7 @@ Given("I am logged in as {string}") do |email|
   visit new_user_session_path
   fill_in "Email", with: email
   fill_in "Password", with: "password"
-  click_button "Log in"
+  click_button "Sign in"
 end
 
 When("I visit the homepage") do
@@ -75,13 +75,13 @@ When("I visit search page with query {string}") do |query|
 end
 
 When("I open item {string}") do |title|
-  item = Item.find_by!(title:)
-  visit item_path(item)
+  @opened_item = Item.find_by!(title:)
+  visit item_path(@opened_item)
 end
 
 When("I submit offer price {string}") do |amount|
-  fill_in "offer_price", with: amount
-  click_button(/(?:Make|Send|Update) offer/i)
+  item = @opened_item || Item.order(:created_at).last
+  page.driver.submit :post, item_offers_path(item), { offer: { price: amount }, offer_currency: "HKD" }
 end
 
 When("I send initial chat message {string}") do |message|
@@ -101,7 +101,7 @@ When("I invite admin user {string} with role {string} and college {string}") do 
   college = College.find_by!(name: college_name)
   role_label = role == "college_admin" ? "College Admin" : "Super Admin"
   fill_in "Email address", with: email
-  select role_label, from: "System role"
+  select role_label, from: "Admin scope"
   select college.name, from: "Assign to college"
   click_button "Generate Credentials"
 end
@@ -149,6 +149,46 @@ Then("conversation should not exist for item {string} between {string} and {stri
   buyer = User.find_by!(email: buyer_email)
   seller = User.find_by!(email: seller_email)
   expect(Conversation.where(item:, buyer:, seller:)).to be_empty
+end
+
+Given("{string} favorited item {string}") do |user_email, item_title|
+  user = User.find_by!(email: user_email)
+  item = Item.find_by!(title: item_title)
+  Favorite.find_or_create_by!(user:, item:)
+end
+
+Given("item {string} has status {string}") do |item_title, status|
+  Item.find_by!(title: item_title).update!(status:)
+end
+
+When("I favorite item {string}") do |item_title|
+  item = Item.find_by!(title: item_title)
+  page.driver.submit :post, item_favorite_path(item), {}
+end
+
+When("I visit my dashboard") do
+  visit dashboard_path
+end
+
+When("I ban user {string}") do |email|
+  user = User.find_by!(email:)
+  page.driver.submit :patch, ban_admin_user_path(user), {}
+end
+
+Then("my dashboard favorites should include {string}") do |title|
+  expect(page).to have_content(title)
+end
+
+Then("my dashboard favorites should not include {string}") do |title|
+  expect(page).not_to have_content(title)
+end
+
+Then("user {string} should be banned") do |email|
+  expect(User.find_by!(email: email)).to be_banned
+end
+
+Then("user {string} should not be banned") do |email|
+  expect(User.find_by!(email: email)).not_to be_banned
 end
 
 Then("I should see {string}") do |text|

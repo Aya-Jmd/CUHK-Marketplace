@@ -27,6 +27,8 @@ export default class extends Controller {
       const matches = query === "" || haystack.includes(query)
 
       thread.hidden = !matches
+      thread.style.display = matches ? "" : "none"
+      thread.setAttribute("aria-hidden", matches ? "false" : "true")
       if (matches) visibleCount += 1
     })
 

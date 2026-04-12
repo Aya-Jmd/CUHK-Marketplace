@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+  before_action :authenticate_user!, except: %i[ index show ]
   before_action :set_item, only: %i[ show edit update destroy ]
   before_action :ensure_item_visible!, only: :show
   before_action :authorize_item_owner!, only: %i[ edit update destroy ]
@@ -41,11 +42,11 @@ class ItemsController < ApplicationController
 
     # Calculate distance if user is signed in and has location
     if user_signed_in? && current_user.has_location? && @item.has_location?
-      @distance = LocationService.calculate_distance(
-        current_user.latitude, current_user.longitude,
-        @item.latitude, @item.longitude
-      )
-      @distance_text = distance_text(@distance)
+      user_location = current_user.location_coordinates
+      @distance = @item.distance_from(user_location)
+      @walking_distance = @item.walking_distance_from(user_location)
+      @walking_time_minutes = LocationService.estimate_walking_minutes(@walking_distance)
+      @distance_text = distance_text(@walking_distance)
     end
 
     # Find nearby items (within 1.5km)
@@ -163,6 +164,8 @@ class ItemsController < ApplicationController
 
     # Location distance helper
     def distance_text(distance)
+      return nil unless distance
+
       if distance < 0.5
         "Very close - Easy walk"
       elsif distance < 1.0
