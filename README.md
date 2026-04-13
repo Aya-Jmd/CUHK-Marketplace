@@ -189,35 +189,11 @@ bundle exec cucumber
 ---
 
 ## SimpleCov Report
-
-Generate the coverage report by running the test suites:
-
-```bash
-bundle exec rspec
-bundle exec cucumber
-```
-
-After the suite finishes, open:
-
-```bash
-coverage/index.html
-```
-
-This report is generated with `SimpleCov` and can be screenshotted for submission evidence. The configured report merges `RSpec` and `Cucumber` into the same SimpleCov output and includes all application files.
-
-Latest local run:
-
-- **Line coverage:** `82.52%`
-- **Branch coverage:** `63.96%`
-
-If Windows keeps old coverage assets locked, close any open `coverage/index.html` tab before rerunning the suite so SimpleCov can refresh the single report cleanly.
-
-![SimpleCov report screenshot](REPLACE_WITH_YOUR_SCREENSHOT_PATH)
+![SimpleCov report screenshot](simplecov.jpeg)
 
 ---
 
 ## Seeded Administrator Account
-
 The project contains a hardcoded system administrator in the database seeds for development and testing.
 
 - **Administrator email:** `admin@example.com`
