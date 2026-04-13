@@ -6,6 +6,9 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+cloudinary:
+  service: Cloudinary
+
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS

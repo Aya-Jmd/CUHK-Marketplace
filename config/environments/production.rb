@@ -1,6 +1,4 @@
 require "active_support/core_ext/integer/time"
-require "solid_cache"
-require "solid_cable"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -26,7 +24,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system. On Heroku this is ephemeral,
   # so files may disappear after dyno restarts until a durable storage service
   # is configured.
-  config.active_storage.service = :local
+  config.active_storage.service = ENV["CLOUDINARY_URL"].present? ? :cloudinary : :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -50,24 +48,27 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :solid_cache_store
+  # Keep production on the in-process memory store for a Heroku-safe baseline.
+  config.cache_store = :memory_store
 
-  # Default to the built-in async adapter in production unless Solid Queue is
-  # explicitly enabled with a matching worker/process setup.
-  config.active_job.queue_adapter = ENV.fetch("ACTIVE_JOB_QUEUE_ADAPTER", "async").to_sym
-
-  if config.active_job.queue_adapter == :solid_queue
-    require "solid_queue"
-    config.solid_queue.connects_to = { database: { writing: :queue } }
-  end
+  # Use the in-process async adapter for background jobs unless a more durable
+  # backend is intentionally added later.
+  config.active_job.queue_adapter = :async
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  app_host =
+    ENV["APP_HOST"].presence ||
+    begin
+      heroku_app_name = ENV["HEROKU_APP_NAME"].presence
+      "#{heroku_app_name}.herokuapp.com" if heroku_app_name
+    end ||
+    "example.com"
+
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: app_host, protocol: "https" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {

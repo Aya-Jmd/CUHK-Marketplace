@@ -11,6 +11,54 @@ module ApplicationHelper
     lee-woo-sing
   ].freeze
 
+  def marketplace_image_tag(attachment, transformation = {}, **options)
+    image_tag(marketplace_image_url(attachment, transformation), **options)
+  end
+
+  def marketplace_image_url(attachment, transformation = {})
+    return "" unless attachment.present?
+
+    if marketplace_cloudinary_attachment?(attachment)
+      public_id = attachment.blob.key
+      cloudinary_options = cloudinary_transformation_options(transformation)
+      Cloudinary::Utils.cloudinary_url(public_id, cloudinary_options.merge(secure: true))
+    elsif transformation.present?
+      url_for(attachment.variant(transformation))
+    else
+      url_for(attachment)
+    end
+  end
+
+  def marketplace_cloudinary_attachment?(attachment)
+    attachment.respond_to?(:blob) && attachment.blob&.service_name.to_s == "cloudinary"
+  end
+
+  def cloudinary_transformation_options(transformation)
+    return {} if transformation.blank?
+
+    if (size = transformation[:resize_to_fill])
+      width, height = Array(size)
+      {
+        width: width,
+        height: height,
+        crop: "fill",
+        fetch_format: "auto",
+        quality: "auto"
+      }
+    elsif (size = transformation[:resize_to_limit])
+      width, height = Array(size)
+      {
+        width: width,
+        height: height,
+        crop: "limit",
+        fetch_format: "auto",
+        quality: "auto"
+      }
+    else
+      { fetch_format: "auto", quality: "auto" }
+    end
+  end
+
   def display_price(amount_hkd)
     return "" if amount_hkd.nil?
 

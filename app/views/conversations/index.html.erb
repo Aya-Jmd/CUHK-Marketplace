@@ -61,7 +61,7 @@
             <%= link_to item_path(@current_conversation.item, marketplace_base_params),
                 class: "chat-page__listing-card chat-page__listing-card--link" do %>
               <% if @current_conversation.item.images.attached? %>
-                <%= image_tag @current_conversation.item.images.first.variant(resize_to_fill: [120, 120]),
+                <%= marketplace_image_tag @current_conversation.item.images.first, { resize_to_fill: [120, 120] },
                     class: "chat-page__listing-media",
                     alt: @current_conversation.item.title %>
               <% else %>

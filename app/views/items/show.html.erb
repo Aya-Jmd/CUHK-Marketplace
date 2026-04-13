@@ -64,7 +64,7 @@
           <% if @item.images.attached? %>
             <div class="item-show__gallery" data-controller="gallery">
               <div class="item-show__gallery-main">
-                <%= image_tag @item.images.first.variant(resize_to_limit: [1200, 1200]),
+                <%= marketplace_image_tag @item.images.first, { resize_to_limit: [1200, 1200] },
                     data: { gallery_target: "mainImage" },
                     class: "item-show__gallery-image",
                     alt: @item.title %>
@@ -75,8 +75,8 @@
                   <% @item.images.each do |image| %>
                     <div class="item-show__gallery-thumb"
                          data-action="click->gallery#swap"
-                         data-full-url="<%= url_for(image) %>">
-                      <%= image_tag image.variant(resize_to_fill: [200, 200]), class: "item-show__gallery-thumb-image", alt: "" %>
+                         data-full-url="<%= marketplace_image_url(image, resize_to_limit: [1200, 1200]) %>">
+                      <%= marketplace_image_tag image, { resize_to_fill: [200, 200] }, class: "item-show__gallery-thumb-image", alt: "" %>
                     </div>
                   <% end %>
                 </div>

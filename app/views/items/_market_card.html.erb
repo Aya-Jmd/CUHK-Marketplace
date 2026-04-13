@@ -14,7 +14,7 @@
   <%= link_to item_path(item, marketplace_base_params), class: "market-card__link" do %>
     <div class="market-card__media">
       <% if item.images.attached? %>
-        <%= image_tag item.images.first.variant(resize_to_fill: [400, 300]), class: "market-card__image", alt: item.title %>
+        <%= marketplace_image_tag item.images.first, { resize_to_fill: [400, 300] }, class: "market-card__image", alt: item.title %>
       <% else %>
         <span class="market-card__placeholder" aria-hidden="true">
           <span class="market-card__placeholder-badge">Listing</span>

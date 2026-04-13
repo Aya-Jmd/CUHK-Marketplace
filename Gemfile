@@ -81,3 +81,4 @@ gem "leaflet-rails"           # Lightweight mapping library
 gem "geocoder"                # For distance calculations and geocoding
 
 gem "mini_magick"
+gem "cloudinary"
