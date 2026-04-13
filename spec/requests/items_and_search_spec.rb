@@ -498,7 +498,7 @@ RSpec.describe "Items and Search", type: :request do
       expect(response).to have_http_status(:ok)
       expect(slider).to be_present
       expect(slider["data-range-slider-max-value"].to_f).to eq(20.0)
-      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([0.0, 12.0, 20.0])
+      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([ 0.0, 12.0, 20.0 ])
     end
 
     it "preserves decimal price steps for the slider instead of rounding them up" do
@@ -518,7 +518,7 @@ RSpec.describe "Items and Search", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(slider).to be_present
-      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([0.0, 124.9, 200.0])
+      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([ 0.0, 124.9, 200.0 ])
     end
 
     it "filters search results with exact decimal price values" do

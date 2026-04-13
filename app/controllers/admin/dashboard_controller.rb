@@ -26,7 +26,12 @@ class Admin::DashboardController < Admin::BaseController
   end
 
   def invite
-    role_to_invite = invite_params[:role]
+    role_to_invite = invite_role
+
+    unless role_to_invite
+      redirect_to admin_root_path(redirect_scope_params), alert: "Please choose a valid admin scope."
+      return
+    end
 
     if current_user.college_admin? && role_to_invite == "admin"
       redirect_to admin_root_path(redirect_scope_params), alert: "Unauthorized: You can only invite other College Admins."
@@ -92,7 +97,12 @@ class Admin::DashboardController < Admin::BaseController
   end
 
   def invite_params
-    params.require(:user).permit(:email, :role, :college_id)
+    params.require(:user).permit(:email, :college_id)
+  end
+
+  def invite_role
+    requested_role = params.require(:user).fetch(:role, nil).to_s
+    requested_role if User.roles.key?(requested_role)
   end
 
   def invite_access_params
