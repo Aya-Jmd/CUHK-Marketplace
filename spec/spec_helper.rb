@@ -14,7 +14,7 @@ require "regexp_parser/syntax/version_lookup"
 module Regexp::Syntax
   class << self
     def version_class(version)
-      return Regexp::Syntax::Any if ["*", "any"].include?(version.to_s)
+      return Regexp::Syntax::Any if [ "*", "any" ].include?(version.to_s)
 
       version =~ VERSION_REGEXP || raise(InvalidVersionNameError, version)
 
