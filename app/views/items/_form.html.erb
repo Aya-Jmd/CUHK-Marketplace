@@ -1,5 +1,7 @@
 <%= form_with(model: item, class: "listing-form") do |form| %>
-  <% max_price_in_current_currency = Currency.convert_from_hkd(Item::MAX_PRICE_HKD, current_currency_code) %>
+  <% applicable_college = item.college || current_user&.college %>
+  <% max_item_price_hkd = applicable_college&.max_item_price || Item::MAX_PRICE_HKD %>
+  <% max_price_in_current_currency = Currency.convert_from_hkd(max_item_price_hkd, current_currency_code) %>
   <% if item.errors.any? %>
     <div class="listing-form__errors">
       <h3><%= pluralize(item.errors.count, "error") %> prevented this item from being saved:</h3>
@@ -25,7 +27,7 @@
         value: item.price.present? ? Currency.convert_from_hkd(item.price, current_currency_code) : nil,
         class: "market-input",
         placeholder: "Enter the asking price" %>
-    <p class="market-note">Maximum asking price: <%= display_price(Item::MAX_PRICE_HKD) %>.</p>
+    <p class="market-note">Maximum asking price: <%= display_price(max_item_price_hkd) %>.</p>
   </div>
 
   <div class="market-form-field">

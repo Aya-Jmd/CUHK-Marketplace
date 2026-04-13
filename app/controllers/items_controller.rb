@@ -4,28 +4,13 @@ class ItemsController < ApplicationController
   before_action :ensure_item_visible!, only: :show
   before_action :authorize_item_editor!, only: %i[ edit update ]
   before_action :authorize_item_deletion!, only: :destroy
+  before_action :redirect_if_listing_limit_reached!, only: %i[ new create ]
 
   def index
     @scope = normalized_marketplace_scope(params[:scope])
     @categories = Category.sorted_for_dropdown
     base = apply_marketplace_scope(@scope, marketplace_listing_relation)
-
-    price_floor_hkd = Item.minimum(:price)&.to_d || 0.to_d
-    price_ceiling_hkd = Item.maximum(:price)&.to_d || 100_000.to_d
-
-    @price_floor = convert_price_from_hkd(price_floor_hkd).floor.round(2)
-    @price_ceiling = convert_price_from_hkd(price_ceiling_hkd).ceil
-
-    submitted_in_current_currency = params[:price_currency] == current_currency_code
-    requested_min = submitted_in_current_currency && params[:min_price].present? ? params[:min_price].to_d : nil
-    requested_max = submitted_in_current_currency && params[:max_price].present? ? params[:max_price].to_d : nil
-
-    @min_price = requested_min || @price_floor
-    @max_price = requested_max || @price_ceiling
-
-    @min_price = [ @min_price, @max_price ].min
-    @max_price = [ @min_price, @max_price ].max
-    @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
+    configure_price_filter_from_scope(base)
 
     min_price_hkd = convert_price_to_hkd(@min_price)
     max_price_hkd = convert_price_to_hkd(@max_price)
@@ -64,7 +49,7 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @item = Item.new
+    @item = Item.new(college: default_item_college)
   end
 
   def edit
@@ -82,7 +67,10 @@ class ItemsController < ApplicationController
         format.html { redirect_to item_url(@item), notice: "Item was successfully created." }
         format.json { render :show, status: :created, location: @item }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do
+          prepare_item_form_alerts
+          render :new, status: :unprocessable_entity
+        end
         format.json { render json: @item.errors, status: :unprocessable_entity }
       end
     end
@@ -97,7 +85,10 @@ class ItemsController < ApplicationController
         format.html { redirect_to @item, notice: "Item was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @item }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          prepare_item_form_alerts
+          render :edit, status: :unprocessable_entity
+        end
         format.json { render json: @item.errors, status: :unprocessable_entity }
       end
     end
@@ -169,6 +160,28 @@ class ItemsController < ApplicationController
       return if item.price.blank?
 
       item.price = convert_price_to_hkd(item.price)
+    end
+
+    def redirect_if_listing_limit_reached!
+      return unless current_user&.reached_college_item_limit?
+
+      redirect_to items_path, alert: "You already posted the maximum number of items!"
+    end
+
+    def prepare_item_form_alerts
+      return unless @item&.college_price_limit_exceeded?
+
+      flash.now[:alert] = college_price_limit_notice(@item)
+    end
+
+    def college_price_limit_notice(item)
+      "Your item's price is too high! It should be lower than #{helpers.display_price(item.college_max_price_hkd)}."
+    end
+
+    def default_item_college
+      return current_user.college unless current_user&.admin?
+
+      College.order(:id).first
     end
 
     def distance_text(distance)

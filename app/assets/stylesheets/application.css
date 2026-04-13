@@ -5845,6 +5845,50 @@ body a {
   font-size: 0.82rem;
 }
 
+.admin-rules {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(214, 221, 232, 0.95);
+}
+
+.admin-rules__selector-form,
+.admin-rules__form {
+  gap: 0.9rem;
+}
+
+.admin-rules__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(12rem, 0.8fr);
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(214, 221, 232, 0.95);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.admin-rules__copy {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.admin-rules__label {
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.94rem;
+  font-weight: 800;
+}
+
+.admin-rules__control {
+  min-width: 0;
+}
+
+.admin-rules__control .market-input {
+  width: 100%;
+}
+
 .auth-shell {
   min-height: 100vh;
   margin-top: -0.85rem;
@@ -7116,6 +7160,96 @@ body a {
   margin-top: 0.25rem;
 }
 
+.analytics-page .dashboard-toolbar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.7rem;
+}
+
+.analytics-page .dashboard-scope-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-switch {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-form {
+  display: inline-flex;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-select,
+.analytics-page .dashboard-scope-control .site-header__scope-toggle {
+  min-height: 2.15rem;
+  height: auto;
+  padding: 0.46rem 0.84rem;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 221, 232, 0.98);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%);
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-select {
+  max-width: 13.5rem;
+  padding-right: 2.05rem;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2364748b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: calc(100% - 1rem) 50%;
+  background-size: 0.62rem 0.42rem;
+  background-repeat: no-repeat;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle {
+  gap: 0.62rem;
+  text-decoration: none;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle-text {
+  max-width: 9rem;
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle:hover,
+.analytics-page .dashboard-scope-control .site-header__scope-select:hover,
+.analytics-page .dashboard-scope-control .site-header__scope-select:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--theme-primary-border-soft);
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle.is-college {
+  background: linear-gradient(135deg, var(--theme-primary-surface-tint) 0%, rgba(255, 255, 255, 0.98) 100%);
+  color: var(--theme-primary-ink-strong);
+  border-color: var(--theme-primary-border-soft);
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle-track {
+  width: 2.1rem;
+  height: 1.15rem;
+  padding: 0.12rem;
+  border-radius: 999px;
+  background: rgba(203, 213, 225, 0.75);
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle-thumb {
+  width: 0.9rem;
+  height: 0.9rem;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+}
+
+.analytics-page .dashboard-scope-control .site-header__scope-toggle.is-college .site-header__scope-toggle-track {
+  background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-primary-dark) 100%);
+}
+
 .analytics-page .dashboard-side-controls {
   width: 100%;
   gap: 0.4rem;
@@ -7372,6 +7506,10 @@ body a {
     grid-template-columns: 1fr;
   }
 
+  .admin-rules__row {
+    grid-template-columns: 1fr;
+  }
+
   .admin-overview-panel__heading {
     flex-direction: column;
   }
@@ -7389,6 +7527,10 @@ body a {
   }
 
   .analytics-page .dashboard-heading-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-page .dashboard-toolbar-row {
     grid-template-columns: 1fr;
   }
 }

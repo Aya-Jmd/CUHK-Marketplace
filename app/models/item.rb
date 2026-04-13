@@ -20,6 +20,7 @@ class Item < ApplicationRecord
     greater_than: 0,
     less_than_or_equal_to: MAX_PRICE_HKD
   }
+  validate :price_within_college_limit
 
   scope :available, -> { joins(:user).merge(User.active).where(status: "available") }
 
@@ -123,5 +124,21 @@ class Item < ApplicationRecord
     return true if viewer&.college_admin? && viewer.college_id == college_id
 
     false
+  end
+
+  def college_max_price_hkd
+    college&.max_item_price || MAX_PRICE_HKD
+  end
+
+  def college_price_limit_exceeded?
+    price.present? && price.to_d > college_max_price_hkd.to_d
+  end
+
+  private
+
+  def price_within_college_limit
+    return unless college_price_limit_exceeded?
+
+    errors.add(:price, "must be less than or equal to #{college_max_price_hkd}")
   end
 end

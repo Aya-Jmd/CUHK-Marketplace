@@ -8,11 +8,17 @@
         <div class="dashboard-header">
           <div class="dashboard-heading">
             <div class="dashboard-heading-tools">
-              <div class="dashboard-toolbar dashboard-toolbar-compact">
-                <p class="analytics-page__mode-label">Compare posted and sold item prices across your selected categories and date range.</p>
-                <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
-                  <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
-                  <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
+              <div class="dashboard-toolbar-row">
+                <div class="dashboard-toolbar dashboard-toolbar-compact">
+                  <p class="analytics-page__mode-label">Compare posted and sold item prices across your selected categories and date range.</p>
+                  <div class="dashboard-mode-switch" role="tablist" aria-label="Chart mode">
+                    <button type="button" class="dashboard-mode-button is-active" data-chart-mode="averages">Show averages</button>
+                    <button type="button" class="dashboard-mode-button" data-chart-mode="exact">Show exact values</button>
+                  </div>
+                </div>
+
+                <div class="dashboard-scope-control">
+                  <%= render "general/marketplace_scope_control" %>
                 </div>
               </div>
 
@@ -22,6 +28,9 @@
 
           <div class="dashboard-side-controls">
             <%= form_with url: analytics_path, method: :get, local: true, class: "dashboard-filters" do %>
+              <% marketplace_base_params.each do |param_name, value| %>
+                <%= hidden_field_tag param_name, value %>
+              <% end %>
               <%= hidden_field_tag :chart_mode, @chart_mode, id: "dashboard-chart-mode-input" %>
 
               <div class="dashboard-date-range">

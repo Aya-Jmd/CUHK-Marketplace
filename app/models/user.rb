@@ -68,4 +68,16 @@ class User < ApplicationRecord
     return nil unless has_location?
     { lat: latitude, lng: longitude }
   end
+
+  def live_items
+    items.where.not(status: %w[removed sold])
+  end
+
+  def live_items_count
+    live_items.count
+  end
+
+  def reached_college_item_limit?
+    college.present? && college.posting_limit_reached_by?(self)
+  end
 end

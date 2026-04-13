@@ -1,0 +1,37 @@
+<% if current_user&.admin? %>
+  <div class="<%= class_names('site-header__scope-switch', local_assigns[:wrapper_class]) %>">
+    <%= form_with url: marketplace_scope_form_url, method: :get, local: true, class: "site-header__scope-form" do %>
+      <% marketplace_scope_preserved_params.each do |key, value| %>
+        <% if value.is_a?(Array) %>
+          <% value.each do |entry| %>
+            <%= hidden_field_tag "#{key}[]", entry %>
+          <% end %>
+        <% elsif value.present? %>
+          <%= hidden_field_tag key, value %>
+        <% end %>
+      <% end %>
+
+      <%= select_tag :college_scope_id,
+          options_for_select(marketplace_scope_select_options, params[:college_scope_id]),
+          class: "site-header__scope-select",
+          onchange: "this.form.requestSubmit()" %>
+    <% end %>
+  </div>
+<% elsif current_user.present? %>
+  <% current_scope = marketplace_scope %>
+  <% next_scope = current_scope == "college" ? "all" : "college" %>
+  <% current_scope_label = marketplace_scope_label(current_scope) %>
+  <% next_scope_label = marketplace_scope_label(next_scope) %>
+
+  <nav class="<%= class_names('site-header__scope-switch', local_assigns[:wrapper_class]) %>" aria-label="Marketplace scope">
+    <%= link_to marketplace_scope_switch_path(next_scope),
+        class: class_names("site-header__scope-toggle", { "is-college" => current_scope == "college" }),
+        aria: { label: "Switch marketplace scope to #{next_scope_label}" },
+        title: "Switch to #{next_scope_label}" do %>
+      <span class="site-header__scope-toggle-text"><%= current_scope_label %></span>
+      <span class="site-header__scope-toggle-track" aria-hidden="true">
+        <span class="site-header__scope-toggle-thumb"></span>
+      </span>
+    <% end %>
+  </nav>
+<% end %>

@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   before_action :reject_banned_user!, unless: :devise_controller?
   before_action :force_admin_setup_completion!, unless: :devise_controller?
   helper_method :current_currency_code, :current_currency, :selected_marketplace_college, :hide_global_chrome?, :immersive_flash_page?
+  helper ItemsHelper, ConversationsHelper, MessagesHelper
+  helper Turbo::FramesHelper, Turbo::StreamsHelper
 
   rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
 
@@ -111,6 +113,44 @@ class ApplicationController < ActionController::Base
     relation.where("items.is_global = :global OR items.college_id = :college_id",
       global: true,
       college_id: current_user.college_id)
+  end
+
+  def configure_price_filter_from_scope(scope)
+    @price_steps = price_steps_for_scope(scope)
+    @price_floor = @price_steps.first || 0.to_d
+    @price_ceiling = @price_steps.last || 0.to_d
+
+    submitted_in_current_currency = params[:price_currency] == current_currency_code
+    requested_min = submitted_in_current_currency && params[:min_price].present? ? params[:min_price].to_d : nil
+    requested_max = submitted_in_current_currency && params[:max_price].present? ? params[:max_price].to_d : nil
+
+    @min_price = requested_min.present? ? snap_price_floor(requested_min) : @price_floor
+    @max_price = requested_max.present? ? snap_price_ceiling(requested_max) : @price_ceiling
+
+    @min_price = [ @min_price, @price_floor ].max
+    @max_price = [ @max_price, @price_ceiling ].min
+    @min_price, @max_price = [ @min_price, @max_price ].minmax
+    @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
+  end
+
+  def price_steps_for_scope(scope)
+    converted_prices =
+      scope
+        .where.not(price: nil)
+        .reorder(price: :asc)
+        .distinct
+        .pluck(:price)
+        .map { |price| convert_price_from_hkd(price).to_d.round(2) }
+
+    ([ 0.to_d ] + converted_prices).uniq.sort
+  end
+
+  def snap_price_floor(requested_price)
+    @price_steps.select { |price| price <= requested_price }.max || @price_floor
+  end
+
+  def snap_price_ceiling(requested_price)
+    @price_steps.find { |price| price >= requested_price } || @price_ceiling
   end
 
   def preload_favorited_item_ids(items)

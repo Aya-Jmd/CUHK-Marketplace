@@ -4,7 +4,7 @@ require_relative "../config/environment"
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "rspec/rails"
 require "devise"
-Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
+Dir.glob("spec/support/**/*.rb").sort.each { |f| require Rails.root.join(f) }
 
 # CI runs `db:test:prepare` before the suite. Skipping this check avoids
 # false positives in local Windows environments where migration metadata can desync.

@@ -8,11 +8,13 @@
 <% reset_label = local_assigns[:reset_label] || "Reset price range" %>
 <% show_apply = local_assigns.fetch(:show_apply, false) %>
 <% auto_submit = local_assigns.fetch(:auto_submit, false) %>
+<% price_steps = local_assigns.fetch(:price_steps, [ price_floor, price_ceiling ].compact.uniq.sort) %>
 
 <div class="<%= class_names(wrapper_class) %>"
      data-controller="range-slider"
      data-range-slider-min-value="<%= price_floor %>"
      data-range-slider-max-value="<%= price_ceiling %>"
+     data-range-slider-steps-value="<%= price_steps.map { |step| step.to_d.round(2).to_f }.to_json %>"
      data-range-slider-currency-value="<%= price_currency %>"
      data-range-slider-auto-submit-value="<%= auto_submit %>">
   <% hidden_fields.each do |name, value| %>

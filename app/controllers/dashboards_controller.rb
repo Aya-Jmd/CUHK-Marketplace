@@ -46,6 +46,7 @@ class DashboardsController < ApplicationController
   DATASET_OPACITY = 0.6
 
   def category_prices
+    @scope = normalized_marketplace_scope(params[:scope])
     @categories = Category.order(:name).to_a
     @selected_category_ids = selected_category_ids(@categories)
     @selected_categories = @categories.select { |category| @selected_category_ids.include?(category.id) }
@@ -128,7 +129,7 @@ class DashboardsController < ApplicationController
   end
 
   def grouped_average_scope(category_ids, date_column, sold_only: false)
-    scope = Item.where(category_id: category_ids)
+    scope = analytics_item_scope.where(category_id: category_ids)
     scope = scope.where.not(sold_at: nil) if sold_only
     scope = scope.where(date_column => selected_time_window)
 
@@ -137,7 +138,7 @@ class DashboardsController < ApplicationController
 
   def exact_points_by_category(category_ids, date_column, sold_only: false)
     day_positions = @labels.each_with_index.to_h
-    scope = Item.where(category_id: category_ids)
+    scope = analytics_item_scope.where(category_id: category_ids)
     scope = scope.where.not(sold_at: nil) if sold_only
     scope = scope.where(date_column => selected_time_window).order(date_column)
 
@@ -167,6 +168,10 @@ class DashboardsController < ApplicationController
 
   def selected_time_window
     @start_date.beginning_of_day..@end_date.end_of_day
+  end
+
+  def analytics_item_scope
+    @analytics_item_scope ||= apply_marketplace_scope(@scope, Item.all)
   end
 
   def average_series_for_days(values_by_day)

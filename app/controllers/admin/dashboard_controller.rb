@@ -3,7 +3,8 @@ class Admin::DashboardController < Admin::BaseController
     if current_user.admin?
       @total_users = User.count
       @total_items = Item.available.count
-      @colleges = College.all
+      @colleges = College.order(:name)
+      @rule_college_options = College.order(:id)
       @report_scope = ItemReport.includes(:item)
       @users = User.includes(:college).order(created_at: :desc)
     elsif current_user.college_admin?
@@ -17,6 +18,7 @@ class Admin::DashboardController < Admin::BaseController
     @total_reports = @report_scope.count
     @pending_reports = @report_scope.pending.count
     @new_admin = User.new
+    @rule_college = selected_rule_college
   end
 
   def invite
@@ -46,5 +48,16 @@ class Admin::DashboardController < Admin::BaseController
     else
       redirect_to admin_root_path, alert: "Error sending invite: #{@new_admin.errors.full_messages.join(', ')}"
     end
+  end
+
+  private
+
+  def selected_rule_college
+    return current_user.college if current_user.college_admin?
+
+    colleges = College.order(:id)
+    return colleges.first if params[:rule_college_id].blank?
+
+    colleges.find_by(id: params[:rule_college_id]) || colleges.first
   end
 end

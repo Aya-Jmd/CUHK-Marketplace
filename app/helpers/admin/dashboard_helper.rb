@@ -22,4 +22,8 @@ module Admin::DashboardHelper
       "text-amber-500"
     end
   end
+
+  def admin_rule_price_value(college)
+    Currency.convert_from_hkd(college.max_item_price, current_currency_code)
+  end
 end

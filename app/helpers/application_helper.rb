@@ -77,21 +77,49 @@ module ApplicationHelper
 
     marketplace_scope(scope) == "college" ? marketplace_college_label : "CUHK"
   end
-  def marketplace_scope_switch_path(target_scope)
-    preserved_params =
-      case [ controller.controller_name, controller.action_name ]
-      when [ "search", "index" ]
-        params.permit(:q, :category_id, :sort, :price_currency, :min_price, :max_price).to_h.symbolize_keys
-      when [ "items", "index" ]
-        params.permit(:price_currency, :min_price, :max_price).to_h.symbolize_keys
+
+  def marketplace_scope_form_url
+    case [ controller.controller_name, controller.action_name ]
+    when [ "search", "index" ]
+      search_path
+    when [ "dashboards", "category_prices" ]
+      analytics_path
+    else
+      items_path
+    end
+  end
+
+  def marketplace_scope_select_options
+    default_label =
+      if controller.controller_name == "dashboards" && controller.action_name == "category_prices"
+        "All colleges"
       else
-        {}
+        "CUHK Global"
       end
 
-    route_params = preserved_params.merge(marketplace_base_params(target_scope))
+    [ [ default_label, "" ] ] + College.order(:name).pluck(:name, :id)
+  end
+
+  def marketplace_scope_preserved_params
+    case [ controller.controller_name, controller.action_name ]
+    when [ "search", "index" ]
+      params.permit(:q, :category_id, :sort, :price_currency, :min_price, :max_price).to_h.symbolize_keys
+    when [ "items", "index" ]
+      params.permit(:price_currency, :min_price, :max_price).to_h.symbolize_keys
+    when [ "dashboards", "category_prices" ]
+      params.permit(:chart_mode, :start_date, :end_date, category_ids: []).to_h.symbolize_keys
+    else
+      {}
+    end
+  end
+
+  def marketplace_scope_switch_path(target_scope)
+    route_params = marketplace_scope_preserved_params.merge(marketplace_base_params(target_scope))
 
     if controller.controller_name == "search" && controller.action_name == "index"
       search_path(route_params)
+    elsif controller.controller_name == "dashboards" && controller.action_name == "category_prices"
+      analytics_path(route_params)
     else
       items_path(route_params)
     end

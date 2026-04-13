@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
 
     post "invite", to: "dashboard#invite", as: :invite
+    resource :college_rules, only: [ :update ]
 
     resources :users, only: [] do
       member do

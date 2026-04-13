@@ -6,6 +6,7 @@
 <% max_price = local_assigns[:max_price] %>
 <% price_floor = local_assigns[:price_floor] %>
 <% price_ceiling = local_assigns[:price_ceiling] %>
+<% price_steps = local_assigns[:price_steps] || [ price_floor, price_ceiling ].compact.uniq.sort %>
 <% price_currency = local_assigns[:price_currency] %>
 <% price_active = local_assigns[:price_filter_active] %>
 <% query = base_state[:q] %>
@@ -32,6 +33,7 @@
                 max_price: max_price,
                 price_floor: price_floor,
                 price_ceiling: price_ceiling,
+                price_steps: price_steps,
                 price_currency: price_currency,
                 reset_path: reset_price_path %>
           <% end %>

@@ -3,6 +3,7 @@
     max_price: @max_price,
     price_floor: @price_floor,
     price_ceiling: @price_ceiling,
+    price_steps: @price_steps,
     price_currency: current_currency_code,
     hidden_fields: marketplace_base_params(@scope).merge(price_currency: current_currency_code),
     reset_path: items_path(marketplace_base_params(@scope)),

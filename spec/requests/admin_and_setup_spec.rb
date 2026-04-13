@@ -94,6 +94,46 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(response.body).to include("Assign to college")
   end
 
+  it "shows the college rules manager with the first college selected by default for super admins" do
+    first_college = create_college(name: "First Rules College")
+    second_college = create_college(name: "Second Rules College")
+    super_admin = create_user(email: "rules_default_super_admin@cuhk.edu.hk", role: :admin)
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    get admin_root_path
+
+    document = Nokogiri::HTML.parse(response.body)
+    selector = document.at_css("select[name='rule_college_id']")
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Manage college rules")
+    expect(selector).to be_present
+    expect(selector.at_css("option[selected]")["value"]).to eq(first_college.id.to_s)
+    expect(selector.text).to include(second_college.name)
+  end
+
+  it "lets a super admin update the rules for the selected college" do
+    target_college = create_college(name: "Rules Target College")
+    other_college = create_college(name: "Rules Other College")
+    super_admin = create_user(email: "rules_super_admin@cuhk.edu.hk", role: :admin)
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    patch admin_college_rules_path, params: {
+      college_id: target_college.id,
+      college: {
+        max_items_per_user: 12,
+        max_item_price: 88.5
+      }
+    }
+
+    expect(response).to redirect_to(admin_root_path(rule_college_id: target_college.id))
+    expect(target_college.reload.max_items_per_user).to eq(12)
+    expect(target_college.max_item_price).to eq(88.5.to_d)
+    expect(other_college.reload.max_items_per_user).to eq(College::DEFAULT_MAX_ITEMS_PER_USER)
+  end
+
   it "scopes the dashboard to the college admin's college" do
     home_college = create_college(name: "Home College")
     outside_college = create_college(name: "Outside College")
@@ -112,6 +152,27 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(response.body).to include(same_college_user.email)
     expect(response.body).not_to include(other_college_user.email)
     expect(response.body).not_to include("Assign to college")
+  end
+
+  it "lets a college admin update only their own college rules" do
+    home_college = create_college(name: "Home Rules College")
+    other_college = create_college(name: "Other Rules College")
+    college_admin = create_user(email: "rules_college_admin@cuhk.edu.hk", college: home_college, role: :college_admin)
+    college_admin.update!(setup_completed: true)
+
+    sign_in college_admin
+    patch admin_college_rules_path, params: {
+      college_id: other_college.id,
+      college: {
+        max_items_per_user: 7,
+        max_item_price: 42
+      }
+    }
+
+    expect(response).to redirect_to(admin_root_path)
+    expect(home_college.reload.max_items_per_user).to eq(7)
+    expect(home_college.max_item_price).to eq(42.to_d)
+    expect(other_college.reload.max_items_per_user).to eq(College::DEFAULT_MAX_ITEMS_PER_USER)
   end
 
   it "forces invited college admins into the inviter's college scope" do

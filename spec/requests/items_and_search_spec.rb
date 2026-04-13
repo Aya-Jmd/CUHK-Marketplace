@@ -75,6 +75,70 @@ RSpec.describe "Items and Search", type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to include("must be less than or equal to #{Item::MAX_PRICE_HKD}")
     end
+
+    it "shows the college price cap notice when the submitted price is too high" do
+      college = create_college(name: "Price Rule College")
+      college.update!(max_item_price: 80)
+      seller = create_user(email: "college_price_rule_seller@cuhk.edu.hk", college:)
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "Too Expensive Lamp",
+            price: 81,
+            description: "Above the local cap"
+          }
+        }
+      }.not_to change(Item, :count)
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      document = Nokogiri::HTML.parse(response.body)
+
+      expect(document.text).to include("Your item's price is too high! It should be lower than HK$80.00.")
+    end
+
+    it "blocks direct item creation once the college posting limit is reached" do
+      college = create_college(name: "Posting Limit College")
+      college.update!(max_items_per_user: 1)
+      seller = create_user(email: "posting_limit_direct_seller@cuhk.edu.hk", college:)
+      create_item(user: seller, college:, title: "Existing Listing")
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "Blocked Listing",
+            price: 20,
+            description: "Should not be created"
+          }
+        }
+      }.not_to change(Item, :count)
+
+      expect(response).to redirect_to(items_path)
+      follow_redirect!
+      expect(response.body).to include("You already posted the maximum number of items!")
+    end
+  end
+
+  describe "GET /items/new" do
+    it "blocks access to the sell page once the college posting limit is reached" do
+      college = create_college(name: "Sell Gate College")
+      college.update!(max_items_per_user: 1)
+      seller = create_user(email: "sell_gate_seller@cuhk.edu.hk", college:)
+      create_item(user: seller, college:, title: "Existing Sell Gate Listing")
+
+      sign_in seller
+      get new_item_path
+
+      expect(response).to redirect_to(items_path)
+
+      follow_redirect!
+
+      expect(response.body).to include("You already posted the maximum number of items!")
+    end
   end
 
   describe "GET /items/:id" do
@@ -209,6 +273,29 @@ RSpec.describe "Items and Search", type: :request do
       expect(document.at_css(".search-results-page__sidebar-scroll[data-custom-scrollbar-target='viewport']")).to be_present
       expect(document.at_css(".search-results-page__custom-scrollbar[data-custom-scrollbar-target='track']")).to be_present
       expect(document.at_css(".search-results-page__custom-scrollbar-thumb[data-custom-scrollbar-target='thumb']")).to be_present
+    end
+
+    it "builds price slider steps from the current category scope instead of the global max" do
+      college = create_college(name: "Morningside")
+      buyer = create_user(email: "search_price_scope@cuhk.edu.hk", college:)
+      seller = create_user(email: "search_price_scope_seller@cuhk.edu.hk", college:)
+      books = Category.create!(name: "Scoped Books")
+      electronics = Category.create!(name: "Scoped Electronics")
+
+      create_item(user: seller, title: "Book A", category: books, price: 12)
+      create_item(user: seller, title: "Book B", category: books, price: 20)
+      create_item(user: seller, title: "Luxury Server Rack", category: electronics, price: 8_000_000)
+
+      sign_in buyer
+      get search_path, params: { category_id: books.id }
+
+      document = Nokogiri::HTML.parse(response.body)
+      slider = document.at_css("[data-controller='range-slider']")
+
+      expect(response).to have_http_status(:ok)
+      expect(slider).to be_present
+      expect(slider["data-range-slider-max-value"].to_f).to eq(20.0)
+      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([0.0, 12.0, 20.0])
     end
   end
 end

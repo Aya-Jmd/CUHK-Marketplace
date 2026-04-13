@@ -25,6 +25,16 @@ RSpec.describe Item, type: :model do
     expect(item.errors[:price]).to include("must be less than or equal to #{Item::MAX_PRICE_HKD}")
   end
 
+  it "rejects prices above the college maximum" do
+    college = create_college(name: "Price Cap College")
+    college.update!(max_item_price: 80)
+    user = create_user(email: "seller_item_college_price_cap@cuhk.edu.hk", college:)
+    item = Item.new(user:, college:, title: "Limited Chair", price: 81)
+
+    expect(item).not_to be_valid
+    expect(item.errors[:price]).to include("must be less than or equal to #{college.max_item_price.to_s("F")}")
+  end
+
   it "rejects descriptions longer than the maximum length" do
     user = create_user(email: "seller_item_description_cap@cuhk.edu.hk")
     item = Item.new(

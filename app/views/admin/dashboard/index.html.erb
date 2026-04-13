@@ -177,6 +177,78 @@
             </tbody>
           </table>
         </div>
+
+        <div class="admin-rules">
+          <% rules_note =
+              if current_user.admin?
+                "Choose a college, then set the listing rules that apply to its users."
+              elsif @rule_college.present?
+                "These rules apply to every user in #{@rule_college.name}."
+              else
+                "No college is available to manage yet."
+              end %>
+          <div class="market-section-heading admin-dashboard__heading">
+            <div>
+              <p class="market-section-eyebrow">User Management</p>
+              <h2 class="market-section-title">Manage college rules</h2>
+              <p class="market-note"><%= rules_note %></p>
+            </div>
+          </div>
+
+          <% if @rule_college.present? %>
+            <% if current_user.admin? %>
+              <%= form_with url: admin_root_path, method: :get, local: true, class: "admin-form admin-rules__selector-form" do %>
+                <div class="market-form-field">
+                  <%= label_tag :rule_college_id, "College" %>
+                  <%= select_tag :rule_college_id,
+                      options_from_collection_for_select(@rule_college_options, :id, :name, @rule_college.id),
+                      class: "listing-form__select",
+                      onchange: "this.form.requestSubmit()" %>
+                </div>
+              <% end %>
+            <% end %>
+
+            <%= form_with model: @rule_college, url: admin_college_rules_path, method: :patch, local: true, class: "admin-form admin-rules__form" do |f| %>
+              <% if current_user.admin? %>
+                <%= hidden_field_tag :college_id, @rule_college.id %>
+              <% end %>
+
+              <div class="admin-rules__row">
+                <div class="admin-rules__copy">
+                  <%= f.label :max_item_price, "Max item price", class: "admin-rules__label" %>
+                  <p class="market-note">
+                    Users in <%= @rule_college.name %> cannot publish listings above this amount.
+                  </p>
+                </div>
+                <div class="admin-rules__control">
+                  <%= f.number_field :max_item_price,
+                      step: "0.01",
+                      min: 0.01,
+                      max: Currency.convert_from_hkd(Item::MAX_PRICE_HKD, current_currency_code),
+                      value: admin_rule_price_value(@rule_college),
+                      class: "market-input" %>
+                </div>
+              </div>
+
+              <div class="admin-rules__row">
+                <div class="admin-rules__copy">
+                  <%= f.label :max_items_per_user, "Max number of items a user can post", class: "admin-rules__label" %>
+                  <p class="market-note">
+                    Active and reserved listings count toward this limit.
+                  </p>
+                </div>
+                <div class="admin-rules__control">
+                  <%= f.number_field :max_items_per_user,
+                      step: 1,
+                      min: 1,
+                      class: "market-input" %>
+                </div>
+              </div>
+
+              <%= f.submit "Save college rules", class: "market-button" %>
+            <% end %>
+          <% end %>
+        </div>
       </section>
     </div>
   </div>
