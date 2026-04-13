@@ -12786,6 +12786,25 @@ body a {
   font-size: 1.15rem;
 }
 
+.profile-show-page:not(.profile-show-page--dashboard) .profile-item-row__price-block--dashboard {
+  min-width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  justify-items: end;
+  align-self: center;
+}
+
+.profile-show-page:not(.profile-show-page--dashboard) .profile-item-row__price-block--dashboard .profile-item-row__price-value {
+  font-size: 1.24rem;
+  font-weight: 650;
+}
+
+.profile-show-page:not(.profile-show-page--dashboard) .profile-item-row__title-line .profile-item-row__title {
+  font-size: 1.42rem;
+}
+
 .profile-show-page--dashboard .profile-item-row__action-bar--pin-side {
   justify-content: flex-end;
   align-self: end;

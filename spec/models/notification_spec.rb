@@ -12,4 +12,30 @@ RSpec.describe Notification, type: :model do
     expect(Notification.unread).to include(unread)
     expect(Notification.unread.where(recipient: seller).count).to be >= 1
   end
+
+  it "broadcasts a live notification payload to the recipient stream" do
+    recipient = create_user(email: "live_notif_recipient@cuhk.edu.hk")
+    actor = create_user(email: "live_notif_actor@cuhk.edu.hk")
+    item = create_item(user: recipient, title: "Desk Lamp")
+
+    expected_message = "#{actor.display_name} completed the transaction for Desk Lamp."
+
+    expect {
+      Notification.create!(
+        recipient:,
+        actor:,
+        notifiable: item,
+        action: "offer_completed"
+      )
+    }.to have_broadcasted_to("notifications_user_#{recipient.id}").with(
+      hash_including(
+        action: "offer_completed",
+        actor_name: actor.display_name,
+        item_name: "Desk Lamp",
+        offer_price_hkd: nil,
+        message: expected_message,
+        count: 1
+      )
+    )
+  end
 end

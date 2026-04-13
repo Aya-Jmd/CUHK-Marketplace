@@ -47,10 +47,6 @@
             <p class="market-page__lede">
               Browse the items this seller currently has available on the CUHK marketplace.
             </p>
-
-            <div class="market-page__actions">
-              <%= link_to "Back to marketplace", items_path(marketplace_base_params), class: "market-button market-button--light" %>
-            </div>
           </div>
 
           <aside class="profile-show__hero-panel">
@@ -147,8 +143,7 @@
                         </div>
                       </div>
 
-                      <div class="profile-item-row__price-block">
-                        <p class="profile-item-row__price-label">Price</p>
+                      <div class="profile-item-row__price-block profile-item-row__price-block--dashboard">
                         <strong class="profile-item-row__price-value"><%= display_price(item.price) %></strong>
                       </div>
                     </div>
