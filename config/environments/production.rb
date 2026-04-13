@@ -23,14 +23,10 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Use S3-compatible object storage in production when configured, since local
-  # disk files are not durable across Heroku dyno restarts.
-  config.active_storage.service =
-    if ENV["AWS_BUCKET"].present?
-      :amazon
-    else
-      :local
-    end
+  # Store uploaded files on the local file system. On Heroku this is ephemeral,
+  # so files may disappear after dyno restarts until a durable storage service
+  # is configured.
+  config.active_storage.service = :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
