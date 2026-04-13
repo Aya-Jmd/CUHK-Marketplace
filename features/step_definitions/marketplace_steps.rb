@@ -1,5 +1,8 @@
 Given("a college named {string}") do |name|
-  College.find_or_create_by!(name:)
+  College.find_or_create_by!(name:) do |college|
+    college.slug = name.parameterize
+    college.listing_expiry_days = 30
+  end
 end
 
 Given("a user exists with email {string} in college {string}") do |email, college_name|

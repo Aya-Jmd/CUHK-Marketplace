@@ -1,7 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "Item reports", type: :request do
-  let!(:college) { College.find_or_create_by!(name: "Shaw College") { |c| c.listing_expiry_days = 30 } }
+  let!(:college) do
+    College.find_or_create_by!(name: "Shaw College") do |college|
+      college.slug = "shaw-college"
+      college.listing_expiry_days = 30
+    end
+  end
   let!(:category) { Category.find_or_create_by!(name: "Textbook") }
   let(:expected_reviewer_ids) { User.admin.or(User.college_admin.where(college_id: college.id)).distinct.pluck(:id) }
   let!(:seller) do

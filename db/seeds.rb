@@ -15,7 +15,10 @@ colleges = [
 ]
 
 colleges.each do |college_name|
-  College.find_or_create_by!(name: college_name, listing_expiry_days: 30)
+  College.find_or_create_by!(name: college_name) do |college|
+    college.slug = college_name.parameterize
+    college.listing_expiry_days = 30
+  end
 end
 
 puts "Done! #{College.count} colleges are now in the database."

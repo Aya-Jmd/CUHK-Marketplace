@@ -116,7 +116,7 @@ module ApplicationHelper
   end
 
   def theme_slug_for_college(college)
-    slug = college_slug(college)
+    slug = normalized_theme_slug(college_slug(college))
     return slug if MARKETPLACE_COLLEGE_SLUGS.include?(slug)
 
     "global"
@@ -125,7 +125,11 @@ module ApplicationHelper
   def college_slug(college)
     return if college.blank?
 
-    college.try(:slug).presence || college.name.to_s.parameterize.delete_suffix("-college")
+    college.try(:slug).presence || college.name.to_s.parameterize
+  end
+
+  def normalized_theme_slug(slug)
+    slug.to_s.delete_suffix("-college")
   end
 
   def marketplace_hero_title

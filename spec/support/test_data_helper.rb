@@ -20,7 +20,10 @@ module TestDataHelper
   end
 
   def create_college(name: "Shaw")
-    College.find_or_create_by!(name:)
+    College.find_or_create_by!(name:) do |college|
+      college.slug = name.parameterize
+      college.listing_expiry_days = 30
+    end
   end
 
   def create_user(email:, college: nil, role: :student, password: "password")

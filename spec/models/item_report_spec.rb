@@ -18,10 +18,11 @@ RSpec.describe ItemReport, type: :model do
     college_admin = create_user(email: "report_college_admin@cuhk.edu.hk", college:, role: :college_admin)
     item = create_item(user: seller, title: "Reported Listing", college:)
     report = ItemReport.create!(item:, reporter:, message: "This listing breaks the rules.")
+    reviewer_ids = User.admin.or(User.college_admin.where(college_id: college.id)).distinct.pluck(:id)
 
     created_notifications = Notification.where(action: "item_report_created", notifiable: report)
 
-    expect(created_notifications.pluck(:recipient_id)).to match_array([ admin.id, college_admin.id ])
+    expect(created_notifications.pluck(:recipient_id)).to match_array(reviewer_ids)
 
     report.resolve!(resolver: admin, resolution: :ignored)
 
@@ -30,7 +31,7 @@ RSpec.describe ItemReport, type: :model do
     expect(report.reload).to be_ignored
     expect(report.resolved_by).to eq(admin)
     expect(created_notifications.pluck(:read_at)).to all(be_present)
-    expect(resolved_notifications.pluck(:recipient_id)).to match_array([ admin.id, college_admin.id ])
+    expect(resolved_notifications.pluck(:recipient_id)).to match_array(reviewer_ids)
   end
 
   it "rejects pending as a resolution target" do
