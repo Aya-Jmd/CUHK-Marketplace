@@ -1,6 +1,5 @@
 require "active_support/core_ext/integer/time"
 require "solid_cache"
-require "solid_queue"
 require "solid_cable"
 
 Rails.application.configure do
@@ -24,8 +23,14 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Use S3-compatible object storage in production when configured, since local
+  # disk files are not durable across Heroku dyno restarts.
+  config.active_storage.service =
+    if ENV["AWS_BUCKET"].present?
+      :amazon
+    else
+      :local
+    end
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -52,9 +57,14 @@ Rails.application.configure do
   # Replace the default in-process memory cache store with a durable alternative.
   config.cache_store = :solid_cache_store
 
-  # Replace the default in-process and non-durable queuing backend for Active Job.
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  # Default to the built-in async adapter in production unless Solid Queue is
+  # explicitly enabled with a matching worker/process setup.
+  config.active_job.queue_adapter = ENV.fetch("ACTIVE_JOB_QUEUE_ADAPTER", "async").to_sym
+
+  if config.active_job.queue_adapter == :solid_queue
+    require "solid_queue"
+    config.solid_queue.connects_to = { database: { writing: :queue } }
+  end
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
