@@ -101,28 +101,14 @@ export default class extends Controller {
     this.minInputTarget.value = min.toFixed(2)
     this.maxInputTarget.value = max.toFixed(2)
     this.labelTarget.textContent =
-      this.currencyFormatter().format(this.readableDisplayValue(min)) +
+      this.currencyFormatter().format(min) +
       " - " +
-      this.currencyFormatter().format(this.readableDisplayValue(max))
+      this.currencyFormatter().format(max)
   }
 
   numberOrFallback(value, fallback) {
     const parsed = Number(value)
     return Number.isFinite(parsed) ? parsed : fallback
-  }
-
-  readableDisplayValue(value) {
-    if (value <= 0) return 0
-
-    if (value >= 1000) {
-      return Math.ceil(value / 10) * 10
-    }
-
-    if (value >= 100) {
-      return Math.ceil(value / 5) * 5
-    }
-
-    return Math.ceil(value)
   }
 
   currencyFormatter() {

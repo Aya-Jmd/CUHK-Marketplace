@@ -37,6 +37,32 @@ RSpec.describe "Favorites", type: :request do
     expect(response).to redirect_to(items_path)
   end
 
+  it "does not let a seller favorite their own item" do
+    seller = create_user(email: "favorite_own_seller@cuhk.edu.hk")
+    item = create_item(user: seller, title: "My Own Lamp")
+
+    sign_in seller
+
+    expect do
+      post item_favorite_path(item)
+    end.not_to change(Favorite, :count)
+
+    expect(response).to redirect_to(item_path(item))
+    expect(flash[:alert]).to eq("You cannot favorite your own item.")
+  end
+
+  it "does not render the favorite button on a seller's own item page" do
+    seller = create_user(email: "favorite_self_view_seller@cuhk.edu.hk")
+    item = create_item(user: seller, title: "Seller Owned Lamp")
+
+    sign_in seller
+    get item_path(item)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).not_to include("favorite_button_item_show_item_#{item.id}")
+    expect(response.body).not_to include("favorite-toggle")
+  end
+
   it "shows only available favorites on the dashboard" do
     seller = create_user(email: "dashboard_favorite_seller@cuhk.edu.hk")
     buyer = create_user(email: "dashboard_favorite_buyer@cuhk.edu.hk")

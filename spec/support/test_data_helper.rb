@@ -23,12 +23,15 @@ module TestDataHelper
     College.find_or_create_by!(name:) do |college|
       college.slug = name.parameterize
       college.listing_expiry_days = 30
+      college.max_items_per_user = College::DEFAULT_MAX_ITEMS_PER_USER
+      college.max_item_price = College::DEFAULT_MAX_ITEM_PRICE_HKD
     end
   end
 
-  def create_user(email:, college: nil, role: :student, password: "password")
+  def create_user(email:, college: nil, role: :student, password: "password", pseudo: nil)
     User.create!(
       email:,
+      pseudo: pseudo || User.pseudo_from_email(email),
       password:,
       password_confirmation: password,
       college: college || create_college,

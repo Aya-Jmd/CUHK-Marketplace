@@ -15,7 +15,7 @@
     <div class="chat-page__thread-heading">
       <strong class="chat-page__thread-name"><%= other_user.display_name %></strong>
       <span class="chat-page__thread-name-divider" aria-hidden="true">|</span>
-      <span class="chat-page__thread-item-inline"><%= conversation.item.title %></span>
+      <span class="chat-page__thread-item-inline" title="<%= conversation.item.title %>"><%= conversation.item.title %></span>
     </div>
     <% if last_message.present? %>
       <span class="chat-page__thread-time"><%= last_message.created_at.strftime("%H:%M") %></span>

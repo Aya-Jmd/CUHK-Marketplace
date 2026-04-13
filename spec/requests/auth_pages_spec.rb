@@ -24,6 +24,8 @@ RSpec.describe "Authentication pages", type: :request do
     expect(document.at_css(".site-footer")).not_to be_present
     expect(document.css(".auth-shell__item").size).to be >= 4
     expect(response.body).to include("Create your account")
+    expect(response.body).to include("Username")
+    expect(response.body).not_to include("Display name")
   end
 
   it "persists the default campus location during sign up" do
@@ -33,6 +35,7 @@ RSpec.describe "Authentication pages", type: :request do
       post user_registration_path, params: {
         user: {
           email: "signup_location_user@cuhk.edu.hk",
+          pseudo: "signup_user",
           password: "password123",
           password_confirmation: "password123",
           college_id: college.id,
@@ -57,6 +60,7 @@ RSpec.describe "Authentication pages", type: :request do
       post user_registration_path, params: {
         user: {
           email: "signup_college_default_user@cuhk.edu.hk",
+          pseudo: "signup_user_2",
           password: "password123",
           password_confirmation: "password123",
           college_id: college.id,
@@ -90,5 +94,43 @@ RSpec.describe "Authentication pages", type: :request do
 
     expect(response).to redirect_to(root_path)
     expect(user.reload.college_id).to eq(old_college.id)
+  end
+
+  it "requires a pseudo during sign up" do
+    college = create_college(name: "New Asia")
+
+    expect do
+      post user_registration_path, params: {
+        user: {
+          email: "signup_missing_pseudo@cuhk.edu.hk",
+          pseudo: "",
+          password: "password123",
+          password_confirmation: "password123",
+          college_id: college.id
+        }
+      }
+    end.not_to change(User, :count)
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(CGI.unescapeHTML(response.body)).to include("Pseudo can't be blank")
+  end
+
+  it "rejects inappropriate pseudos during sign up" do
+    college = create_college(name: "United College")
+
+    expect do
+      post user_registration_path, params: {
+        user: {
+          email: "signup_bad_pseudo@cuhk.edu.hk",
+          pseudo: "shit",
+          password: "password123",
+          password_confirmation: "password123",
+          college_id: college.id
+        }
+      }
+    end.not_to change(User, :count)
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response.body).to include(User::INAPPROPRIATE_PSEUDO_MESSAGE)
   end
 end

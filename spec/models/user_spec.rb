@@ -4,12 +4,14 @@ RSpec.describe User, type: :model do
   it "requires a college for students but not for admins" do
     student = User.new(
       email: "student_without_college@cuhk.edu.hk",
+      pseudo: "student",
       password: "password123",
       password_confirmation: "password123",
       role: :student
     )
     admin = User.new(
       email: "admin_without_college@cuhk.edu.hk",
+      pseudo: "admin",
       password: "password123",
       password_confirmation: "password123",
       role: :admin
@@ -41,9 +43,9 @@ RSpec.describe User, type: :model do
   end
 
   it "formats display and location helpers" do
-    user = create_user(email: "display_name_user@cuhk.edu.hk")
+    user = create_user(email: "display_user@cuhk.edu.hk")
 
-    expect(user.display_name).to eq("display_name_user")
+    expect(user.display_name).to eq("display_user")
     expect(user.has_location?).to be(false)
     expect(user.location_display_name).to eq("Location not set")
     expect(user.location_coordinates).to be_nil
@@ -53,6 +55,20 @@ RSpec.describe User, type: :model do
     expect(user.has_location?).to be(true)
     expect(user.location_display_name).to eq("New Asia")
     expect(user.location_coordinates).to eq({ lat: 22.4188, lng: 114.2078 })
+  end
+
+  it "rejects pseudos longer than fifteen characters" do
+    user = build_user_with_pseudo("this_display_name_is_too_long")
+
+    expect(user).not_to be_valid
+    expect(user.errors[:pseudo]).to include("is too long (maximum is 15 characters)")
+  end
+
+  it "rejects inappropriate pseudos" do
+    user = build_user_with_pseudo("fuck")
+
+    expect(user).not_to be_valid
+    expect(user.errors[:pseudo]).to include(User::INAPPROPRIATE_PSEUDO_MESSAGE)
   end
 
   it "sets a saved campus location when the key is known" do
@@ -77,6 +93,7 @@ RSpec.describe User, type: :model do
     inviter = create_user(email: "user_spec_inviter@cuhk.edu.hk", role: :admin)
     invitee = User.new(
       email: "user_spec_invitee@cuhk.edu.hk",
+      pseudo: "invitee",
       password: "ABCDEFGH",
       password_confirmation: "ABCDEFGH",
       role: :college_admin,
@@ -94,5 +111,16 @@ RSpec.describe User, type: :model do
     invitee.update!(setup_completed: true)
 
     expect(invitee.reload.invite_pin_ciphertext).to be_nil
+  end
+
+  def build_user_with_pseudo(pseudo)
+    User.new(
+      email: "pseudo_test_user@cuhk.edu.hk",
+      pseudo: pseudo,
+      password: "password123",
+      password_confirmation: "password123",
+      role: :student,
+      college: create_college(name: "Pseudo College")
+    )
   end
 end

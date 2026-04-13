@@ -15,7 +15,11 @@
 
   <div class="market-form-field">
     <%= form.label :title, "Title" %>
-    <%= form.text_field :title, class: "market-input", placeholder: "What are you selling?" %>
+    <%= form.text_field :title,
+        maxlength: Item::MAX_TITLE_LENGTH,
+        class: "market-input",
+        placeholder: "What are you selling?" %>
+    <p class="market-note">Maximum title length: <%= Item::MAX_TITLE_LENGTH %> characters.</p>
   </div>
 
   <div class="market-form-field">
@@ -43,13 +47,13 @@
   <div class="listing-form__grid">
     <div class="market-form-field">
       <%= form.label :category_id, "Category" %>
-      <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, { prompt: "Choose a category..." }, { class: "profile-form__select" } %>
+      <%= form.collection_select :category_id, Category.sorted_for_dropdown, :id, :name, { prompt: "Choose a category..." }, { class: "profile-form__select", data: { controller: "enhanced-select" } } %>
     </div>
 
     <% if current_user.admin? %>
       <div class="market-form-field">
         <%= form.label :college_id, "College" %>
-        <%= form.collection_select :college_id, College.order(:name), :id, :name, { prompt: "Choose a college..." }, { class: "profile-form__select" } %>
+        <%= form.collection_select :college_id, College.order(:name), :id, :name, { prompt: "Choose a college..." }, { class: "profile-form__select", data: { controller: "enhanced-select" } } %>
       </div>
     <% end %>
   </div>

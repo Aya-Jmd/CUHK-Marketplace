@@ -50,6 +50,25 @@ RSpec.describe "Chat and Profiles", type: :request do
     expect(document.at_css(".chat-page__custom-scrollbar-thumb[data-chat-scroll-target='thumb']")).to be_present
   end
 
+  it "renders the username and full item title separately in the conversation thread heading" do
+    seller = create_user(email: "chat_layout_seller@cuhk.edu.hk", pseudo: "sellername")
+    buyer = create_user(email: "chat_layout_buyer@cuhk.edu.hk")
+    item = create_item(user: seller, title: "A very long listing title that should truncate in the UI")
+    conversation = Conversation.create!(item:, buyer:, seller:)
+    conversation.messages.create!(user: seller, content: "Still available")
+
+    sign_in buyer
+    get conversations_path(conversation_id: conversation.id)
+
+    document = Nokogiri::HTML.parse(response.body)
+    thread = document.at_css("##{ActionView::RecordIdentifier.dom_id(conversation, :thread)}")
+
+    expect(response).to have_http_status(:ok)
+    expect(thread.at_css(".chat-page__thread-name")&.text).to eq("sellername")
+    expect(thread.at_css(".chat-page__thread-item-inline")&.text).to eq(item.title)
+    expect(thread.at_css(".chat-page__thread-item-inline")&.[]("title")).to eq(item.title)
+  end
+
   it "updates current user profile location without letting them change college" do
     college_a = create_college(name: "Shaw")
     college_b = create_college(name: "Morningside")
@@ -61,6 +80,54 @@ RSpec.describe "Chat and Profiles", type: :request do
     expect(response).to redirect_to(profile_path)
     expect(user.reload.college_id).to eq(college_a.id)
     expect(user.default_location).to eq("new_asia")
+  end
+
+  it "updates the current user pseudo from the profile page" do
+    user = create_user(email: "profile_rename@cuhk.edu.hk", pseudo: "oldname")
+
+    sign_in user
+    patch profile_path, params: { user: { pseudo: "newname" } }
+
+    expect(response).to redirect_to(profile_path)
+    expect(user.reload.pseudo).to eq("newname")
+  end
+
+  it "renders the username editor in read mode by default with the current pseudo prefilled" do
+    user = create_user(email: "profile_inline_form@cuhk.edu.hk", pseudo: "oldname")
+
+    sign_in user
+    get profile_path
+
+    document = Nokogiri::HTML.parse(response.body)
+    username_editor = document.at_css(".profile-inline-edit")
+    read_row = username_editor.at_css(".profile-inline-edit__read-row")
+    edit_row = username_editor.at_css(".profile-inline-edit__edit-row")
+    pseudo_input = username_editor.at_css("input[name='user[pseudo]']")
+
+    expect(response).to have_http_status(:ok)
+    expect(username_editor.css("form.profile-inline-edit__form").size).to eq(1)
+    expect(read_row).to be_present
+    expect(read_row["hidden"]).to be_nil
+    expect(read_row.text).to include("oldname")
+    expect(edit_row).to be_present
+    expect(edit_row["hidden"]).not_to be_nil
+    expect(pseudo_input).to be_present
+    expect(pseudo_input["value"]).to eq("oldname")
+  end
+
+  it "rejects an inappropriate pseudo from the profile page" do
+    user = create_user(email: "profile_bad_name@cuhk.edu.hk", pseudo: "cleanname")
+
+    sign_in user
+    patch profile_path, params: { user: { pseudo: "fuck" } }
+    document = Nokogiri::HTML.parse(response.body)
+    username_editor = document.at_css(".profile-inline-edit")
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(user.reload.pseudo).to eq("cleanname")
+    expect(response.body).to include(User::INAPPROPRIATE_PSEUDO_MESSAGE)
+    expect(username_editor.at_css(".profile-inline-edit__read-row")["hidden"]).not_to be_nil
+    expect(username_editor.at_css(".profile-inline-edit__edit-row")["hidden"]).to be_nil
   end
 
   it "renders a seller profile for guests" do

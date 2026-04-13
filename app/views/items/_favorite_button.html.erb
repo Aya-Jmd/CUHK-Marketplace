@@ -1,8 +1,9 @@
 <% favorite_context = normalized_favorite_context(local_assigns[:favorite_context]) %>
 <% favorited = favorited_item?(item) %>
+<% can_toggle_favorite = favoriteable_item?(item) %>
 
 <%= turbo_frame_tag favorite_button_dom_id(item, favorite_context), class: "favorite-toggle__frame" do %>
-  <% if user_signed_in? %>
+  <% if can_toggle_favorite %>
     <%= button_to item_favorite_path(item),
         method: (favorited ? :delete : :post),
         params: { context: favorite_context },
@@ -15,6 +16,14 @@
         </svg>
       </span>
     <% end %>
+  <% elsif user_signed_in? %>
+    <span class="favorite-toggle favorite-toggle--disabled" aria-hidden="true">
+      <span class="favorite-toggle__icon">
+        <svg class="favorite-toggle__heart" viewBox="0 0 24 24" fill="none">
+          <path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54Z" />
+        </svg>
+      </span>
+    </span>
   <% else %>
     <%= link_to new_user_session_path,
         class: "favorite-toggle",

@@ -57,9 +57,11 @@
         </section>
 
         <section class="item-show__surface item-show__media-card">
-          <div class="item-show__favorite">
-            <%= render "items/favorite_button", item: @item, favorite_context: "item_show" %>
-          </div>
+          <% unless user_signed_in? && @item.user_id == current_user.id %>
+            <div class="item-show__favorite">
+              <%= render "items/favorite_button", item: @item, favorite_context: "item_show" %>
+            </div>
+          <% end %>
 
           <% if @item.images.attached? %>
             <div class="item-show__gallery" data-controller="gallery">

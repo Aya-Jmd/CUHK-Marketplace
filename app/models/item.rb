@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   MAX_PRICE_HKD = 9_999_999
+  MAX_TITLE_LENGTH = 100
   MAX_DESCRIPTION_LENGTH = 1000
 
   belongs_to :user
@@ -15,6 +16,7 @@ class Item < ApplicationRecord
   has_many_attached :images
 
   validates :title, :price, presence: true
+  validates :title, length: { maximum: MAX_TITLE_LENGTH }
   validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
   validates :price, numericality: {
     greater_than: 0,

@@ -1,6 +1,30 @@
 class User < ApplicationRecord
   ADMIN_INVITE_PIN_LENGTH = 8
   ADMIN_INVITE_PIN_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".freeze
+  PSEUDO_MAX_LENGTH = 15
+  INAPPROPRIATE_PSEUDO_MESSAGE = "Inappropriate name choice, choose another one.".freeze
+  BLOCKED_PSEUDO_TERMS = %w[
+    asshole
+    bastard
+    bitch
+    blowjob
+    clit
+    cock
+    cunt
+    dick
+    fuck
+    motherfucker
+    nigga
+    nigger
+    penis
+    pussy
+    rape
+    rapist
+    shit
+    slut
+    vagina
+    whore
+  ].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -22,6 +46,8 @@ class User < ApplicationRecord
   has_many :invited_admins, class_name: "User", foreign_key: :invited_by_id, inverse_of: :invited_by
 
   validates :college, presence: true, unless: :admin?
+  validates :pseudo, presence: true, length: { maximum: PSEUDO_MAX_LENGTH }
+  validate :pseudo_must_be_appropriate
 
   scope :active, -> { where(banned_at: nil) }
   scope :banned, -> { where.not(banned_at: nil) }
@@ -33,6 +59,7 @@ class User < ApplicationRecord
   end
 
   before_save :clear_admin_invite_pin, if: :setup_completed?
+  before_validation :normalize_pseudo
 
   def banned?
     banned_at.present?
@@ -55,7 +82,7 @@ class User < ApplicationRecord
   end
 
   def display_name
-    email.to_s.split("@").first
+    pseudo
   end
 
   def has_location?
@@ -101,6 +128,12 @@ class User < ApplicationRecord
     end.join
   end
 
+  def self.pseudo_from_email(email)
+    local_part = email.to_s.split("@").first.to_s.strip
+    local_part = "user" if local_part.blank?
+    local_part.first(PSEUDO_MAX_LENGTH)
+  end
+
   def self.admin_invite_pin_encryptor
     @admin_invite_pin_encryptor ||= begin
       key = Rails.application.key_generator.generate_key("admin invite setup pin", ActiveSupport::MessageEncryptor.key_len)
@@ -133,6 +166,28 @@ class User < ApplicationRecord
   end
 
   private
+
+  def normalize_pseudo
+    self.pseudo = pseudo.to_s.strip.presence
+  end
+
+  def pseudo_must_be_appropriate
+    return if pseudo.blank?
+    return unless blocked_pseudo?
+
+    errors.add(:pseudo, INAPPROPRIATE_PSEUDO_MESSAGE)
+  end
+
+  def blocked_pseudo?
+    normalized_words = pseudo.downcase.scan(/[a-z0-9]+/)
+    return false if normalized_words.empty?
+
+    compact_pseudo = normalized_words.join
+
+    BLOCKED_PSEUDO_TERMS.any? do |term|
+      normalized_words.include?(term) || compact_pseudo == term
+    end
+  end
 
   def clear_admin_invite_pin
     self.invite_pin_ciphertext = nil

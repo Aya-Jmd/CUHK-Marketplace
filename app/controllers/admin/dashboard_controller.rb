@@ -39,6 +39,7 @@ class Admin::DashboardController < Admin::BaseController
 
     @new_admin = User.new(
       email: invite_params[:email],
+      pseudo: User.pseudo_from_email(invite_params[:email]),
       role: role_to_invite,
       college_id: assigned_college_id,
       password: setup_pin,

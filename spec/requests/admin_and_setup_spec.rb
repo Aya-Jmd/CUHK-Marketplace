@@ -244,8 +244,28 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(response.body).to include("College Management")
     expect(response.body).to include("College rules")
     expect(selector).to be_present
-    expect(selector.at_css("option[selected]")["value"]).to eq(first_college.id.to_s)
+    expect(selector.at_css("option[selected]")["value"]).to eq(College.order(:id).first.id.to_s)
     expect(selector.text).to include(second_college.name)
+  end
+
+  it "renders invite and rules inputs with the updated admin constraints" do
+    create_college(name: "Rules Constraints College")
+    super_admin = create_user(email: "rules_constraints_super_admin@cuhk.edu.hk", role: :admin)
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    get admin_root_path
+
+    document = Nokogiri::HTML.parse(response.body)
+    invite_form = document.at_css("form.admin-dashboard__invite-form--flush")
+    price_input = document.at_css("input[name='college[max_item_price]']")
+    count_input = document.at_css("input[name='college[max_items_per_user]']")
+
+    expect(response).to have_http_status(:ok)
+    expect(invite_form).to be_present
+    expect(price_input["onkeydown"]).to include("Subtract")
+    expect(count_input["onkeydown"]).to include("Subtract")
+    expect(count_input["max"]).to eq("100")
   end
 
   it "lets a super admin update the rules for the selected college" do

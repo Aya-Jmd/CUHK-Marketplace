@@ -14,6 +14,7 @@
       <%= select_tag :college_scope_id,
           options_for_select(marketplace_scope_select_options, params[:college_scope_id]),
           class: "site-header__scope-select",
+          data: { controller: "enhanced-select" },
           onchange: "this.form.requestSubmit()" %>
     <% end %>
   </div>

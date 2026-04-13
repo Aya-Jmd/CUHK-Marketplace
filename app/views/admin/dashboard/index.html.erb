@@ -84,7 +84,7 @@
           </div>
         </div>
 
-        <%= form_with model: @new_admin, url: admin_invite_path, local: true, class: "admin-form admin-dashboard__invite-form" do |f| %>
+        <%= form_with model: @new_admin, url: admin_invite_path, local: true, class: "admin-form admin-dashboard__invite-form admin-dashboard__invite-form--flush" do |f| %>
           <% if current_user.admin? && @rule_college.present? %>
             <%= hidden_field_tag :rule_college_id, @rule_college.id %>
           <% end %>
@@ -96,7 +96,7 @@
 
           <div class="listing-form__field">
             <%= f.label :role, "Admin scope" %>
-            <select name="user[role]" id="user_role" class="listing-form__select">
+            <select name="user[role]" id="user_role" class="listing-form__select" data-controller="enhanced-select">
               <% if current_user.admin? %>
                 <option value="admin">Super Admin</option>
               <% end %>
@@ -107,7 +107,7 @@
           <% if current_user.admin? %>
             <div class="listing-form__field">
               <%= f.label :college_id, "Assign to college" %>
-              <%= f.collection_select :college_id, @colleges, :id, :name, { prompt: "Select a college..." }, class: "listing-form__select" %>
+              <%= f.collection_select :college_id, @colleges, :id, :name, { prompt: "Select a college..." }, { class: "listing-form__select", data: { controller: "enhanced-select" } } %>
             </div>
           <% end %>
 
@@ -288,6 +288,7 @@
                   <%= select_tag :rule_college_id,
                       options_from_collection_for_select(@rule_college_options, :id, :name, @rule_college.id),
                       class: "listing-form__select",
+                      data: { controller: "enhanced-select" },
                       onchange: "this.form.requestSubmit()" %>
                 </div>
               <% end %>
@@ -311,6 +312,7 @@
                       min: 0.01,
                       max: Currency.convert_from_hkd(Item::MAX_PRICE_HKD, current_currency_code),
                       value: admin_rule_price_value(@rule_college),
+                      onkeydown: "return !['-','Subtract'].includes(event.key)",
                       class: "market-input" %>
                 </div>
               </div>
@@ -326,6 +328,8 @@
                   <%= f.number_field :max_items_per_user,
                       step: 1,
                       min: 1,
+                      max: College::DEFAULT_MAX_ITEMS_PER_USER,
+                      onkeydown: "return !['-','Subtract'].includes(event.key)",
                       class: "market-input" %>
                 </div>
               </div>

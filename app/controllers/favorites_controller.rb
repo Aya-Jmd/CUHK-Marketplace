@@ -8,6 +8,11 @@ class FavoritesController < ApplicationController
       return
     end
 
+    if @item.user_id == current_user.id
+      redirect_back fallback_location: item_path(@item), alert: "You cannot favorite your own item."
+      return
+    end
+
     current_user.favorites.create_or_find_by!(item: @item)
     respond_to_toggle("Added to favorites.")
   end

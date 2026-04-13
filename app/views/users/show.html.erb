@@ -70,7 +70,7 @@
         <div class="market-section-heading profile-show__section-heading">
           <div>
             <p class="market-section-eyebrow"><%= profile_owner ? "Selling" : "Seller inventory" %></p>
-            <h2 class="market-section-title"><%= profile_owner ? "Incoming offers and transactions" : "Available listings" %></h2>
+            <h2 class="market-section-title"><%= profile_owner ? "Items in a transaction" : "Available listings" %></h2>
             <p class="market-note">
               <%= profile_owner ? "Track offer responses and active meetups for the listings that already have buyer activity." : "Only items that are currently visible on the marketplace are shown here." %>
             </p>
@@ -310,7 +310,7 @@
           <div class="market-section-heading profile-show__section-heading">
             <div>
               <p class="market-section-eyebrow">Live listings</p>
-              <h2 class="market-section-title">Items currently on the marketplace</h2>
+              <h2 class="market-section-title">Items awaiting offers</h2>
               <p class="market-note">
                 These listings are still live and waiting for their first buyer.
               </p>

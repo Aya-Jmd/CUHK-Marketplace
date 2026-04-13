@@ -1,4 +1,6 @@
 <% content_for :title, "My Profile" %>
+<% saved_pseudo = @user.pseudo_in_database || @user.display_name %>
+<% pseudo_has_errors = @user.errors[:pseudo].any? %>
 
 <div class="market-page market-page--soft profile-edit-page">
   <section class="market-page__hero profile-edit-page__hero">
@@ -25,9 +27,58 @@
         </div>
 
         <dl class="market-data-list">
-          <div>
-            <dt>Display name</dt>
-            <dd><%= @user.display_name %></dd>
+          <div class="profile-inline-edit"
+               data-controller="inline-edit"
+               data-inline-edit-open-value="<%= pseudo_has_errors %>"
+               data-inline-edit-original-value="<%= saved_pseudo %>">
+            <dt>Username</dt>
+            <dd class="profile-inline-edit__detail">
+              <%= form_with model: @user, url: profile_path, method: :patch, local: true, class: "profile-inline-edit__form" do |f| %>
+                <div class="profile-inline-edit__row">
+                  <div class="profile-inline-edit__read-row"
+                       data-inline-edit-target="readView"
+                       <%= "hidden" if pseudo_has_errors %>>
+                    <span class="profile-inline-edit__value">
+                      <%= saved_pseudo %>
+                    </span>
+                    <button type="button"
+                            class="market-button market-button--compact profile-inline-edit__trigger"
+                            data-action="inline-edit#open">
+                      Edit
+                    </button>
+                  </div>
+
+                  <div class="profile-inline-edit__edit-row"
+                       data-inline-edit-target="editView"
+                       <%= "hidden" unless pseudo_has_errors %>>
+                    <%= f.text_field :pseudo,
+                                     value: @user.pseudo.presence || saved_pseudo,
+                                     maxlength: User::PSEUDO_MAX_LENGTH,
+                                     required: true,
+                                     autocomplete: "nickname",
+                                     class: "market-input profile-inline-edit__input",
+                                     data: { inline_edit_target: "input", action: "keydown.esc->inline-edit#close" } %>
+                    <div class="profile-inline-edit__actions">
+                      <%= f.submit "Save",
+                                   class: "market-button market-button--compact" %>
+                      <button type="button"
+                              class="market-button market-button--secondary market-button--compact"
+                              data-action="inline-edit#close">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p class="market-note profile-inline-edit__hint"
+                   data-inline-edit-target="hint"
+                   <%= "hidden" unless pseudo_has_errors %>>
+                  Required, 15 characters maximum.
+                </p>
+                <% if pseudo_has_errors %>
+                  <p class="profile-inline-edit__error" data-inline-edit-target="error"><%= @user.errors[:pseudo].first %></p>
+                <% end %>
+              <% end %>
+            </dd>
           </div>
           <div>
             <dt>Email</dt>

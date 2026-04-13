@@ -1,6 +1,7 @@
 module ItemsHelper
   def favorited_item?(item)
     return false unless user_signed_in?
+    return false if item.user_id == current_user.id
 
     ids = @favorited_item_ids
     return current_user.favorites.exists?(item_id: item.id) if ids.nil?
@@ -10,6 +11,10 @@ module ItemsHelper
 
   def favorite_button_dom_id(item, context = "market_card")
     dom_id(item, :"favorite_button_#{normalized_favorite_context(context)}")
+  end
+
+  def favoriteable_item?(item)
+    user_signed_in? && item.user_id != current_user.id
   end
 
   def normalized_favorite_context(context)

@@ -62,7 +62,7 @@ class DashboardsController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:default_location, :latitude, :longitude)
+    params.require(:user).permit(:pseudo, :default_location, :latitude, :longitude)
   end
 
   def selected_category_ids(categories)

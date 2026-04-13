@@ -15,15 +15,26 @@
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
-        <div class="auth-form__grid">
+        <div class="auth-form__grid auth-form__grid--triple">
           <div class="auth-form__field">
             <%= f.label :email %>
+            <span class="auth-form__hint auth-form__hint--placeholder" aria-hidden="true">&nbsp;</span>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "auth-form__input" %>
           </div>
 
           <div class="auth-form__field">
-            <%= f.label :college_id, "Your college" %>
-            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Choose a college..." }, class: "auth-form__select" %>
+            <%= f.label :pseudo, "Username" %>
+            <span class="auth-form__hint">Required, 15 characters maximum</span>
+            <%= f.text_field :pseudo, autocomplete: "username", maxlength: User::PSEUDO_MAX_LENGTH, required: true, class: "auth-form__input" %>
+            <% if resource.errors[:pseudo].any? %>
+              <p class="profile-inline-edit__error"><%= resource.errors[:pseudo].first %></p>
+            <% end %>
+          </div>
+
+          <div class="auth-form__field">
+            <%= f.label :college_id, "College" %>
+            <span class="auth-form__hint auth-form__hint--placeholder" aria-hidden="true">&nbsp;</span>
+            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Choose a college..." }, { class: "auth-form__select", data: { controller: "enhanced-select" } } %>
           </div>
         </div>
 
@@ -38,6 +49,7 @@
 
           <div class="auth-form__field">
             <%= f.label :password_confirmation %>
+            <span class="auth-form__hint auth-form__hint--placeholder" aria-hidden="true">&nbsp;</span>
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "auth-form__input" %>
           </div>
         </div>

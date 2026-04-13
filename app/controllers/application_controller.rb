@@ -18,8 +18,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    sign_up_keys = [ :college_id, :default_location, :latitude, :longitude ]
-    account_update_keys = [ :default_location, :latitude, :longitude ]
+    sign_up_keys = [ :pseudo, :college_id, :default_location, :latitude, :longitude ]
+    account_update_keys = [ :pseudo, :default_location, :latitude, :longitude ]
 
     devise_parameter_sanitizer.permit(:sign_up, keys: sign_up_keys)
     devise_parameter_sanitizer.permit(:account_update, keys: account_update_keys)

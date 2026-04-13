@@ -1,5 +1,5 @@
 class College < ApplicationRecord
-  DEFAULT_MAX_ITEMS_PER_USER = 30
+  DEFAULT_MAX_ITEMS_PER_USER = 100
   DEFAULT_MAX_ITEM_PRICE_HKD = Item::MAX_PRICE_HKD
 
   has_many :users
@@ -9,7 +9,11 @@ class College < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
-  validates :max_items_per_user, numericality: { only_integer: true, greater_than: 0 }
+  validates :max_items_per_user, numericality: {
+    only_integer: true,
+    greater_than: 0,
+    less_than_or_equal_to: DEFAULT_MAX_ITEMS_PER_USER
+  }
   validates :max_item_price, numericality: {
     greater_than: 0,
     less_than_or_equal_to: Item::MAX_PRICE_HKD

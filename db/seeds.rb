@@ -84,6 +84,7 @@ admin = User.find_or_initialize_by(email: admin_email)
 admin.assign_attributes(
   college: nil,
   role: :admin,
+  pseudo: User.pseudo_from_email(admin_email),
   password: admin_password,
   password_confirmation: admin_password,
   setup_completed: false

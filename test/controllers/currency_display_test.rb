@@ -9,6 +9,7 @@ class CurrencyDisplayTest < ActionDispatch::IntegrationTest
     @college = College.create!(name: "Engineering", listing_expiry_days: 30)
     @user = User.create!(
       email: "currency-display-#{suffix}@example.com",
+      pseudo: "currency#{suffix.first(6)}",
       password: "password123",
       password_confirmation: "password123",
       college: @college

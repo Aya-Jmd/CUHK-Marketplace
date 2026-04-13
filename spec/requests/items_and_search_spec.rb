@@ -148,6 +148,25 @@ RSpec.describe "Items and Search", type: :request do
       expect(document.text).to include("Your item's price is too high! It should be lower than HK$80.00.")
     end
 
+    it "rejects titles longer than the maximum length when creating an item" do
+      seller = create_user(email: "long_title_create_seller@cuhk.edu.hk")
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "a" * (Item::MAX_TITLE_LENGTH + 1),
+            price: 120,
+            description: "Too long title"
+          }
+        }
+      }.not_to change(Item, :count)
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to include("Title is too long (maximum is #{Item::MAX_TITLE_LENGTH} characters)")
+    end
+
     it "blocks direct item creation once the college posting limit is reached" do
       college = create_college(name: "Posting Limit College")
       college.update!(max_items_per_user: 1)
@@ -272,6 +291,26 @@ RSpec.describe "Items and Search", type: :request do
       expect(item.location_name).to eq("shaw")
       expect(item.latitude).to eq(22.4222)
       expect(item.longitude).to eq(114.2009)
+    end
+
+    it "rejects titles longer than the maximum length when updating an item" do
+      seller = create_user(email: "long_title_update_seller@cuhk.edu.hk")
+      item = create_item(user: seller, title: "Original Title")
+
+      sign_in seller
+
+      expect do
+        patch item_path(item), params: {
+          item: {
+            title: "a" * (Item::MAX_TITLE_LENGTH + 1),
+            price: 120,
+            description: "Updated description"
+          }
+        }
+      end.not_to change { item.reload.title }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to include("Title is too long (maximum is #{Item::MAX_TITLE_LENGTH} characters)")
     end
   end
 
@@ -430,6 +469,48 @@ RSpec.describe "Items and Search", type: :request do
       expect(slider).to be_present
       expect(slider["data-range-slider-max-value"].to_f).to eq(20.0)
       expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([0.0, 12.0, 20.0])
+    end
+
+    it "preserves decimal price steps for the slider instead of rounding them up" do
+      college = create_college(name: "S.H. Ho")
+      buyer = create_user(email: "search_decimal_steps@cuhk.edu.hk", college:)
+      seller = create_user(email: "search_decimal_step_seller@cuhk.edu.hk", college:)
+      books = Category.create!(name: "Decimal Books")
+
+      create_item(user: seller, title: "Annotated Notes", category: books, price: 124.9)
+      create_item(user: seller, title: "Bound Past Papers", category: books, price: 200)
+
+      sign_in buyer
+      get search_path, params: { category_id: books.id }
+
+      document = Nokogiri::HTML.parse(response.body)
+      slider = document.at_css("[data-controller='range-slider']")
+
+      expect(response).to have_http_status(:ok)
+      expect(slider).to be_present
+      expect(JSON.parse(slider["data-range-slider-steps-value"])).to eq([0.0, 124.9, 200.0])
+    end
+
+    it "filters search results with exact decimal price values" do
+      college = create_college(name: "Chung Chi")
+      buyer = create_user(email: "search_decimal_filter@cuhk.edu.hk", college:)
+      seller = create_user(email: "search_decimal_filter_seller@cuhk.edu.hk", college:)
+      books = Category.create!(name: "Decimal Filter Books")
+      rounded_down = create_item(user: seller, title: "Workbook 124.89", category: books, price: 124.89)
+      exact_match = create_item(user: seller, title: "Workbook 124.90", category: books, price: 124.9)
+      upper_bound = create_item(user: seller, title: "Workbook 200.00", category: books, price: 200)
+
+      sign_in buyer
+      get search_path, params: {
+        category_id: books.id,
+        min_price: "124.90",
+        max_price: "200.00",
+        price_currency: Currency::BASE_CODE
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(rounded_down.title)
+      expect(response.body).to include(exact_match.title, upper_bound.title)
     end
   end
 end

@@ -12,6 +12,7 @@ RSpec.describe "Item reports", type: :request do
   let!(:seller) do
     User.create!(
       email: "seller@example.com",
+      pseudo: "seller",
       password: "password123",
       password_confirmation: "password123",
       college: college
@@ -20,6 +21,7 @@ RSpec.describe "Item reports", type: :request do
   let!(:reporter) do
     User.create!(
       email: "reporter@example.com",
+      pseudo: "reporter",
       password: "password123",
       password_confirmation: "password123",
       college: college
@@ -28,6 +30,7 @@ RSpec.describe "Item reports", type: :request do
   let!(:admin) do
     User.create!(
       email: "item-reports-admin@example.com",
+      pseudo: "adminreport",
       password: "password123",
       password_confirmation: "password123",
       role: :admin,
@@ -37,6 +40,7 @@ RSpec.describe "Item reports", type: :request do
   let!(:college_admin) do
     User.create!(
       email: "college-admin@example.com",
+      pseudo: "collegeadmin",
       password: "password123",
       password_confirmation: "password123",
       role: :college_admin,

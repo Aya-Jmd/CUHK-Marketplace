@@ -8,6 +8,7 @@ end
 Given("a user exists with email {string} in college {string}") do |email, college_name|
   college = College.find_by!(name: college_name)
   User.find_or_create_by!(email:) do |user|
+    user.pseudo = User.pseudo_from_email(email)
     user.password = "password"
     user.password_confirmation = "password"
     user.college = college
@@ -17,6 +18,7 @@ end
 Given("an admin user {string} exists with role {string} in college {string} and setup {string}") do |email, role, college_name, setup|
   college = College.find_by!(name: college_name)
   user = User.find_or_initialize_by(email:)
+  user.pseudo ||= User.pseudo_from_email(email)
   user.password = "password"
   user.password_confirmation = "password"
   user.college = college
