@@ -50,9 +50,11 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new(college: default_item_college)
+    apply_default_pickup_location(@item)
   end
 
   def edit
+    apply_default_pickup_location(@item)
   end
 
   def create
@@ -60,6 +62,7 @@ class ItemsController < ApplicationController
 
     @item.user = current_user
     @item.college = current_user.college unless current_user.admin?
+    apply_default_pickup_location(@item)
     normalize_price_to_hkd(@item)
 
     respond_to do |format|
@@ -78,6 +81,7 @@ class ItemsController < ApplicationController
 
   def update
     @item.assign_attributes(item_params)
+    apply_default_pickup_location(@item)
     normalize_price_to_hkd(@item)
 
     respond_to do |format|
@@ -182,6 +186,21 @@ class ItemsController < ApplicationController
       return current_user.college unless current_user&.admin?
 
       College.order(:id).first
+    end
+
+    def apply_default_pickup_location(item)
+      return unless current_user_saved_location?
+      return unless item.latitude.blank? && item.longitude.blank? && item.location_name.blank?
+
+      item.assign_attributes(
+        latitude: current_user.latitude,
+        longitude: current_user.longitude,
+        location_name: current_user.default_location
+      )
+    end
+
+    def current_user_saved_location?
+      current_user&.default_location.present? && current_user&.has_location?
     end
 
     def distance_text(distance)

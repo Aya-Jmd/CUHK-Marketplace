@@ -50,6 +50,30 @@ RSpec.describe "Authentication pages", type: :request do
     expect(user.longitude).to eq(114.2065)
   end
 
+  it "falls back to the college default campus location during sign up when none is chosen" do
+    college = create_college(name: "Shaw College")
+
+    expect do
+      post user_registration_path, params: {
+        user: {
+          email: "signup_college_default_user@cuhk.edu.hk",
+          password: "password123",
+          password_confirmation: "password123",
+          college_id: college.id,
+          default_location: "",
+          latitude: "",
+          longitude: ""
+        }
+      }
+    end.to change(User, :count).by(1)
+
+    user = User.find_by!(email: "signup_college_default_user@cuhk.edu.hk")
+
+    expect(user.default_location).to eq("shaw")
+    expect(user.latitude).to eq(22.4179)
+    expect(user.longitude).to eq(114.2065)
+  end
+
   it "does not allow users to change college through account settings" do
     old_college = create_college(name: "Old College")
     new_college = create_college(name: "New College")

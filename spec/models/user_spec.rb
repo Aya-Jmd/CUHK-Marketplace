@@ -72,4 +72,27 @@ RSpec.describe User, type: :model do
     expect(user.latitude).to be_nil
     expect(user.longitude).to be_nil
   end
+
+  it "encrypts admin invite pins and clears them once setup is complete" do
+    inviter = create_user(email: "user_spec_inviter@cuhk.edu.hk", role: :admin)
+    invitee = User.new(
+      email: "user_spec_invitee@cuhk.edu.hk",
+      password: "ABCDEFGH",
+      password_confirmation: "ABCDEFGH",
+      role: :college_admin,
+      college: create_college(name: "Invite Pin College"),
+      setup_completed: false,
+      invited_by: inviter
+    )
+
+    invitee.store_admin_invite_pin("ABCD2345")
+    invitee.save!
+
+    expect(invitee.reload.invite_pin_ciphertext).not_to eq("ABCD2345")
+    expect(invitee.reveal_admin_invite_pin).to eq("ABCD2345")
+
+    invitee.update!(setup_completed: true)
+
+    expect(invitee.reload.invite_pin_ciphertext).to be_nil
+  end
 end

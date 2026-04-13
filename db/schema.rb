@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_13_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_193000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
@@ -174,6 +174,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_100000) do
     t.string "default_location"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.text "invite_pin_ciphertext"
+    t.bigint "invited_by_id"
     t.float "latitude"
     t.float "longitude"
     t.datetime "remember_created_at"
@@ -184,6 +186,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_100000) do
     t.datetime "updated_at", null: false
     t.index ["banned_by_id"], name: "index_users_on_banned_by_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -204,4 +207,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_100000) do
   add_foreign_key "offers", "users", column: "buyer_id"
   add_foreign_key "offers", "users", column: "seller_id"
   add_foreign_key "users", "users", column: "banned_by_id"
+  add_foreign_key "users", "users", column: "invited_by_id"
 end

@@ -4,18 +4,21 @@
 ] %>
 <% content_for :title, "Admin panel" %>
 
-<div class="market-page market-page--soft admin-page admin-page--dashboard">
-  <section class="market-page__hero">
-    <div class="market-page__hero-inner market-page__hero-inner--wide">
-      <div class="admin-page__hero-row">
-        <div>
-          <h1 class="market-page__title">Admin panel</h1>
-        </div>
-      </div>
-    </div>
-  </section>
+
 
   <div class="market-page__body market-page__body--wide">
+  <div class="market-page market-page--soft admin-page admin-page--dashboard">
+
+    <section class="market-page__hero">
+      <div class="market-page__hero-inner market-page__hero-inner--wide">
+        <div class="admin-page__hero-row">
+          <div>
+            <h1 class="market-page__title">Admin panel</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="admin-dashboard__overview">
       <section class="market-surface-card admin-overview-panel">
         <div class="market-section-heading admin-overview-panel__heading">
@@ -76,12 +79,16 @@
             <p class="market-section-eyebrow">Invite</p>
             <h2 class="market-section-title">Add a moderator</h2>
             <p class="market-note">
-              Credentials are generated server-side exactly as before. This only changes the presentation.
+              Create moderator access here, then use Manage invite below whenever you need to recover a pending setup pin.
             </p>
           </div>
         </div>
 
-        <%= form_with model: @new_admin, url: admin_invite_path, local: true, class: "admin-form" do |f| %>
+        <%= form_with model: @new_admin, url: admin_invite_path, local: true, class: "admin-form admin-dashboard__invite-form" do |f| %>
+          <% if current_user.admin? && @rule_college.present? %>
+            <%= hidden_field_tag :rule_college_id, @rule_college.id %>
+          <% end %>
+
           <div class="listing-form__field">
             <%= f.label :email, "Email address" %>
             <%= f.email_field :email, required: true, placeholder: "email@cuhk.edu.hk", class: "listing-form__input" %>
@@ -178,23 +185,101 @@
           </table>
         </div>
 
-        <div class="admin-rules">
-          <% rules_note =
-              if current_user.admin?
-                "Choose a college, then set the listing rules that apply to its users."
-              elsif @rule_college.present?
-                "These rules apply to every user in #{@rule_college.name}."
-              else
-                "No college is available to manage yet."
-              end %>
-          <div class="market-section-heading admin-dashboard__heading">
+      </section>
+
+      <div class="admin-dashboard__invite-tools">
+        <section class="market-surface-card admin-dashboard__invite-access" id="admin-invite-access">
+          <div class="market-section-heading">
             <div>
-              <p class="market-section-eyebrow">User Management</p>
-              <h2 class="market-section-title">Manage college rules</h2>
-              <p class="market-note"><%= rules_note %></p>
+              <p class="market-section-eyebrow">Manage invite</p>
+              <h2 class="market-section-title">Invite access</h2>
             </div>
           </div>
 
+          <div class="admin-invite-access__panel">
+            <p class="admin-invite-access__hint">Enter your password to see invites</p>
+
+            <%= form_with url: admin_reveal_invites_path, method: :post, local: true, class: "admin-form admin-invite-access__form" do %>
+              <% if current_user.admin? && @rule_college.present? %>
+                <%= hidden_field_tag :rule_college_id, @rule_college.id %>
+              <% end %>
+
+              <div class="listing-form__field">
+                <%= label_tag :invite_access_password, "Current password" %>
+                <%= password_field_tag "invite_access[password]",
+                    nil,
+                    id: "invite_access_password",
+                    required: true,
+                    autocomplete: "current-password",
+                    placeholder: "Enter your password",
+                    class: "listing-form__input" %>
+              </div>
+
+              <%= submit_tag "Show invites", class: "market-button market-button--secondary" %>
+            <% end %>
+          </div>
+        </section>
+
+        <% if @invite_results_visible %>
+          <section class="market-surface-card admin-dashboard__invite-results" id="admin-pending-invites" data-turbo-temporary>
+            <div class="market-section-heading admin-dashboard__heading">
+              <div>
+                <p class="market-section-eyebrow">Pending invites</p>
+                <h2 class="market-section-title">Setup pins</h2>
+                <p class="market-note">
+                  Only unfinished invites that you created appear here. Refresh again to hide this list.
+                </p>
+              </div>
+            </div>
+
+            <% if @revealed_invites.any? %>
+              <div class="admin-invite-list" role="list">
+                <% @revealed_invites.each do |invite| %>
+                  <article class="admin-invite-card" role="listitem">
+                    <p class="admin-invite-card__eyebrow">Invited administrator</p>
+                    <strong class="admin-invite-card__email"><%= invite[:user].email %></strong>
+
+                    <div class="admin-invite-card__details">
+                      <div class="admin-invite-card__detail">
+                        <span class="admin-invite-card__detail-label">College</span>
+                        <span class="admin-invite-card__detail-value"><%= invite[:college_name] %></span>
+                      </div>
+
+                      <div class="admin-invite-card__detail admin-invite-card__detail--pin">
+                        <span class="admin-invite-card__detail-label">Setup pin</span>
+                        <code class="admin-invite-card__pin"><%= invite[:setup_pin] %></code>
+                      </div>
+                    </div>
+                  </article>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="admin-invite-table__empty">
+                No unfinished invites are assigned to you right now.
+              </div>
+            <% end %>
+          </section>
+        <% end %>
+      </div>
+
+      <section class="market-surface-card admin-dashboard__college">
+        <% rules_note =
+            if current_user.admin?
+              "Choose a college, then set the listing rules that apply to its users."
+            elsif @rule_college.present?
+              "These rules apply to every user in #{@rule_college.name}."
+            else
+              "No college is available to manage yet."
+            end %>
+        <div class="market-section-heading admin-dashboard__heading">
+          <div>
+            <p class="market-section-eyebrow">College Management</p>
+            <h2 class="market-section-title">College rules</h2>
+            <p class="market-note"><%= rules_note %></p>
+          </div>
+        </div>
+
+        <div class="admin-rules">
           <% if @rule_college.present? %>
             <% if current_user.admin? %>
               <%= form_with url: admin_root_path, method: :get, local: true, class: "admin-form admin-rules__selector-form" do %>

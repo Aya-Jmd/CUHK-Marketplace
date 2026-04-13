@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Authentication and user-facing profile pages.
-  devise_for :users, controllers: { sessions: "users/sessions" }
+  devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
   resources :users, only: [ :show ]
   get "/dashboard", to: "dashboards#show", as: :dashboard
   get "/profile", to: "dashboards#edit", as: :profile
@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
 
     post "invite", to: "dashboard#invite", as: :invite
+    post "reveal_invites", to: "dashboard#reveal_invites", as: :reveal_invites
     resource :college_rules, only: [ :update ]
 
     resources :users, only: [] do

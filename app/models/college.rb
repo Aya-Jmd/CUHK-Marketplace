@@ -19,6 +19,10 @@ class College < ApplicationRecord
     user.present? && user.live_items_count >= max_items_per_user
   end
 
+  def default_location_key
+    LocationService.default_location_key_for_college(self)
+  end
+
   private
 
   def assign_slug

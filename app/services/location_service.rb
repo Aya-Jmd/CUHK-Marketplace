@@ -56,4 +56,20 @@ class LocationService
   def self.location_options
     CUHK_LOCATIONS.map { |key, value| [ value[:name], key ] }
   end
+
+  def self.default_location_key_for_college(college)
+    return if college.blank?
+
+    slug =
+      if college.respond_to?(:slug)
+        college.slug.to_s
+      else
+        college.to_s.parameterize
+      end
+
+    candidate = slug.delete_suffix("-college").tr("-", "_")
+    return candidate if CUHK_LOCATIONS.key?(candidate)
+
+    "campus_central"
+  end
 end

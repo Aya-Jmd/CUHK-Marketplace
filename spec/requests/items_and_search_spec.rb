@@ -57,6 +57,55 @@ RSpec.describe "Items and Search", type: :request do
   end
 
   describe "POST /items" do
+    it "uses the seller's saved default location when no pickup point is submitted" do
+      seller = create_user(email: "default_pickup_seller@cuhk.edu.hk")
+      seller.update!(default_location: "new_asia", latitude: 22.4191, longitude: 114.2094)
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "Default Pickup Chair",
+            price: 120,
+            description: "Pickup should inherit from the profile."
+          }
+        }
+      }.to change(Item, :count).by(1)
+
+      item = Item.order(:id).last
+
+      expect(item.location_name).to eq("new_asia")
+      expect(item.latitude).to eq(22.4191)
+      expect(item.longitude).to eq(114.2094)
+    end
+
+    it "keeps the submitted pickup point instead of overwriting it with the profile default" do
+      seller = create_user(email: "explicit_pickup_seller@cuhk.edu.hk")
+      seller.update!(default_location: "new_asia", latitude: 22.4191, longitude: 114.2094)
+
+      sign_in seller
+
+      expect {
+        post items_path, params: {
+          item: {
+            title: "Custom Pickup Chair",
+            price: 120,
+            description: "Pickup should stay custom.",
+            location_name: "shaw",
+            latitude: 22.4222,
+            longitude: 114.2009
+          }
+        }
+      }.to change(Item, :count).by(1)
+
+      item = Item.order(:id).last
+
+      expect(item.location_name).to eq("shaw")
+      expect(item.latitude).to eq(22.4222)
+      expect(item.longitude).to eq(114.2009)
+    end
+
     it "rejects asking prices above the HKD cap" do
       seller = create_user(email: "overpriced_item_seller@cuhk.edu.hk")
 
@@ -124,6 +173,21 @@ RSpec.describe "Items and Search", type: :request do
   end
 
   describe "GET /items/new" do
+    it "prefills the sell form with the user's saved default location" do
+      seller = create_user(email: "prefilled_sell_form@cuhk.edu.hk")
+      seller.update!(default_location: "library", latitude: 22.4188, longitude: 114.2078)
+
+      sign_in seller
+      get new_item_path
+
+      document = Nokogiri::HTML.parse(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(document.at_css("input[name='item[latitude]']")["value"]).to eq("22.4188")
+      expect(document.at_css("input[name='item[longitude]']")["value"]).to eq("114.2078")
+      expect(document.at_css("input[name='item[location_name]']")["value"]).to eq("library")
+    end
+
     it "blocks access to the sell page once the college posting limit is reached" do
       college = create_college(name: "Sell Gate College")
       college.update!(max_items_per_user: 1)
@@ -138,6 +202,76 @@ RSpec.describe "Items and Search", type: :request do
       follow_redirect!
 
       expect(response.body).to include("You already posted the maximum number of items!")
+    end
+  end
+
+  describe "GET /items/:id/edit" do
+    it "prefills the edit form with the user's saved default location when the item has none" do
+      seller = create_user(email: "prefilled_edit_form@cuhk.edu.hk")
+      seller.update!(default_location: "library", latitude: 22.4188, longitude: 114.2078)
+      item = create_item(user: seller, title: "Edit Pickup Item", latitude: nil, longitude: nil)
+
+      sign_in seller
+      get edit_item_path(item)
+
+      document = Nokogiri::HTML.parse(response.body)
+
+      expect(response).to have_http_status(:ok)
+      expect(document.at_css("input[name='item[latitude]']")["value"]).to eq("22.4188")
+      expect(document.at_css("input[name='item[longitude]']")["value"]).to eq("114.2078")
+      expect(document.at_css("input[name='item[location_name]']")["value"]).to eq("library")
+    end
+  end
+
+  describe "PATCH /items/:id" do
+    it "uses the seller's saved default location when updating an item without a pickup point" do
+      seller = create_user(email: "default_pickup_update_seller@cuhk.edu.hk")
+      seller.update!(default_location: "new_asia", latitude: 22.4191, longitude: 114.2094)
+      item = create_item(user: seller, title: "Pickup Update Chair", latitude: nil, longitude: nil)
+
+      sign_in seller
+      patch item_path(item), params: {
+        item: {
+          title: "Pickup Update Chair",
+          price: 120,
+          description: "Updated without choosing a pickup point.",
+          location_name: "",
+          latitude: "",
+          longitude: ""
+        }
+      }
+
+      item.reload
+
+      expect(response).to redirect_to(item_path(item))
+      expect(item.location_name).to eq("new_asia")
+      expect(item.latitude).to eq(22.4191)
+      expect(item.longitude).to eq(114.2094)
+    end
+
+    it "keeps the submitted pickup point when updating an item" do
+      seller = create_user(email: "explicit_pickup_update_seller@cuhk.edu.hk")
+      seller.update!(default_location: "new_asia", latitude: 22.4191, longitude: 114.2094)
+      item = create_item(user: seller, title: "Custom Update Chair", latitude: nil, longitude: nil)
+
+      sign_in seller
+      patch item_path(item), params: {
+        item: {
+          title: "Custom Update Chair",
+          price: 120,
+          description: "Updated with a custom pickup point.",
+          location_name: "shaw",
+          latitude: 22.4222,
+          longitude: 114.2009
+        }
+      }
+
+      item.reload
+
+      expect(response).to redirect_to(item_path(item))
+      expect(item.location_name).to eq("shaw")
+      expect(item.latitude).to eq(22.4222)
+      expect(item.longitude).to eq(114.2009)
     end
   end
 

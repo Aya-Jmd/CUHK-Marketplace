@@ -1,7 +1,1237 @@
 {
   "RSpec": {
     "coverage": {
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/channels/application_cable/connection.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/admin/dashboard_helper.rb": {
+        "lines": [
+          1,
+          1,
+          9,
+          9,
+          null,
+          1,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          10,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 3, 4, 3, 40]": {
+            "[:then, 1, 3, 4, 3, 16]": 0,
+            "[:else, 2, 3, 4, 3, 40]": 9
+          },
+          "[:if, 3, 4, 4, 4, 38]": {
+            "[:then, 4, 4, 4, 4, 15]": 8,
+            "[:else, 5, 4, 4, 4, 38]": 1
+          },
+          "[:if, 6, 10, 4, 10, 35]": {
+            "[:then, 7, 10, 4, 10, 19]": 0,
+            "[:else, 8, 10, 4, 10, 35]": 0
+          },
+          "[:if, 9, 11, 4, 11, 44]": {
+            "[:then, 10, 11, 4, 11, 19]": 0,
+            "[:else, 11, 11, 4, 11, 44]": 0
+          },
+          "[:if, 12, 17, 4, 23, 7]": {
+            "[:then, 13, 18, 6, 18, 20]": 0,
+            "[:else, 14, 19, 4, 22, 22]": 0
+          },
+          "[:if, 15, 19, 4, 22, 22]": {
+            "[:then, 16, 20, 6, 20, 22]": 0,
+            "[:else, 17, 22, 6, 22, 22]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/application_helper.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          93,
+          null,
+          91,
+          91,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          14,
+          14,
+          14,
+          14,
+          14,
+          null,
+          14,
+          null,
+          11,
+          null,
+          0,
+          null,
+          0,
+          null,
+          1,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          1,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          333,
+          null,
+          null,
+          1,
+          50,
+          50,
+          null,
+          50,
+          null,
+          null,
+          1,
+          148,
+          31,
+          null,
+          null,
+          117,
+          null,
+          null,
+          1,
+          107,
+          null,
+          107,
+          null,
+          null,
+          1,
+          2,
+          null,
+          0,
+          null,
+          2,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          null,
+          2,
+          2,
+          null,
+          0,
+          null,
+          null,
+          2,
+          null,
+          null,
+          1,
+          9,
+          null,
+          3,
+          null,
+          0,
+          null,
+          6,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          7,
+          null,
+          7,
+          3,
+          4,
+          4,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          70,
+          16,
+          null,
+          null,
+          54,
+          12,
+          null,
+          11,
+          null,
+          null,
+          42,
+          14,
+          null,
+          null,
+          28,
+          null,
+          null,
+          1,
+          45,
+          45,
+          null,
+          12,
+          null,
+          null,
+          1,
+          45,
+          null,
+          36,
+          null,
+          null,
+          1,
+          45,
+          null,
+          null,
+          1,
+          7,
+          0,
+          0,
+          null,
+          null,
+          7,
+          1,
+          null,
+          null,
+          6,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          1,
+          7,
+          0,
+          0,
+          null,
+          null,
+          7,
+          null,
+          6,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 15, 4, 15, 32]": {
+            "[:then, 1, 15, 4, 15, 13]": 2,
+            "[:else, 2, 15, 4, 15, 32]": 91
+          },
+          "[:if, 3, 26, 4, 26, 75]": {
+            "[:then, 4, 26, 4, 26, 35]": 10,
+            "[:else, 5, 26, 4, 26, 75]": 4
+          },
+          "[:if, 6, 27, 4, 27, 73]": {
+            "[:then, 7, 27, 4, 27, 34]": 2,
+            "[:else, 8, 27, 4, 27, 73]": 12
+          },
+          "[:if, 9, 28, 4, 28, 81]": {
+            "[:then, 10, 28, 4, 28, 36]": 2,
+            "[:else, 11, 28, 4, 28, 81]": 12
+          },
+          "[:\"&.\", 12, 29, 52, 29, 64]": {
+            "[:then, 13, 29, 52, 29, 64]": 10,
+            "[:else, 14, 29, 52, 29, 64]": 2
+          },
+          "[:\"&.\", 15, 30, 16, 30, 27]": {
+            "[:then, 16, 30, 16, 30, 27]": 10,
+            "[:else, 17, 30, 16, 30, 27]": 4
+          },
+          "[:\"&.\", 18, 30, 16, 30, 34]": {
+            "[:then, 19, 30, 16, 30, 34]": 10,
+            "[:else, 20, 30, 16, 30, 34]": 4
+          },
+          "[:\"&.\", 21, 30, 38, 30, 50]": {
+            "[:then, 22, 30, 38, 30, 50]": 2,
+            "[:else, 23, 30, 38, 30, 50]": 2
+          },
+          "[:\"&.\", 24, 30, 38, 30, 57]": {
+            "[:then, 25, 30, 38, 30, 57]": 2,
+            "[:else, 26, 30, 38, 30, 57]": 2
+          },
+          "[:\"&.\", 27, 30, 61, 30, 72]": {
+            "[:then, 28, 30, 61, 30, 72]": 2,
+            "[:else, 29, 30, 61, 30, 72]": 0
+          },
+          "[:case, 30, 32, 4, 53, 7]": {
+            "[:when, 31, 34, 6, 34, 122]": 11,
+            "[:when, 32, 36, 6, 36, 124]": 0,
+            "[:when, 33, 38, 6, 38, 129]": 0,
+            "[:when, 34, 40, 6, 40, 62]": 1,
+            "[:when, 35, 42, 6, 42, 134]": 0,
+            "[:when, 36, 44, 6, 44, 95]": 0,
+            "[:when, 37, 46, 6, 46, 87]": 0,
+            "[:when, 38, 48, 6, 48, 85]": 1,
+            "[:when, 39, 50, 6, 50, 80]": 1,
+            "[:else, 40, 52, 6, 52, 66]": 0
+          },
+          "[:\"&.\", 41, 34, 79, 34, 91]": {
+            "[:then, 42, 34, 79, 34, 91]": 9,
+            "[:else, 43, 34, 79, 34, 91]": 2
+          },
+          "[:\"&.\", 44, 36, 81, 36, 93]": {
+            "[:then, 45, 36, 81, 36, 93]": 0,
+            "[:else, 46, 36, 81, 36, 93]": 0
+          },
+          "[:if, 47, 57, 4, 57, 51]": {
+            "[:then, 48, 57, 34, 57, 43]": 66,
+            "[:else, 49, 57, 46, 57, 51]": 267
+          },
+          "[:\"&.\", 50, 61, 11, 61, 32]": {
+            "[:then, 51, 61, 11, 61, 32]": 50,
+            "[:else, 52, 61, 11, 61, 32]": 0
+          },
+          "[:\"&.\", 53, 61, 11, 61, 38]": {
+            "[:then, 54, 61, 11, 61, 38]": 50,
+            "[:else, 55, 61, 11, 61, 38]": 0
+          },
+          "[:if, 56, 62, 4, 62, 38]": {
+            "[:then, 57, 62, 4, 62, 23]": 0,
+            "[:else, 58, 62, 4, 62, 38]": 50
+          },
+          "[:\"&.\", 59, 68, 7, 68, 27]": {
+            "[:then, 60, 68, 7, 68, 27]": 133,
+            "[:else, 61, 68, 7, 68, 27]": 15
+          },
+          "[:if, 62, 68, 4, 70, 7]": {
+            "[:then, 63, 69, 6, 69, 102]": 31,
+            "[:else, 64, 68, 4, 70, 7]": 117
+          },
+          "[:if, 65, 69, 13, 69, 102]": {
+            "[:then, 66, 69, 50, 69, 97]": 2,
+            "[:else, 67, 69, 100, 69, 102]": 29
+          },
+          "[:\"&.\", 68, 76, 66, 76, 86]": {
+            "[:then, 69, 76, 66, 76, 86]": 104,
+            "[:else, 70, 76, 66, 76, 86]": 3
+          },
+          "[:if, 71, 76, 4, 76, 86]": {
+            "[:then, 72, 76, 4, 76, 62]": 0,
+            "[:else, 73, 76, 4, 76, 86]": 107
+          },
+          "[:\"&.\", 74, 76, 11, 76, 45]": {
+            "[:then, 75, 76, 11, 76, 45]": 0,
+            "[:else, 76, 76, 11, 76, 45]": 0
+          },
+          "[:if, 77, 78, 4, 78, 78]": {
+            "[:then, 78, 78, 44, 78, 69]": 49,
+            "[:else, 79, 78, 72, 78, 78]": 58
+          },
+          "[:case, 80, 82, 4, 89, 7]": {
+            "[:when, 81, 84, 6, 84, 17]": 0,
+            "[:when, 82, 86, 6, 86, 20]": 2,
+            "[:else, 83, 88, 6, 88, 16]": 0
+          },
+          "[:if, 84, 94, 6, 98, 9]": {
+            "[:then, 85, 95, 8, 95, 22]": 2,
+            "[:else, 86, 97, 8, 97, 21]": 0
+          },
+          "[:case, 87, 104, 4, 113, 7]": {
+            "[:when, 88, 106, 6, 106, 105]": 3,
+            "[:when, 89, 108, 6, 108, 80]": 0,
+            "[:when, 90, 110, 6, 110, 94]": 6,
+            "[:else, 91, 112, 6, 112, 8]": 0
+          },
+          "[:if, 92, 119, 4, 125, 7]": {
+            "[:then, 93, 120, 6, 120, 31]": 3,
+            "[:else, 94, 121, 4, 124, 30]": 4
+          },
+          "[:if, 95, 121, 4, 124, 30]": {
+            "[:then, 96, 122, 6, 122, 34]": 4,
+            "[:else, 97, 124, 6, 124, 30]": 0
+          },
+          "[:if, 98, 129, 4, 131, 7]": {
+            "[:then, 99, 130, 6, 130, 51]": 16,
+            "[:else, 100, 129, 4, 131, 7]": 54
+          },
+          "[:\"&.\", 101, 130, 36, 130, 50]": {
+            "[:then, 102, 130, 36, 130, 50]": 14,
+            "[:else, 103, 130, 36, 130, 50]": 2
+          },
+          "[:\"&.\", 104, 133, 7, 133, 27]": {
+            "[:then, 105, 133, 7, 133, 27]": 44,
+            "[:else, 106, 133, 7, 133, 27]": 10
+          },
+          "[:if, 107, 133, 4, 137, 7]": {
+            "[:then, 108, 134, 6, 136, 21]": 12,
+            "[:else, 109, 133, 4, 137, 7]": 42
+          },
+          "[:if, 110, 134, 6, 134, 106]": {
+            "[:then, 111, 134, 6, 134, 65]": 1,
+            "[:else, 112, 134, 6, 134, 106]": 11
+          },
+          "[:if, 113, 139, 4, 141, 7]": {
+            "[:then, 114, 140, 6, 140, 21]": 14,
+            "[:else, 115, 139, 4, 141, 7]": 28
+          },
+          "[:\"&.\", 116, 143, 27, 143, 48]": {
+            "[:then, 117, 143, 27, 143, 48]": 21,
+            "[:else, 118, 143, 27, 143, 48]": 7
+          },
+          "[:if, 119, 148, 4, 148, 59]": {
+            "[:then, 120, 148, 4, 148, 15]": 33,
+            "[:else, 121, 148, 4, 148, 59]": 12
+          },
+          "[:if, 122, 154, 4, 154, 28]": {
+            "[:then, 123, 154, 4, 154, 10]": 9,
+            "[:else, 124, 154, 4, 154, 28]": 36
+          },
+          "[:\"&.\", 125, 164, 7, 164, 27]": {
+            "[:then, 126, 164, 7, 164, 27]": 5,
+            "[:else, 127, 164, 7, 164, 27]": 2
+          },
+          "[:if, 128, 164, 4, 167, 7]": {
+            "[:then, 129, 165, 6, 166, 88]": 0,
+            "[:else, 130, 164, 4, 167, 7]": 7
+          },
+          "[:if, 131, 166, 6, 166, 88]": {
+            "[:then, 132, 166, 6, 166, 68]": 0,
+            "[:else, 133, 166, 6, 166, 88]": 0
+          },
+          "[:if, 134, 169, 4, 171, 7]": {
+            "[:then, 135, 170, 6, 170, 81]": 1,
+            "[:else, 136, 169, 4, 171, 7]": 6
+          },
+          "[:\"&.\", 137, 181, 7, 181, 27]": {
+            "[:then, 138, 181, 7, 181, 27]": 5,
+            "[:else, 139, 181, 7, 181, 27]": 2
+          },
+          "[:if, 140, 181, 4, 184, 7]": {
+            "[:then, 141, 182, 6, 183, 71]": 0,
+            "[:else, 142, 181, 4, 184, 7]": 7
+          },
+          "[:if, 143, 183, 6, 183, 71]": {
+            "[:then, 144, 183, 6, 183, 51]": 0,
+            "[:else, 145, 183, 6, 183, 71]": 0
+          },
+          "[:if, 146, 186, 4, 186, 119]": {
+            "[:then, 147, 186, 4, 186, 36]": 1,
+            "[:else, 148, 186, 4, 186, 119]": 6
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/conversations_helper.rb": {
+        "lines": [
+          1,
+          1,
+          70,
+          70,
+          null,
+          70,
+          10,
+          null,
+          10,
+          null,
+          0,
+          null,
+          60,
+          38,
+          null,
+          6,
+          null,
+          10,
+          null,
+          6,
+          null,
+          6,
+          null,
+          10,
+          null,
+          0,
+          null,
+          null,
+          22,
+          null,
+          null,
+          null,
+          1,
+          35,
+          35,
+          null,
+          null,
+          35,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 4, 4, 4, 52]": {
+            "[:then, 1, 4, 4, 4, 29]": 0,
+            "[:else, 2, 4, 4, 4, 52]": 70
+          },
+          "[:if, 3, 6, 4, 30, 7]": {
+            "[:then, 4, 7, 6, 12, 9]": 10,
+            "[:else, 5, 13, 4, 29, 48]": 60
+          },
+          "[:case, 6, 7, 6, 12, 9]": {
+            "[:when, 7, 9, 8, 9, 78]": 10,
+            "[:when, 8, 11, 8, 11, 81]": 0,
+            "[:else, 9, 7, 6, 12, 9]": 0
+          },
+          "[:if, 10, 13, 4, 29, 48]": {
+            "[:then, 11, 14, 6, 27, 9]": 38,
+            "[:else, 12, 29, 6, 29, 48]": 22
+          },
+          "[:case, 13, 14, 6, 27, 9]": {
+            "[:when, 14, 16, 8, 16, 24]": 6,
+            "[:when, 15, 18, 8, 18, 24]": 10,
+            "[:when, 16, 20, 8, 20, 25]": 6,
+            "[:when, 17, 22, 8, 22, 31]": 6,
+            "[:when, 18, 24, 8, 24, 19]": 10,
+            "[:else, 19, 26, 8, 26, 50]": 0
+          },
+          "[:\"&.\", 20, 38, 6, 38, 53]": {
+            "[:then, 21, 38, 6, 38, 53]": 35,
+            "[:else, 22, 38, 6, 38, 53]": 0
+          },
+          "[:\"&.\", 23, 40, 6, 40, 38]": {
+            "[:then, 24, 40, 6, 40, 38]": 0,
+            "[:else, 25, 40, 6, 40, 38]": 35
+          },
+          "[:\"&.\", 26, 42, 6, 42, 24]": {
+            "[:then, 27, 42, 6, 42, 24]": 35,
+            "[:else, 28, 42, 6, 42, 24]": 0
+          },
+          "[:\"&.\", 29, 42, 6, 42, 38]": {
+            "[:then, 30, 42, 6, 42, 38]": 35,
+            "[:else, 31, 42, 6, 42, 38]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/items_helper.rb": {
+        "lines": [
+          1,
+          1,
+          26,
+          null,
+          22,
+          22,
+          null,
+          18,
+          null,
+          null,
+          1,
+          27,
+          null,
+          null,
+          1,
+          64,
+          null,
+          null,
+          1,
+          11,
+          null,
+          11,
+          null,
+          null,
+          1,
+          11,
+          null,
+          11,
+          null,
+          11,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          25,
+          25,
+          null,
+          null,
+          1,
+          null,
+          1,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:unless, 0, 3, 4, 3, 39]": {
+            "[:else, 1, 3, 4, 3, 39]": 22,
+            "[:then, 2, 3, 4, 3, 16]": 4
+          },
+          "[:if, 3, 6, 4, 6, 71]": {
+            "[:then, 4, 6, 4, 6, 59]": 4,
+            "[:else, 5, 6, 4, 6, 71]": 18
+          },
+          "[:if, 6, 20, 4, 20, 34]": {
+            "[:then, 7, 20, 4, 20, 13]": 0,
+            "[:else, 8, 20, 4, 20, 34]": 11
+          },
+          "[:case, 9, 28, 4, 49, 7]": {
+            "[:when, 10, 30, 6, 30, 11]": 11,
+            "[:when, 11, 32, 6, 33, 53]": 0,
+            "[:when, 12, 35, 6, 36, 47]": 0,
+            "[:when, 13, 38, 6, 39, 44]": 0,
+            "[:when, 14, 41, 6, 42, 47]": 0,
+            "[:when, 15, 44, 6, 45, 50]": 0,
+            "[:else, 16, 47, 6, 48, 47]": 0
+          },
+          "[:\"&.\", 17, 54, 6, 54, 25]": {
+            "[:then, 18, 54, 6, 54, 25]": 0,
+            "[:else, 19, 54, 6, 54, 25]": 0
+          },
+          "[:\"&.\", 20, 55, 6, 55, 24]": {
+            "[:then, 21, 55, 6, 55, 24]": 0,
+            "[:else, 22, 55, 6, 55, 24]": 0
+          },
+          "[:case, 23, 68, 4, 72, 7]": {
+            "[:when, 24, 69, 20, 69, 25]": 0,
+            "[:when, 25, 70, 20, 70, 26]": 0,
+            "[:else, 26, 71, 9, 71, 14]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/messages_helper.rb": {
+        "lines": [
+          1,
+          1,
+          15,
+          null,
+          3,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          2,
+          null,
+          3,
+          null,
+          2,
+          null,
+          2,
+          null,
+          3,
+          null,
+          0,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:case, 0, 3, 4, 25, 7]": {
+            "[:when, 1, 5, 6, 12, 7]": 3,
+            "[:when, 2, 14, 6, 14, 106]": 2,
+            "[:when, 3, 16, 6, 16, 92]": 3,
+            "[:when, 4, 18, 6, 18, 93]": 2,
+            "[:when, 5, 20, 6, 20, 99]": 2,
+            "[:when, 6, 22, 6, 22, 62]": 3,
+            "[:else, 7, 24, 6, 24, 21]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/notifications_helper.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          4,
+          null,
+          null,
+          null,
+          4,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          4,
+          null,
+          null,
+          1,
+          null,
+          14,
+          14,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          6,
+          null,
+          null,
+          null,
+          null,
+          1,
+          5,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          5,
+          5,
+          5,
+          null,
+          5,
+          null,
+          5,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          10,
+          null,
+          10,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          10,
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          5,
+          null,
+          0,
+          null,
+          0,
+          null,
+          5,
+          null,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          2,
+          2,
+          null,
+          2,
+          null,
+          2,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          6,
+          null,
+          6,
+          null,
+          null,
+          5,
+          null,
+          1,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          17,
+          null,
+          null,
+          1,
+          5,
+          null,
+          null,
+          1,
+          6,
+          6,
+          null,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          6,
+          6,
+          null,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          6,
+          4,
+          3,
+          null,
+          null,
+          null,
+          null,
+          1,
+          null,
+          15,
+          6,
+          null,
+          9,
+          null,
+          null,
+          15,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:\"&.\", 0, 8, 7, 8, 27]": {
+            "[:then, 1, 8, 7, 8, 27]": 4,
+            "[:else, 2, 8, 7, 8, 27]": 0
+          },
+          "[:\"&.\", 3, 8, 31, 8, 59]": {
+            "[:then, 4, 8, 31, 8, 59]": 3,
+            "[:else, 5, 8, 31, 8, 59]": 0
+          },
+          "[:if, 6, 8, 4, 13, 7]": {
+            "[:then, 7, 9, 6, 12, 7]": 1,
+            "[:else, 8, 8, 4, 13, 7]": 3
+          },
+          "[:if, 9, 21, 19, 21, 47]": {
+            "[:then, 10, 21, 38, 21, 41]": 6,
+            "[:else, 11, 21, 44, 21, 47]": 8
+          },
+          "[:unless, 12, 28, 4, 28, 29]": {
+            "[:else, 13, 28, 4, 28, 29]": 0,
+            "[:then, 14, 28, 4, 28, 15]": 0
+          },
+          "[:case, 15, 56, 4, 73, 7]": {
+            "[:when, 16, 58, 6, 58, 104]": 5,
+            "[:when, 17, 60, 6, 60, 106]": 0,
+            "[:when, 18, 62, 6, 62, 112]": 0,
+            "[:when, 19, 64, 6, 64, 58]": 0,
+            "[:when, 20, 66, 6, 66, 82]": 0,
+            "[:when, 21, 68, 6, 68, 88]": 0,
+            "[:when, 22, 70, 6, 70, 80]": 0,
+            "[:else, 23, 72, 6, 72, 40]": 0
+          },
+          "[:case, 24, 77, 4, 88, 7]": {
+            "[:when, 25, 79, 6, 79, 64]": 10,
+            "[:when, 26, 81, 6, 81, 48]": 0,
+            "[:when, 27, 83, 6, 83, 69]": 0,
+            "[:when, 28, 85, 6, 85, 77]": 0,
+            "[:when, 29, 87, 6, 87, 53]": 0,
+            "[:else, 30, 77, 4, 88, 7]": 0
+          },
+          "[:case, 31, 92, 4, 100, 7]": {
+            "[:when, 32, 93, 30, 93, 41]": 10,
+            "[:when, 33, 94, 30, 94, 39]": 0,
+            "[:when, 34, 95, 32, 95, 43]": 0,
+            "[:when, 35, 96, 31, 96, 41]": 0,
+            "[:when, 36, 97, 31, 97, 41]": 0,
+            "[:when, 37, 98, 32, 98, 43]": 0,
+            "[:when, 38, 99, 32, 99, 43]": 0,
+            "[:else, 39, 92, 4, 100, 7]": 0
+          },
+          "[:case, 40, 104, 4, 111, 7]": {
+            "[:when, 41, 106, 6, 106, 42]": 0,
+            "[:when, 42, 108, 6, 108, 41]": 0,
+            "[:else, 43, 110, 6, 110, 39]": 5
+          },
+          "[:case, 44, 115, 4, 122, 7]": {
+            "[:when, 45, 117, 6, 117, 135]": 1,
+            "[:when, 46, 119, 6, 119, 130]": 0,
+            "[:else, 47, 121, 6, 121, 40]": 0
+          },
+          "[:if, 48, 126, 4, 126, 81]": {
+            "[:then, 49, 126, 4, 126, 36]": 2,
+            "[:else, 50, 126, 4, 126, 81]": 0
+          },
+          "[:if, 51, 127, 4, 127, 27]": {
+            "[:then, 52, 127, 4, 127, 10]": 0,
+            "[:else, 53, 127, 4, 127, 27]": 2
+          },
+          "[:case, 54, 129, 4, 134, 7]": {
+            "[:when, 55, 131, 6, 131, 41]": 2,
+            "[:when, 56, 133, 6, 133, 45]": 0,
+            "[:else, 57, 129, 4, 134, 7]": 0
+          },
+          "[:if, 58, 138, 4, 138, 70]": {
+            "[:then, 59, 138, 4, 138, 21]": 0,
+            "[:else, 60, 138, 4, 138, 70]": 0
+          },
+          "[:if, 61, 140, 4, 140, 81]": {
+            "[:then, 62, 140, 4, 140, 36]": 0,
+            "[:else, 63, 140, 4, 140, 81]": 0
+          },
+          "[:\"&.\", 64, 141, 73, 141, 90]": {
+            "[:then, 65, 141, 73, 141, 90]": 0,
+            "[:else, 66, 141, 73, 141, 90]": 0
+          },
+          "[:if, 67, 141, 4, 141, 90]": {
+            "[:then, 68, 141, 4, 141, 21]": 0,
+            "[:else, 69, 141, 4, 141, 90]": 0
+          },
+          "[:case, 70, 147, 4, 152, 7]": {
+            "[:when, 71, 149, 6, 149, 192]": 0,
+            "[:else, 72, 151, 6, 151, 8]": 0
+          },
+          "[:if, 73, 156, 4, 156, 81]": {
+            "[:then, 74, 156, 4, 156, 36]": 1,
+            "[:else, 75, 156, 4, 156, 81]": 5
+          },
+          "[:case, 76, 158, 4, 168, 7]": {
+            "[:when, 77, 161, 6, 161, 41]": 5,
+            "[:when, 78, 163, 6, 163, 69]": 1,
+            "[:when, 79, 165, 6, 165, 35]": 0,
+            "[:else, 80, 167, 6, 167, 20]": 0
+          },
+          "[:\"&.\", 81, 163, 6, 163, 18]": {
+            "[:then, 82, 163, 6, 163, 18]": 1,
+            "[:else, 83, 163, 6, 163, 18]": 0
+          },
+          "[:if, 84, 163, 6, 163, 69]": {
+            "[:then, 85, 163, 30, 163, 52]": 1,
+            "[:else, 86, 163, 55, 163, 69]": 0
+          },
+          "[:if, 87, 185, 4, 185, 36]": {
+            "[:then, 88, 185, 4, 185, 20]": 0,
+            "[:else, 89, 185, 4, 185, 36]": 6
+          },
+          "[:if, 90, 195, 4, 195, 37]": {
+            "[:then, 91, 195, 4, 195, 22]": 0,
+            "[:else, 92, 195, 4, 195, 37]": 6
+          },
+          "[:if, 93, 204, 4, 204, 79]": {
+            "[:then, 94, 204, 4, 204, 39]": 2,
+            "[:else, 95, 204, 4, 204, 79]": 4
+          },
+          "[:if, 96, 205, 4, 205, 84]": {
+            "[:then, 97, 205, 4, 205, 39]": 1,
+            "[:else, 98, 205, 4, 205, 84]": 3
+          },
+          "[:if, 99, 206, 4, 206, 73]": {
+            "[:then, 100, 206, 4, 206, 34]": 3,
+            "[:else, 101, 206, 4, 206, 73]": 0
+          },
+          "[:if, 102, 213, 6, 217, 9]": {
+            "[:then, 103, 214, 8, 214, 37]": 6,
+            "[:else, 104, 216, 8, 216, 33]": 9
+          },
+          "[:case, 105, 223, 4, 231, 7]": {
+            "[:when, 106, 225, 6, 225, 47]": 0,
+            "[:else, 107, 227, 6, 230, 46]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/offers_helper.rb": {
+        "lines": [
+          1,
+          null
+        ],
+        "branches": {}
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/helpers/search_helper.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          4,
+          null,
+          null,
+          1,
+          4,
+          4,
+          null,
+          4,
+          0,
+          0,
+          0,
+          null,
+          null,
+          4,
+          null,
+          null,
+          1,
+          30,
+          30,
+          30,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          1,
+          4,
+          2,
+          2,
+          null,
+          0,
+          2,
+          2,
+          2,
+          null,
+          1,
+          null,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          4,
+          2,
+          1,
+          null,
+          1,
+          null,
+          2,
+          2,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          4,
+          null,
+          null,
+          1,
+          8,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 15, 4, 15, 76]": {
+            "[:then, 1, 15, 4, 15, 46]": 3,
+            "[:else, 2, 15, 4, 15, 76]": 1
+          },
+          "[:if, 3, 17, 4, 21, 7]": {
+            "[:then, 4, 18, 6, 20, 35]": 0,
+            "[:else, 5, 17, 4, 21, 7]": 4
+          },
+          "[:if, 6, 28, 4, 28, 97]": {
+            "[:then, 7, 28, 4, 28, 31]": 4,
+            "[:else, 8, 28, 4, 28, 97]": 26
+          },
+          "[:if, 9, 37, 4, 52, 7]": {
+            "[:then, 10, 38, 6, 41, 49]": 2,
+            "[:else, 11, 42, 4, 51, 49]": 2
+          },
+          "[:if, 12, 38, 6, 38, 63]": {
+            "[:then, 13, 38, 6, 38, 41]": 0,
+            "[:else, 14, 38, 6, 38, 63]": 2
+          },
+          "[:if, 15, 39, 6, 39, 62]": {
+            "[:then, 16, 39, 6, 39, 41]": 2,
+            "[:else, 17, 39, 6, 39, 62]": 0
+          },
+          "[:if, 18, 42, 4, 51, 49]": {
+            "[:then, 19, 43, 6, 46, 63]": 2,
+            "[:else, 20, 48, 6, 51, 49]": 0
+          },
+          "[:if, 21, 43, 6, 43, 77]": {
+            "[:then, 22, 43, 6, 43, 55]": 0,
+            "[:else, 23, 43, 6, 43, 77]": 2
+          },
+          "[:if, 24, 44, 6, 44, 76]": {
+            "[:then, 25, 44, 6, 44, 55]": 1,
+            "[:else, 26, 44, 6, 44, 76]": 1
+          },
+          "[:if, 27, 48, 6, 48, 57]": {
+            "[:then, 28, 48, 6, 48, 35]": 0,
+            "[:else, 29, 48, 6, 48, 57]": 0
+          },
+          "[:if, 30, 49, 6, 49, 63]": {
+            "[:then, 31, 49, 6, 49, 42]": 0,
+            "[:else, 32, 49, 6, 49, 63]": 0
+          },
+          "[:if, 33, 56, 4, 66, 7]": {
+            "[:then, 34, 57, 6, 61, 9]": 2,
+            "[:else, 35, 62, 4, 65, 53]": 2
+          },
+          "[:if, 36, 57, 6, 61, 9]": {
+            "[:then, 37, 58, 8, 58, 90]": 1,
+            "[:else, 38, 60, 8, 60, 72]": 1
+          },
+          "[:if, 39, 62, 4, 65, 53]": {
+            "[:then, 40, 63, 6, 63, 64]": 2,
+            "[:else, 41, 65, 6, 65, 53]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/channels/application_cable/connection.rb": {
         "lines": [
           1,
           1,
@@ -31,7 +1261,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/channels/notifications_channel.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/channels/notifications_channel.rb": {
         "lines": [
           1,
           1,
@@ -51,7 +1281,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/channels/application_cable/channel.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/channels/application_cable/channel.rb": {
         "lines": [
           1,
           1,
@@ -60,7 +1290,7 @@
         ],
         "branches": {}
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/college.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/college.rb": {
         "lines": [
           1,
           1,
@@ -80,31 +1310,35 @@
           null,
           null,
           1,
-          4,
+          7,
+          null,
+          null,
+          1,
+          3,
           null,
           null,
           1,
           null,
           1,
-          185,
-          185,
+          205,
+          205,
           null,
-          1,
+          3,
           null,
           null
         ],
         "branches": {
-          "[:unless, 0, 25, 4, 25, 39]": {
-            "[:else, 1, 25, 4, 25, 39]": 185,
-            "[:then, 2, 25, 4, 25, 10]": 0
+          "[:unless, 0, 29, 4, 29, 39]": {
+            "[:else, 1, 29, 4, 29, 39]": 205,
+            "[:then, 2, 29, 4, 29, 10]": 0
           },
-          "[:if, 3, 26, 4, 26, 49]": {
-            "[:then, 4, 26, 4, 26, 10]": 184,
-            "[:else, 5, 26, 4, 26, 49]": 1
+          "[:if, 3, 30, 4, 30, 49]": {
+            "[:then, 4, 30, 4, 30, 10]": 202,
+            "[:else, 5, 30, 4, 30, 49]": 3
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/application_record.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/application_record.rb": {
         "lines": [
           1,
           1,
@@ -112,7 +1346,7 @@
         ],
         "branches": {}
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/item.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/item.rb": {
         "lines": [
           1,
           1,
@@ -138,7 +1372,7 @@
           null,
           1,
           null,
-          36,
+          42,
           null,
           1,
           null,
@@ -205,7 +1439,7 @@
           null,
           null,
           1,
-          75,
+          78,
           null,
           null,
           1,
@@ -243,17 +1477,17 @@
           null,
           null,
           1,
-          154,
+          161,
           null,
           null,
           1,
-          148,
+          155,
           null,
           null,
           1,
           null,
           1,
-          146,
+          153,
           null,
           4,
           null,
@@ -353,16 +1587,16 @@
             "[:else, 68, 124, 4, 124, 76]": 3
           },
           "[:\"&.\", 69, 130, 4, 130, 27]": {
-            "[:then, 70, 130, 4, 130, 27]": 154,
+            "[:then, 70, 130, 4, 130, 27]": 161,
             "[:else, 71, 130, 4, 130, 27]": 0
           },
           "[:unless, 72, 140, 4, 140, 47]": {
             "[:else, 73, 140, 4, 140, 47]": 4,
-            "[:then, 74, 140, 4, 140, 10]": 142
+            "[:then, 74, 140, 4, 140, 10]": 149
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/conversation.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/conversation.rb": {
         "lines": [
           1,
           1,
@@ -428,7 +1662,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/item_report.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/item_report.rb": {
         "lines": [
           1,
           1,
@@ -444,7 +1678,7 @@
           1,
           1,
           null,
-          8,
+          14,
           null,
           1,
           null,
@@ -559,7 +1793,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/notification.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/notification.rb": {
         "lines": [
           1,
           1,
@@ -703,7 +1937,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/offer.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/offer.rb": {
         "lines": [
           1,
           1,
@@ -795,33 +2029,46 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/user.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/user.rb": {
         "lines": [
           1,
           1,
-          null,
-          1,
-          null,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
           1,
           null,
           1,
           null,
-          36,
           1,
           null,
           1,
-          343,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          42,
+          1,
+          1,
+          3,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          397,
           null,
           null,
           1,
@@ -833,7 +2080,7 @@
           null,
           null,
           1,
-          126,
+          148,
           null,
           null,
           1,
@@ -845,7 +2092,7 @@
           null,
           null,
           1,
-          25,
+          31,
           null,
           null,
           1,
@@ -855,12 +2102,8 @@
           null,
           1,
           2,
-          2,
-          1,
-          1,
-          1,
-          1,
           null,
+          1,
           null,
           null,
           1,
@@ -869,38 +2112,102 @@
           null,
           null,
           1,
-          4,
+          3,
+          3,
+          null,
+          2,
+          2,
+          2,
+          2,
           null,
           null,
           1,
-          4,
+          2,
+          2,
+          null,
+          1,
           null,
           null,
           1,
-          4,
+          7,
+          56,
+          null,
+          null,
+          null,
+          1,
+          16,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          8,
+          null,
+          null,
+          1,
+          8,
+          null,
+          8,
+          null,
+          0,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          1,
+          null,
+          1,
+          53,
           null,
           null
         ],
         "branches": {
-          "[:if, 0, 41, 4, 41, 29]": {
-            "[:then, 1, 41, 14, 41, 21]": 2,
-            "[:else, 2, 41, 24, 41, 29]": 0
+          "[:if, 0, 54, 4, 54, 29]": {
+            "[:then, 1, 54, 14, 54, 21]": 2,
+            "[:else, 2, 54, 24, 54, 29]": 0
           },
-          "[:unless, 3, 53, 4, 53, 62]": {
-            "[:else, 4, 53, 4, 53, 62]": 1,
-            "[:then, 5, 53, 4, 53, 29]": 1
+          "[:unless, 3, 66, 4, 66, 62]": {
+            "[:else, 4, 66, 4, 66, 62]": 1,
+            "[:then, 5, 66, 4, 66, 29]": 1
           },
-          "[:if, 6, 59, 4, 64, 7]": {
-            "[:then, 7, 60, 6, 63, 10]": 1,
-            "[:else, 8, 59, 4, 64, 7]": 1
+          "[:unless, 6, 71, 4, 71, 51]": {
+            "[:else, 7, 71, 4, 71, 51]": 1,
+            "[:then, 8, 71, 4, 71, 14]": 1
           },
-          "[:unless, 9, 68, 4, 68, 35]": {
-            "[:else, 10, 68, 4, 68, 35]": 2,
-            "[:then, 11, 68, 4, 68, 14]": 1
+          "[:unless, 9, 77, 4, 77, 35]": {
+            "[:else, 10, 77, 4, 77, 35]": 2,
+            "[:then, 11, 77, 4, 77, 14]": 1
+          },
+          "[:unless, 12, 83, 4, 83, 30]": {
+            "[:else, 13, 83, 4, 83, 30]": 2,
+            "[:then, 14, 83, 4, 83, 16]": 1
+          },
+          "[:if, 15, 92, 4, 92, 34]": {
+            "[:then, 16, 92, 4, 92, 16]": 0,
+            "[:else, 17, 92, 4, 92, 34]": 2
+          },
+          "[:if, 18, 93, 4, 93, 88]": {
+            "[:then, 19, 93, 4, 93, 16]": 1,
+            "[:else, 20, 93, 4, 93, 88]": 1
+          },
+          "[:if, 21, 116, 4, 116, 42]": {
+            "[:then, 22, 116, 4, 116, 10]": 0,
+            "[:else, 23, 116, 4, 116, 42]": 8
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/currency.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/currency.rb": {
         "lines": [
           1,
           1,
@@ -913,19 +2220,19 @@
           null,
           null,
           1,
-          204,
+          227,
           null,
           null,
           1,
-          124,
-          124,
+          141,
+          141,
           null,
           0,
           null,
           null,
           1,
-          28,
-          28,
+          32,
+          32,
           null,
           0,
           null,
@@ -933,40 +2240,16 @@
         ],
         "branches": {
           "[:if, 0, 17, 4, 17, 63]": {
-            "[:then, 1, 17, 4, 17, 30]": 124,
+            "[:then, 1, 17, 4, 17, 30]": 141,
             "[:else, 2, 17, 4, 17, 63]": 0
           },
           "[:if, 3, 24, 4, 24, 56]": {
-            "[:then, 4, 24, 4, 24, 26]": 28,
+            "[:then, 4, 24, 4, 24, 26]": 32,
             "[:else, 5, 24, 4, 24, 56]": 0
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/category.rb": {
-        "lines": [
-          1,
-          1,
-          1,
-          null,
-          1,
-          13,
-          null,
-          19,
-          null,
-          null
-        ],
-        "branches": {
-          "[:unless, 0, 6, 4, 6, 36]": {
-            "[:else, 1, 6, 4, 6, 36]": 13,
-            "[:then, 2, 6, 4, 6, 15]": 0
-          },
-          "[:if, 3, 8, 31, 8, 63]": {
-            "[:then, 4, 8, 58, 8, 59]": 0,
-            "[:else, 5, 8, 62, 8, 63]": 6
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/services/location_service.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/services/location_service.rb": {
         "lines": [
           1,
           1,
@@ -985,8 +2268,8 @@
           null,
           null,
           1,
-          4,
-          4,
+          5,
+          5,
           null,
           null,
           null,
@@ -1026,11 +2309,27 @@
           1,
           0,
           null,
+          null,
+          1,
+          3,
+          null,
+          null,
+          3,
+          3,
+          null,
+          0,
+          null,
+          null,
+          3,
+          3,
+          null,
+          1,
+          null,
           null
         ],
         "branches": {
           "[:if, 0, 19, 4, 19, 90]": {
-            "[:then, 1, 19, 4, 19, 78]": 2,
+            "[:then, 1, 19, 4, 19, 78]": 3,
             "[:else, 2, 19, 4, 19, 90]": 2
           },
           "[:if, 3, 24, 4, 24, 64]": {
@@ -1048,70 +2347,149 @@
           "[:if, 12, 51, 4, 51, 33]": {
             "[:then, 13, 51, 4, 51, 12]": 0,
             "[:else, 14, 51, 4, 51, 33]": 1
+          },
+          "[:if, 15, 61, 4, 61, 28]": {
+            "[:then, 16, 61, 4, 61, 10]": 0,
+            "[:else, 17, 61, 4, 61, 28]": 3
+          },
+          "[:if, 18, 64, 6, 68, 9]": {
+            "[:then, 19, 65, 8, 65, 25]": 3,
+            "[:else, 20, 67, 8, 67, 33]": 0
+          },
+          "[:if, 21, 71, 4, 71, 54]": {
+            "[:then, 22, 71, 4, 71, 20]": 2,
+            "[:else, 23, 71, 4, 71, 54]": 1
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/dashboard_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/category.rb": {
         "lines": [
           1,
           1,
+          1,
+          null,
+          1,
+          15,
+          null,
+          21,
+          null,
+          null
+        ],
+        "branches": {
+          "[:unless, 0, 6, 4, 6, 36]": {
+            "[:else, 1, 6, 4, 6, 36]": 15,
+            "[:then, 2, 6, 4, 6, 15]": 0
+          },
+          "[:if, 3, 8, 31, 8, 63]": {
+            "[:then, 4, 8, 58, 8, 59]": 0,
+            "[:else, 5, 8, 62, 8, 63]": 6
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/dashboard_controller.rb": {
+        "lines": [
+          1,
+          1,
+          10,
+          9,
+          9,
+          9,
+          9,
+          9,
+          9,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          null,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          null,
+          10,
+          null,
+          null,
+          1,
+          8,
+          null,
+          8,
+          1,
+          1,
+          null,
+          null,
+          7,
+          null,
+          7,
+          null,
+          7,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          7,
+          null,
+          7,
+          6,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
           4,
-          3,
-          3,
-          3,
-          3,
-          3,
-          3,
-          1,
-          1,
-          1,
-          1,
-          null,
-          1,
-          null,
-          null,
-          4,
-          4,
-          4,
-          4,
-          null,
-          null,
-          1,
-          4,
-          null,
-          4,
           1,
           1,
           null,
           null,
           3,
           null,
+          null,
+          1,
+          null,
+          1,
+          10,
+          null,
+          9,
+          9,
+          null,
+          0,
+          null,
+          null,
+          1,
           3,
-          null,
-          3,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          3,
-          null,
-          2,
+          1,
+          1,
           null,
           1,
           null,
           null,
           null,
           1,
+          3,
+          3,
+          3,
+          null,
+          null,
+          1,
+          21,
+          null,
           null,
           1,
           4,
           null,
-          3,
-          3,
+          null,
+          1,
+          12,
           null,
           0,
           null,
@@ -1119,36 +2497,60 @@
         ],
         "branches": {
           "[:if, 0, 3, 4, 16, 7]": {
-            "[:then, 1, 4, 6, 9, 63]": 3,
+            "[:then, 1, 4, 6, 9, 63]": 9,
             "[:else, 2, 10, 4, 15, 87]": 1
           },
           "[:if, 3, 10, 4, 15, 87]": {
             "[:then, 4, 11, 6, 15, 87]": 1,
             "[:else, 5, 10, 4, 15, 87]": 0
           },
-          "[:if, 6, 27, 4, 30, 7]": {
-            "[:then, 7, 28, 6, 29, 12]": 1,
-            "[:else, 8, 27, 4, 30, 7]": 3
+          "[:if, 6, 23, 24, 23, 79]": {
+            "[:then, 7, 23, 50, 23, 74]": 3,
+            "[:else, 8, 23, 77, 23, 79]": 7
           },
-          "[:if, 9, 32, 26, 32, 108]": {
-            "[:then, 10, 32, 56, 32, 79]": 1,
-            "[:else, 11, 32, 82, 32, 108]": 2
+          "[:if, 9, 25, 4, 25, 61]": {
+            "[:then, 10, 25, 4, 25, 34]": 3,
+            "[:else, 11, 25, 4, 25, 61]": 7
           },
-          "[:if, 12, 45, 4, 50, 7]": {
-            "[:then, 13, 47, 6, 47, 134]": 2,
-            "[:else, 14, 49, 6, 49, 111]": 1
+          "[:if, 12, 31, 4, 34, 7]": {
+            "[:then, 13, 32, 6, 33, 12]": 1,
+            "[:else, 14, 31, 4, 34, 7]": 7
           },
-          "[:if, 15, 56, 4, 56, 62]": {
-            "[:then, 16, 56, 4, 56, 31]": 1,
-            "[:else, 17, 56, 4, 56, 62]": 3
+          "[:if, 15, 36, 26, 36, 108]": {
+            "[:then, 16, 36, 56, 36, 79]": 1,
+            "[:else, 17, 36, 82, 36, 108]": 6
           },
-          "[:if, 18, 59, 4, 59, 60]": {
-            "[:then, 19, 59, 4, 59, 25]": 3,
-            "[:else, 20, 59, 4, 59, 60]": 0
+          "[:if, 18, 51, 4, 55, 7]": {
+            "[:then, 19, 52, 6, 52, 166]": 6,
+            "[:else, 20, 54, 6, 54, 134]": 1
+          },
+          "[:unless, 21, 59, 4, 62, 7]": {
+            "[:else, 22, 59, 4, 62, 7]": 3,
+            "[:then, 23, 60, 6, 61, 12]": 1
+          },
+          "[:if, 24, 70, 4, 70, 62]": {
+            "[:then, 25, 70, 4, 70, 31]": 1,
+            "[:else, 26, 70, 4, 70, 62]": 9
+          },
+          "[:if, 27, 73, 4, 73, 60]": {
+            "[:then, 28, 73, 4, 73, 25]": 9,
+            "[:else, 29, 73, 4, 73, 60]": 0
+          },
+          "[:if, 30, 81, 6, 81, 30]": {
+            "[:then, 31, 81, 6, 81, 10]": 0,
+            "[:else, 32, 81, 6, 81, 30]": 1
+          },
+          "[:\"&.\", 33, 83, 36, 83, 56]": {
+            "[:then, 34, 83, 36, 83, 56]": 1,
+            "[:else, 35, 83, 36, 83, 56]": 0
+          },
+          "[:unless, 36, 102, 4, 102, 77]": {
+            "[:else, 37, 102, 4, 102, 77]": 0,
+            "[:then, 38, 102, 4, 102, 13]": 12
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/base_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/base_controller.rb": {
         "lines": [
           1,
           1,
@@ -1158,13 +2560,13 @@
           1,
           null,
           1,
-          18,
+          32,
           1,
           null,
           null,
           null,
           1,
-          17,
+          31,
           0,
           null,
           null,
@@ -1172,16 +2574,16 @@
         ],
         "branches": {
           "[:unless, 0, 9, 4, 11, 7]": {
-            "[:else, 1, 9, 4, 11, 7]": 17,
+            "[:else, 1, 9, 4, 11, 7]": 31,
             "[:then, 2, 10, 6, 10, 58]": 1
           },
           "[:if, 3, 15, 4, 17, 7]": {
             "[:then, 4, 16, 6, 16, 97]": 0,
-            "[:else, 5, 15, 4, 17, 7]": 17
+            "[:else, 5, 15, 4, 17, 7]": 31
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/application_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/application_controller.rb": {
         "lines": [
           1,
           1,
@@ -1203,22 +2605,22 @@
           1,
           null,
           1,
-          9,
-          9,
+          10,
+          10,
           null,
-          9,
-          9,
+          10,
+          10,
           null,
           null,
           1,
-          2,
+          3,
           1,
           0,
           null,
           1,
           null,
           null,
-          1,
+          2,
           null,
           null,
           null,
@@ -1238,18 +2640,18 @@
           null,
           null,
           1,
-          124,
+          144,
           null,
           0,
           0,
           null,
           null,
           1,
-          377,
+          432,
           null,
           null,
           1,
-          179,
+          183,
           null,
           null,
           1,
@@ -1259,9 +2661,9 @@
           null,
           null,
           1,
-          26,
+          30,
           null,
-          26,
+          30,
           null,
           null,
           1,
@@ -1276,8 +2678,8 @@
           null,
           null,
           1,
-          10,
-          10,
+          16,
+          16,
           null,
           4,
           null,
@@ -1348,17 +2750,17 @@
           null,
           null,
           1,
-          146,
+          163,
           null,
           null,
           1,
-          22,
+          23,
           null,
           null,
           1,
-          124,
-          118,
-          39,
+          144,
+          138,
+          53,
           4,
           null,
           2,
@@ -1377,7 +2779,7 @@
         "branches": {
           "[:if, 0, 29, 4, 37, 7]": {
             "[:then, 1, 30, 6, 34, 9]": 1,
-            "[:else, 2, 36, 6, 36, 11]": 1
+            "[:else, 2, 36, 6, 36, 11]": 2
           },
           "[:if, 3, 30, 6, 34, 9]": {
             "[:then, 4, 31, 8, 31, 17]": 0,
@@ -1389,12 +2791,12 @@
             "[:else, 9, 49, 8, 49, 57]": 1
           },
           "[:\"&.\", 10, 56, 18, 56, 39]": {
-            "[:then, 11, 56, 18, 56, 39]": 118,
+            "[:then, 11, 56, 18, 56, 39]": 138,
             "[:else, 12, 56, 18, 56, 39]": 6
           },
           "[:unless, 13, 56, 4, 56, 39]": {
             "[:else, 14, 56, 4, 56, 39]": 0,
-            "[:then, 15, 56, 4, 56, 10]": 124
+            "[:then, 15, 56, 4, 56, 10]": 144
           },
           "[:if, 16, 71, 4, 71, 29]": {
             "[:then, 17, 71, 4, 71, 10]": 0,
@@ -1402,7 +2804,7 @@
           },
           "[:if, 19, 77, 4, 77, 25]": {
             "[:then, 20, 77, 4, 77, 10]": 0,
-            "[:else, 21, 77, 4, 77, 25]": 26
+            "[:else, 21, 77, 4, 77, 25]": 30
           },
           "[:if, 22, 83, 4, 83, 51]": {
             "[:then, 23, 83, 34, 83, 43]": 4,
@@ -1413,15 +2815,15 @@
             "[:then, 27, 88, 4, 88, 19]": 3
           },
           "[:\"&.\", 28, 94, 18, 94, 38]": {
-            "[:then, 29, 94, 18, 94, 38]": 10,
+            "[:then, 29, 94, 18, 94, 38]": 16,
             "[:else, 30, 94, 18, 94, 38]": 0
           },
           "[:unless, 31, 94, 4, 94, 38]": {
-            "[:else, 32, 94, 4, 94, 38]": 10,
+            "[:else, 32, 94, 4, 94, 38]": 16,
             "[:then, 33, 94, 4, 94, 10]": 0
           },
           "[:if, 34, 95, 4, 95, 46]": {
-            "[:then, 35, 95, 4, 95, 10]": 6,
+            "[:then, 35, 95, 4, 95, 10]": 12,
             "[:else, 36, 95, 4, 95, 46]": 4
           },
           "[:\"&.\", 37, 101, 7, 101, 27]": {
@@ -1485,19 +2887,19 @@
             "[:else, 81, 160, 4, 160, 54]": 17
           },
           "[:\"&.\", 82, 174, 18, 174, 42]": {
-            "[:then, 83, 174, 18, 174, 42]": 118,
+            "[:then, 83, 174, 18, 174, 42]": 138,
             "[:else, 84, 174, 18, 174, 42]": 6
           },
           "[:unless, 85, 174, 4, 174, 42]": {
-            "[:else, 86, 174, 4, 174, 42]": 118,
+            "[:else, 86, 174, 4, 174, 42]": 138,
             "[:then, 87, 174, 4, 174, 10]": 6
           },
           "[:unless, 88, 175, 4, 175, 68]": {
-            "[:else, 89, 175, 4, 175, 68]": 39,
-            "[:then, 90, 175, 4, 175, 10]": 79
+            "[:else, 89, 175, 4, 175, 68]": 53,
+            "[:then, 90, 175, 4, 175, 10]": 85
           },
           "[:if, 91, 176, 4, 176, 43]": {
-            "[:then, 92, 176, 4, 176, 10]": 35,
+            "[:then, 92, 176, 4, 176, 10]": 49,
             "[:else, 93, 176, 4, 176, 43]": 4
           },
           "[:if, 94, 177, 4, 177, 47]": {
@@ -1506,766 +2908,78 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/application_helper.rb": {
-        "lines": [
-          1,
-          null,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          91,
-          null,
-          89,
-          89,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          14,
-          14,
-          14,
-          14,
-          14,
-          null,
-          14,
-          null,
-          11,
-          null,
-          0,
-          null,
-          0,
-          null,
-          1,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          1,
-          null,
-          1,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          316,
-          null,
-          null,
-          1,
-          48,
-          48,
-          null,
-          48,
-          null,
-          null,
-          1,
-          133,
-          19,
-          null,
-          null,
-          114,
-          null,
-          null,
-          1,
-          103,
-          null,
-          103,
-          null,
-          null,
-          1,
-          2,
-          null,
-          0,
-          null,
-          2,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          null,
-          2,
-          2,
-          null,
-          0,
-          null,
-          null,
-          2,
-          null,
-          null,
-          1,
-          9,
-          null,
-          3,
-          null,
-          0,
-          null,
-          6,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          7,
-          null,
-          7,
-          3,
-          4,
-          4,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          62,
-          16,
-          null,
-          null,
-          46,
-          6,
-          null,
-          5,
-          null,
-          null,
-          40,
-          12,
-          null,
-          null,
-          28,
-          null,
-          null,
-          1,
-          45,
-          45,
-          null,
-          12,
-          null,
-          null,
-          1,
-          45,
-          null,
-          36,
-          null,
-          null,
-          1,
-          45,
-          null,
-          null,
-          1,
-          7,
-          0,
-          0,
-          null,
-          null,
-          7,
-          1,
-          null,
-          null,
-          6,
-          null,
-          null,
-          1,
-          7,
-          null,
-          null,
-          1,
-          7,
-          0,
-          0,
-          null,
-          null,
-          7,
-          null,
-          6,
-          null,
-          null
-        ],
-        "branches": {
-          "[:if, 0, 15, 4, 15, 32]": {
-            "[:then, 1, 15, 4, 15, 13]": 2,
-            "[:else, 2, 15, 4, 15, 32]": 89
-          },
-          "[:if, 3, 26, 4, 26, 75]": {
-            "[:then, 4, 26, 4, 26, 35]": 10,
-            "[:else, 5, 26, 4, 26, 75]": 4
-          },
-          "[:if, 6, 27, 4, 27, 73]": {
-            "[:then, 7, 27, 4, 27, 34]": 2,
-            "[:else, 8, 27, 4, 27, 73]": 12
-          },
-          "[:if, 9, 28, 4, 28, 81]": {
-            "[:then, 10, 28, 4, 28, 36]": 2,
-            "[:else, 11, 28, 4, 28, 81]": 12
-          },
-          "[:\"&.\", 12, 29, 52, 29, 64]": {
-            "[:then, 13, 29, 52, 29, 64]": 10,
-            "[:else, 14, 29, 52, 29, 64]": 2
-          },
-          "[:\"&.\", 15, 30, 16, 30, 27]": {
-            "[:then, 16, 30, 16, 30, 27]": 10,
-            "[:else, 17, 30, 16, 30, 27]": 4
-          },
-          "[:\"&.\", 18, 30, 16, 30, 34]": {
-            "[:then, 19, 30, 16, 30, 34]": 10,
-            "[:else, 20, 30, 16, 30, 34]": 4
-          },
-          "[:\"&.\", 21, 30, 38, 30, 50]": {
-            "[:then, 22, 30, 38, 30, 50]": 2,
-            "[:else, 23, 30, 38, 30, 50]": 2
-          },
-          "[:\"&.\", 24, 30, 38, 30, 57]": {
-            "[:then, 25, 30, 38, 30, 57]": 2,
-            "[:else, 26, 30, 38, 30, 57]": 2
-          },
-          "[:\"&.\", 27, 30, 61, 30, 72]": {
-            "[:then, 28, 30, 61, 30, 72]": 2,
-            "[:else, 29, 30, 61, 30, 72]": 0
-          },
-          "[:case, 30, 32, 4, 53, 7]": {
-            "[:when, 31, 34, 6, 34, 122]": 11,
-            "[:when, 32, 36, 6, 36, 124]": 0,
-            "[:when, 33, 38, 6, 38, 129]": 0,
-            "[:when, 34, 40, 6, 40, 62]": 1,
-            "[:when, 35, 42, 6, 42, 134]": 0,
-            "[:when, 36, 44, 6, 44, 95]": 0,
-            "[:when, 37, 46, 6, 46, 87]": 0,
-            "[:when, 38, 48, 6, 48, 85]": 1,
-            "[:when, 39, 50, 6, 50, 80]": 1,
-            "[:else, 40, 52, 6, 52, 66]": 0
-          },
-          "[:\"&.\", 41, 34, 79, 34, 91]": {
-            "[:then, 42, 34, 79, 34, 91]": 9,
-            "[:else, 43, 34, 79, 34, 91]": 2
-          },
-          "[:\"&.\", 44, 36, 81, 36, 93]": {
-            "[:then, 45, 36, 81, 36, 93]": 0,
-            "[:else, 46, 36, 81, 36, 93]": 0
-          },
-          "[:if, 47, 57, 4, 57, 51]": {
-            "[:then, 48, 57, 34, 57, 43]": 64,
-            "[:else, 49, 57, 46, 57, 51]": 252
-          },
-          "[:\"&.\", 50, 61, 11, 61, 32]": {
-            "[:then, 51, 61, 11, 61, 32]": 48,
-            "[:else, 52, 61, 11, 61, 32]": 0
-          },
-          "[:\"&.\", 53, 61, 11, 61, 38]": {
-            "[:then, 54, 61, 11, 61, 38]": 48,
-            "[:else, 55, 61, 11, 61, 38]": 0
-          },
-          "[:if, 56, 62, 4, 62, 38]": {
-            "[:then, 57, 62, 4, 62, 23]": 0,
-            "[:else, 58, 62, 4, 62, 38]": 48
-          },
-          "[:\"&.\", 59, 68, 7, 68, 27]": {
-            "[:then, 60, 68, 7, 68, 27]": 118,
-            "[:else, 61, 68, 7, 68, 27]": 15
-          },
-          "[:if, 62, 68, 4, 70, 7]": {
-            "[:then, 63, 69, 6, 69, 102]": 19,
-            "[:else, 64, 68, 4, 70, 7]": 114
-          },
-          "[:if, 65, 69, 13, 69, 102]": {
-            "[:then, 66, 69, 50, 69, 97]": 2,
-            "[:else, 67, 69, 100, 69, 102]": 17
-          },
-          "[:\"&.\", 68, 76, 66, 76, 86]": {
-            "[:then, 69, 76, 66, 76, 86]": 100,
-            "[:else, 70, 76, 66, 76, 86]": 3
-          },
-          "[:if, 71, 76, 4, 76, 86]": {
-            "[:then, 72, 76, 4, 76, 62]": 0,
-            "[:else, 73, 76, 4, 76, 86]": 103
-          },
-          "[:\"&.\", 74, 76, 11, 76, 45]": {
-            "[:then, 75, 76, 11, 76, 45]": 0,
-            "[:else, 76, 76, 11, 76, 45]": 0
-          },
-          "[:if, 77, 78, 4, 78, 78]": {
-            "[:then, 78, 78, 44, 78, 69]": 47,
-            "[:else, 79, 78, 72, 78, 78]": 56
-          },
-          "[:case, 80, 82, 4, 89, 7]": {
-            "[:when, 81, 84, 6, 84, 17]": 0,
-            "[:when, 82, 86, 6, 86, 20]": 2,
-            "[:else, 83, 88, 6, 88, 16]": 0
-          },
-          "[:if, 84, 94, 6, 98, 9]": {
-            "[:then, 85, 95, 8, 95, 22]": 2,
-            "[:else, 86, 97, 8, 97, 21]": 0
-          },
-          "[:case, 87, 104, 4, 113, 7]": {
-            "[:when, 88, 106, 6, 106, 105]": 3,
-            "[:when, 89, 108, 6, 108, 80]": 0,
-            "[:when, 90, 110, 6, 110, 94]": 6,
-            "[:else, 91, 112, 6, 112, 8]": 0
-          },
-          "[:if, 92, 119, 4, 125, 7]": {
-            "[:then, 93, 120, 6, 120, 31]": 3,
-            "[:else, 94, 121, 4, 124, 30]": 4
-          },
-          "[:if, 95, 121, 4, 124, 30]": {
-            "[:then, 96, 122, 6, 122, 34]": 4,
-            "[:else, 97, 124, 6, 124, 30]": 0
-          },
-          "[:if, 98, 129, 4, 131, 7]": {
-            "[:then, 99, 130, 6, 130, 51]": 16,
-            "[:else, 100, 129, 4, 131, 7]": 46
-          },
-          "[:\"&.\", 101, 130, 36, 130, 50]": {
-            "[:then, 102, 130, 36, 130, 50]": 14,
-            "[:else, 103, 130, 36, 130, 50]": 2
-          },
-          "[:\"&.\", 104, 133, 7, 133, 27]": {
-            "[:then, 105, 133, 7, 133, 27]": 36,
-            "[:else, 106, 133, 7, 133, 27]": 10
-          },
-          "[:if, 107, 133, 4, 137, 7]": {
-            "[:then, 108, 134, 6, 136, 21]": 6,
-            "[:else, 109, 133, 4, 137, 7]": 40
-          },
-          "[:if, 110, 134, 6, 134, 106]": {
-            "[:then, 111, 134, 6, 134, 65]": 1,
-            "[:else, 112, 134, 6, 134, 106]": 5
-          },
-          "[:if, 113, 139, 4, 141, 7]": {
-            "[:then, 114, 140, 6, 140, 21]": 12,
-            "[:else, 115, 139, 4, 141, 7]": 28
-          },
-          "[:\"&.\", 116, 143, 27, 143, 48]": {
-            "[:then, 117, 143, 27, 143, 48]": 21,
-            "[:else, 118, 143, 27, 143, 48]": 7
-          },
-          "[:if, 119, 148, 4, 148, 59]": {
-            "[:then, 120, 148, 4, 148, 15]": 33,
-            "[:else, 121, 148, 4, 148, 59]": 12
-          },
-          "[:if, 122, 154, 4, 154, 28]": {
-            "[:then, 123, 154, 4, 154, 10]": 9,
-            "[:else, 124, 154, 4, 154, 28]": 36
-          },
-          "[:\"&.\", 125, 164, 7, 164, 27]": {
-            "[:then, 126, 164, 7, 164, 27]": 5,
-            "[:else, 127, 164, 7, 164, 27]": 2
-          },
-          "[:if, 128, 164, 4, 167, 7]": {
-            "[:then, 129, 165, 6, 166, 88]": 0,
-            "[:else, 130, 164, 4, 167, 7]": 7
-          },
-          "[:if, 131, 166, 6, 166, 88]": {
-            "[:then, 132, 166, 6, 166, 68]": 0,
-            "[:else, 133, 166, 6, 166, 88]": 0
-          },
-          "[:if, 134, 169, 4, 171, 7]": {
-            "[:then, 135, 170, 6, 170, 81]": 1,
-            "[:else, 136, 169, 4, 171, 7]": 6
-          },
-          "[:\"&.\", 137, 181, 7, 181, 27]": {
-            "[:then, 138, 181, 7, 181, 27]": 5,
-            "[:else, 139, 181, 7, 181, 27]": 2
-          },
-          "[:if, 140, 181, 4, 184, 7]": {
-            "[:then, 141, 182, 6, 183, 71]": 0,
-            "[:else, 142, 181, 4, 184, 7]": 7
-          },
-          "[:if, 143, 183, 6, 183, 71]": {
-            "[:then, 144, 183, 6, 183, 51]": 0,
-            "[:else, 145, 183, 6, 183, 71]": 0
-          },
-          "[:if, 146, 186, 4, 186, 119]": {
-            "[:then, 147, 186, 4, 186, 36]": 1,
-            "[:else, 148, 186, 4, 186, 119]": 6
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/items_helper.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/items_controller.rb": {
         "lines": [
           1,
           1,
-          26,
-          null,
-          22,
-          22,
-          null,
-          18,
-          null,
-          null,
           1,
-          27,
-          null,
-          null,
           1,
-          64,
-          null,
-          null,
           1,
-          11,
-          null,
-          11,
-          null,
-          null,
           1,
-          11,
-          null,
-          11,
-          null,
-          11,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          25,
-          25,
-          null,
-          null,
           1,
           null,
           1,
-          0,
-          0,
-          0,
-          0,
+          7,
+          7,
+          7,
+          7,
           null,
-          null,
-          null
-        ],
-        "branches": {
-          "[:unless, 0, 3, 4, 3, 39]": {
-            "[:else, 1, 3, 4, 3, 39]": 22,
-            "[:then, 2, 3, 4, 3, 16]": 4
-          },
-          "[:if, 3, 6, 4, 6, 71]": {
-            "[:then, 4, 6, 4, 6, 59]": 4,
-            "[:else, 5, 6, 4, 6, 71]": 18
-          },
-          "[:if, 6, 20, 4, 20, 34]": {
-            "[:then, 7, 20, 4, 20, 13]": 0,
-            "[:else, 8, 20, 4, 20, 34]": 11
-          },
-          "[:case, 9, 28, 4, 49, 7]": {
-            "[:when, 10, 30, 6, 30, 11]": 11,
-            "[:when, 11, 32, 6, 33, 53]": 0,
-            "[:when, 12, 35, 6, 36, 47]": 0,
-            "[:when, 13, 38, 6, 39, 44]": 0,
-            "[:when, 14, 41, 6, 42, 47]": 0,
-            "[:when, 15, 44, 6, 45, 50]": 0,
-            "[:else, 16, 47, 6, 48, 47]": 0
-          },
-          "[:\"&.\", 17, 54, 6, 54, 25]": {
-            "[:then, 18, 54, 6, 54, 25]": 0,
-            "[:else, 19, 54, 6, 54, 25]": 0
-          },
-          "[:\"&.\", 20, 55, 6, 55, 24]": {
-            "[:then, 21, 55, 6, 55, 24]": 0,
-            "[:else, 22, 55, 6, 55, 24]": 0
-          },
-          "[:case, 23, 68, 4, 72, 7]": {
-            "[:when, 24, 69, 20, 69, 25]": 0,
-            "[:when, 25, 70, 20, 70, 26]": 0,
-            "[:else, 26, 71, 9, 71, 14]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/conversations_helper.rb": {
-        "lines": [
-          1,
-          1,
-          70,
-          70,
-          null,
-          70,
-          10,
-          null,
-          10,
-          null,
-          0,
-          null,
-          60,
-          38,
-          null,
-          6,
-          null,
-          10,
-          null,
-          6,
-          null,
-          6,
-          null,
-          10,
-          null,
-          0,
-          null,
-          null,
-          22,
-          null,
+          7,
+          7,
+          7,
+          7,
           null,
           null,
           1,
-          35,
-          35,
+          14,
+          14,
+          14,
           null,
-          null,
-          35,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
-        "branches": {
-          "[:if, 0, 4, 4, 4, 52]": {
-            "[:then, 1, 4, 4, 4, 29]": 0,
-            "[:else, 2, 4, 4, 4, 52]": 70
-          },
-          "[:if, 3, 6, 4, 30, 7]": {
-            "[:then, 4, 7, 6, 12, 9]": 10,
-            "[:else, 5, 13, 4, 29, 48]": 60
-          },
-          "[:case, 6, 7, 6, 12, 9]": {
-            "[:when, 7, 9, 8, 9, 78]": 10,
-            "[:when, 8, 11, 8, 11, 81]": 0,
-            "[:else, 9, 7, 6, 12, 9]": 0
-          },
-          "[:if, 10, 13, 4, 29, 48]": {
-            "[:then, 11, 14, 6, 27, 9]": 38,
-            "[:else, 12, 29, 6, 29, 48]": 22
-          },
-          "[:case, 13, 14, 6, 27, 9]": {
-            "[:when, 14, 16, 8, 16, 24]": 6,
-            "[:when, 15, 18, 8, 18, 24]": 10,
-            "[:when, 16, 20, 8, 20, 25]": 6,
-            "[:when, 17, 22, 8, 22, 31]": 6,
-            "[:when, 18, 24, 8, 24, 19]": 10,
-            "[:else, 19, 26, 8, 26, 50]": 0
-          },
-          "[:\"&.\", 20, 38, 6, 38, 53]": {
-            "[:then, 21, 38, 6, 38, 53]": 35,
-            "[:else, 22, 38, 6, 38, 53]": 0
-          },
-          "[:\"&.\", 23, 40, 6, 40, 38]": {
-            "[:then, 24, 40, 6, 40, 38]": 0,
-            "[:else, 25, 40, 6, 40, 38]": 35
-          },
-          "[:\"&.\", 26, 42, 6, 42, 24]": {
-            "[:then, 27, 42, 6, 42, 24]": 35,
-            "[:else, 28, 42, 6, 42, 24]": 0
-          },
-          "[:\"&.\", 29, 42, 6, 42, 38]": {
-            "[:then, 30, 42, 6, 42, 38]": 35,
-            "[:else, 31, 42, 6, 42, 38]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/messages_helper.rb": {
-        "lines": [
+          14,
           1,
           1,
-          15,
-          null,
-          3,
-          null,
-          null,
+          1,
+          1,
+          1,
           null,
           null,
           null,
-          null,
-          null,
-          null,
+          14,
           2,
           null,
-          3,
-          null,
-          2,
-          null,
-          2,
-          null,
-          3,
           null,
           0,
           null,
           null,
-          null
-        ],
-        "branches": {
-          "[:case, 0, 3, 4, 25, 7]": {
-            "[:when, 1, 5, 6, 12, 7]": 3,
-            "[:when, 2, 14, 6, 14, 106]": 2,
-            "[:when, 3, 16, 6, 16, 92]": 3,
-            "[:when, 4, 18, 6, 18, 93]": 2,
-            "[:when, 5, 20, 6, 20, 99]": 2,
-            "[:when, 6, 22, 6, 22, 62]": 3,
-            "[:else, 7, 24, 6, 24, 21]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/admin/dashboard_helper.rb": {
-        "lines": [
-          1,
-          1,
-          3,
-          3,
           null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          14,
+          null,
+          null,
+          1,
+          1,
           1,
           null,
           null,
           1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
           1,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
           null,
           null,
           1,
           4,
           null,
-          null
-        ],
-        "branches": {
-          "[:if, 0, 3, 4, 3, 40]": {
-            "[:then, 1, 3, 4, 3, 16]": 0,
-            "[:else, 2, 3, 4, 3, 40]": 3
-          },
-          "[:if, 3, 4, 4, 4, 38]": {
-            "[:then, 4, 4, 4, 4, 15]": 2,
-            "[:else, 5, 4, 4, 4, 38]": 1
-          },
-          "[:if, 6, 10, 4, 10, 35]": {
-            "[:then, 7, 10, 4, 10, 19]": 0,
-            "[:else, 8, 10, 4, 10, 35]": 0
-          },
-          "[:if, 9, 11, 4, 11, 44]": {
-            "[:then, 10, 11, 4, 11, 19]": 0,
-            "[:else, 11, 11, 4, 11, 44]": 0
-          },
-          "[:if, 12, 17, 4, 23, 7]": {
-            "[:then, 13, 18, 6, 18, 20]": 0,
-            "[:else, 14, 19, 4, 22, 22]": 0
-          },
-          "[:if, 15, 19, 4, 22, 22]": {
-            "[:then, 16, 20, 6, 20, 22]": 0,
-            "[:else, 17, 22, 6, 22, 22]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/items_controller.rb": {
-        "lines": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
+          4,
+          4,
+          4,
+          4,
           null,
-          1,
-          7,
-          7,
-          7,
-          7,
-          null,
-          7,
-          7,
-          7,
-          7,
-          null,
-          null,
-          1,
-          14,
-          14,
-          14,
-          null,
-          14,
-          1,
-          1,
-          1,
-          1,
-          1,
-          null,
-          null,
-          null,
-          14,
-          2,
-          null,
-          null,
-          0,
-          null,
-          null,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          14,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          1,
-          null,
-          null,
-          1,
+          4,
+          4,
+          4,
           2,
           null,
           2,
@@ -2273,27 +2987,19 @@
           2,
           null,
           2,
-          2,
-          0,
-          0,
-          null,
-          2,
-          2,
-          2,
-          null,
-          2,
           null,
           null,
           null,
           null,
           1,
-          0,
-          0,
+          2,
+          2,
+          2,
           null,
-          0,
-          0,
-          0,
-          0,
+          2,
+          2,
+          4,
+          2,
           null,
           0,
           0,
@@ -2317,23 +3023,23 @@
           1,
           null,
           1,
-          26,
+          29,
           null,
           null,
           1,
-          2,
-          2,
+          6,
+          6,
           null,
-          2,
+          6,
           null,
           null,
           1,
-          3,
+          6,
           1,
           1,
           null,
           null,
-          2,
+          5,
           null,
           2,
           null,
@@ -2345,7 +3051,7 @@
           null,
           null,
           1,
-          10,
+          16,
           null,
           null,
           1,
@@ -2367,31 +3073,46 @@
           null,
           null,
           1,
+          6,
+          null,
+          6,
+          null,
+          null,
+          1,
+          7,
+          null,
+          2,
+          null,
+          null,
+          1,
           2,
           null,
           2,
           null,
           null,
           1,
+          2,
+          null,
+          null,
+          1,
+          1,
+          null,
+          0,
+          null,
+          null,
+          1,
+          8,
+          6,
+          null,
           4,
           null,
-          2,
           null,
           null,
-          1,
-          2,
           null,
-          2,
           null,
           null,
           1,
-          2,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
+          8,
           null,
           null,
           1,
@@ -2428,105 +3149,121 @@
             "[:then, 10, 36, 6, 45, 34]": 2,
             "[:else, 11, 35, 4, 46, 7]": 12
           },
-          "[:unless, 12, 62, 4, 62, 67]": {
-            "[:else, 13, 62, 4, 62, 67]": 0,
-            "[:then, 14, 62, 4, 62, 40]": 2
+          "[:unless, 12, 64, 4, 64, 67]": {
+            "[:else, 13, 64, 4, 64, 67]": 0,
+            "[:then, 14, 64, 4, 64, 40]": 4
           },
-          "[:if, 15, 66, 6, 75, 9]": {
-            "[:then, 16, 67, 8, 68, 71]": 0,
-            "[:else, 17, 70, 8, 74, 80]": 2
+          "[:if, 15, 69, 6, 78, 9]": {
+            "[:then, 16, 70, 8, 71, 71]": 2,
+            "[:else, 17, 73, 8, 77, 80]": 2
           },
-          "[:if, 18, 84, 6, 93, 9]": {
-            "[:then, 19, 85, 8, 86, 66]": 0,
-            "[:else, 20, 88, 8, 92, 80]": 0
+          "[:if, 18, 88, 6, 97, 9]": {
+            "[:then, 19, 89, 8, 90, 66]": 2,
+            "[:else, 20, 92, 8, 96, 80]": 0
           },
-          "[:if, 21, 99, 22, 99, 85]": {
-            "[:then, 22, 99, 58, 99, 72]": 0,
-            "[:else, 23, 99, 75, 99, 85]": 4
+          "[:if, 21, 103, 22, 103, 85]": {
+            "[:then, 22, 103, 58, 103, 72]": 0,
+            "[:else, 23, 103, 75, 103, 85]": 4
           },
-          "[:\"&.\", 24, 115, 53, 115, 73]": {
-            "[:then, 25, 115, 53, 115, 73]": 2,
-            "[:else, 26, 115, 53, 115, 73]": 0
+          "[:\"&.\", 24, 119, 53, 119, 73]": {
+            "[:then, 25, 119, 53, 119, 73]": 6,
+            "[:else, 26, 119, 53, 119, 73]": 0
           },
-          "[:if, 27, 115, 6, 115, 73]": {
-            "[:then, 28, 115, 6, 115, 49]": 0,
-            "[:else, 29, 115, 6, 115, 73]": 2
+          "[:if, 27, 119, 6, 119, 73]": {
+            "[:then, 28, 119, 6, 119, 49]": 0,
+            "[:else, 29, 119, 6, 119, 73]": 6
           },
-          "[:if, 30, 121, 6, 124, 9]": {
-            "[:then, 31, 122, 8, 123, 14]": 1,
-            "[:else, 32, 121, 6, 124, 9]": 2
+          "[:if, 30, 125, 6, 128, 9]": {
+            "[:then, 31, 126, 8, 127, 14]": 1,
+            "[:else, 32, 125, 6, 128, 9]": 5
           },
-          "[:if, 33, 126, 6, 126, 27]": {
-            "[:then, 34, 126, 6, 126, 12]": 0,
-            "[:else, 35, 126, 6, 126, 27]": 2
+          "[:if, 33, 130, 6, 130, 27]": {
+            "[:then, 34, 130, 6, 130, 12]": 3,
+            "[:else, 35, 130, 6, 130, 27]": 2
           },
-          "[:if, 36, 132, 6, 132, 32]": {
-            "[:then, 37, 132, 6, 132, 12]": 4,
-            "[:else, 38, 132, 6, 132, 32]": 1
+          "[:if, 36, 136, 6, 136, 32]": {
+            "[:then, 37, 136, 6, 136, 12]": 4,
+            "[:else, 38, 136, 6, 136, 32]": 1
           },
-          "[:if, 39, 148, 6, 148, 47]": {
-            "[:then, 40, 148, 6, 148, 12]": 14,
-            "[:else, 41, 148, 6, 148, 47]": 2
+          "[:if, 39, 152, 6, 152, 47]": {
+            "[:then, 40, 152, 6, 152, 12]": 14,
+            "[:else, 41, 152, 6, 152, 47]": 2
           },
-          "[:\"&.\", 42, 154, 70, 154, 89]": {
-            "[:then, 43, 154, 70, 154, 89]": 2,
-            "[:else, 44, 154, 70, 154, 89]": 0
+          "[:\"&.\", 42, 158, 70, 158, 89]": {
+            "[:then, 43, 158, 70, 158, 89]": 2,
+            "[:else, 44, 158, 70, 158, 89]": 0
           },
-          "[:if, 45, 154, 6, 154, 89]": {
-            "[:then, 46, 154, 6, 154, 48]": 0,
-            "[:else, 47, 154, 6, 154, 89]": 2
+          "[:if, 45, 158, 6, 158, 89]": {
+            "[:then, 46, 158, 6, 158, 48]": 0,
+            "[:else, 47, 158, 6, 158, 89]": 2
           },
-          "[:if, 48, 160, 6, 160, 33]": {
-            "[:then, 49, 160, 6, 160, 12]": 0,
-            "[:else, 50, 160, 6, 160, 33]": 2
+          "[:if, 48, 164, 6, 164, 33]": {
+            "[:then, 49, 164, 6, 164, 12]": 0,
+            "[:else, 50, 164, 6, 164, 33]": 6
           },
-          "[:\"&.\", 51, 166, 20, 166, 61]": {
-            "[:then, 52, 166, 20, 166, 61]": 4,
-            "[:else, 53, 166, 20, 166, 61]": 0
+          "[:\"&.\", 51, 170, 20, 170, 61]": {
+            "[:then, 52, 170, 20, 170, 61]": 7,
+            "[:else, 53, 170, 20, 170, 61]": 0
           },
-          "[:unless, 54, 166, 6, 166, 61]": {
-            "[:else, 55, 166, 6, 166, 61]": 2,
-            "[:then, 56, 166, 6, 166, 12]": 2
+          "[:unless, 54, 170, 6, 170, 61]": {
+            "[:else, 55, 170, 6, 170, 61]": 2,
+            "[:then, 56, 170, 6, 170, 12]": 5
           },
-          "[:\"&.\", 57, 172, 20, 172, 56]": {
-            "[:then, 58, 172, 20, 172, 56]": 2,
-            "[:else, 59, 172, 20, 172, 56]": 0
+          "[:\"&.\", 57, 176, 20, 176, 56]": {
+            "[:then, 58, 176, 20, 176, 56]": 2,
+            "[:else, 59, 176, 20, 176, 56]": 0
           },
-          "[:unless, 60, 172, 6, 172, 56]": {
-            "[:else, 61, 172, 6, 172, 56]": 2,
-            "[:then, 62, 172, 6, 172, 12]": 0
+          "[:unless, 60, 176, 6, 176, 56]": {
+            "[:else, 61, 176, 6, 176, 56]": 2,
+            "[:then, 62, 176, 6, 176, 12]": 0
           },
-          "[:\"&.\", 63, 182, 41, 182, 61]": {
-            "[:then, 64, 182, 41, 182, 61]": 0,
-            "[:else, 65, 182, 41, 182, 61]": 0
+          "[:\"&.\", 63, 186, 41, 186, 61]": {
+            "[:then, 64, 186, 41, 186, 61]": 1,
+            "[:else, 65, 186, 41, 186, 61]": 0
           },
-          "[:unless, 66, 182, 6, 182, 61]": {
-            "[:else, 67, 182, 6, 182, 61]": 0,
-            "[:then, 68, 182, 6, 182, 33]": 0
+          "[:unless, 66, 186, 6, 186, 61]": {
+            "[:else, 67, 186, 6, 186, 61]": 0,
+            "[:then, 68, 186, 6, 186, 33]": 1
           },
-          "[:unless, 69, 188, 6, 188, 32]": {
-            "[:else, 70, 188, 6, 188, 32]": 1,
-            "[:then, 71, 188, 6, 188, 16]": 0
+          "[:unless, 69, 192, 6, 192, 48]": {
+            "[:else, 70, 192, 6, 192, 48]": 6,
+            "[:then, 71, 192, 6, 192, 12]": 2
           },
-          "[:if, 72, 190, 6, 200, 9]": {
-            "[:then, 73, 191, 8, 191, 32]": 1,
-            "[:else, 74, 192, 6, 199, 37]": 0
+          "[:unless, 72, 193, 6, 193, 94]": {
+            "[:else, 73, 193, 6, 193, 94]": 4,
+            "[:then, 74, 193, 6, 193, 12]": 2
           },
-          "[:if, 75, 192, 6, 199, 37]": {
-            "[:then, 76, 193, 8, 193, 38]": 0,
-            "[:else, 77, 194, 6, 199, 37]": 0
+          "[:\"&.\", 75, 203, 6, 203, 36]": {
+            "[:then, 76, 203, 6, 203, 36]": 8,
+            "[:else, 77, 203, 6, 203, 36]": 0
           },
-          "[:if, 78, 194, 6, 199, 37]": {
-            "[:then, 79, 195, 8, 195, 41]": 0,
-            "[:else, 80, 196, 6, 199, 37]": 0
+          "[:\"&.\", 78, 203, 49, 203, 76]": {
+            "[:then, 79, 203, 49, 203, 76]": 6,
+            "[:else, 80, 203, 49, 203, 76]": 0
           },
-          "[:if, 81, 196, 6, 199, 37]": {
-            "[:then, 82, 197, 8, 197, 26]": 0,
-            "[:else, 83, 199, 8, 199, 37]": 0
+          "[:unless, 81, 207, 6, 207, 32]": {
+            "[:else, 82, 207, 6, 207, 32]": 1,
+            "[:then, 83, 207, 6, 207, 16]": 0
+          },
+          "[:if, 84, 209, 6, 219, 9]": {
+            "[:then, 85, 210, 8, 210, 32]": 1,
+            "[:else, 86, 211, 6, 218, 37]": 0
+          },
+          "[:if, 87, 211, 6, 218, 37]": {
+            "[:then, 88, 212, 8, 212, 38]": 0,
+            "[:else, 89, 213, 6, 218, 37]": 0
+          },
+          "[:if, 90, 213, 6, 218, 37]": {
+            "[:then, 91, 214, 8, 214, 41]": 0,
+            "[:else, 92, 215, 6, 218, 37]": 0
+          },
+          "[:if, 93, 215, 6, 218, 37]": {
+            "[:then, 94, 216, 8, 216, 26]": 0,
+            "[:else, 95, 218, 8, 218, 37]": 0
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/setups_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/setups_controller.rb": {
         "lines": [
           1,
           1,
@@ -2558,7 +3295,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/college_rules_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/college_rules_controller.rb": {
         "lines": [
           1,
           1,
@@ -2622,7 +3359,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/users_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/users_controller.rb": {
         "lines": [
           1,
           1,
@@ -2692,7 +3429,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/dashboards_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/dashboards_controller.rb": {
         "lines": [
           1,
           1,
@@ -2952,7 +3689,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/api/locations_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/api/locations_controller.rb": {
         "lines": [
           1,
           1,
@@ -3014,7 +3751,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/users/sessions_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/users/sessions_controller.rb": {
         "lines": [
           1,
           1,
@@ -3081,7 +3818,64 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/conversations_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/users/registrations_controller.rb": {
+        "lines": [
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          null,
+          2,
+          2,
+          2,
+          2,
+          2,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          2,
+          0,
+          0,
+          null,
+          null,
+          2,
+          null,
+          null
+        ],
+        "branches": {
+          "[:if, 0, 6, 4, 6, 34]": {
+            "[:then, 1, 6, 4, 6, 18]": 0,
+            "[:else, 2, 6, 4, 6, 34]": 2
+          },
+          "[:if, 3, 8, 4, 22, 7]": {
+            "[:then, 4, 9, 6, 17, 9]": 2,
+            "[:else, 5, 19, 6, 21, 27]": 0
+          },
+          "[:if, 6, 9, 6, 17, 9]": {
+            "[:then, 7, 10, 8, 12, 73]": 2,
+            "[:else, 8, 14, 8, 16, 82]": 0
+          },
+          "[:if, 9, 28, 4, 31, 7]": {
+            "[:then, 10, 29, 6, 30, 12]": 0,
+            "[:else, 11, 28, 4, 31, 7]": 2
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/conversations_controller.rb": {
         "lines": [
           1,
           1,
@@ -3210,7 +4004,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/message.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/message.rb": {
         "lines": [
           1,
           1,
@@ -3311,7 +4105,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/messages_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/messages_controller.rb": {
         "lines": [
           1,
           1,
@@ -3363,7 +4157,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/users_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/users_controller.rb": {
         "lines": [
           1,
           1,
@@ -3397,7 +4191,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/models/favorite.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/favorite.rb": {
         "lines": [
           1,
           1,
@@ -3408,7 +4202,7 @@
         ],
         "branches": {}
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/offers_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/offers_controller.rb": {
         "lines": [
           1,
           1,
@@ -3878,14 +4672,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/offers_helper.rb": {
-        "lines": [
-          1,
-          null
-        ],
-        "branches": {}
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/currencies_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/currencies_controller.rb": {
         "lines": [
           1,
           1,
@@ -3912,7 +4699,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/notifications_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/notifications_controller.rb": {
         "lines": [
           1,
           1,
@@ -4051,383 +4838,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/notifications_helper.rb": {
-        "lines": [
-          1,
-          1,
-          null,
-          4,
-          null,
-          null,
-          null,
-          4,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          4,
-          null,
-          null,
-          1,
-          null,
-          14,
-          14,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          1,
-          6,
-          null,
-          null,
-          null,
-          null,
-          1,
-          5,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          1,
-          5,
-          5,
-          5,
-          null,
-          5,
-          null,
-          5,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          10,
-          null,
-          10,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          10,
-          10,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          5,
-          null,
-          0,
-          null,
-          0,
-          null,
-          5,
-          null,
-          null,
-          null,
-          1,
-          1,
-          null,
-          1,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          2,
-          2,
-          null,
-          2,
-          null,
-          2,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
-          0,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          6,
-          null,
-          6,
-          null,
-          null,
-          5,
-          null,
-          1,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          1,
-          null,
-          null,
-          1,
-          17,
-          null,
-          null,
-          1,
-          5,
-          null,
-          null,
-          1,
-          6,
-          6,
-          null,
-          6,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          6,
-          6,
-          null,
-          6,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          6,
-          4,
-          3,
-          null,
-          null,
-          null,
-          null,
-          1,
-          null,
-          15,
-          6,
-          null,
-          9,
-          null,
-          null,
-          15,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
-        "branches": {
-          "[:\"&.\", 0, 8, 7, 8, 27]": {
-            "[:then, 1, 8, 7, 8, 27]": 4,
-            "[:else, 2, 8, 7, 8, 27]": 0
-          },
-          "[:\"&.\", 3, 8, 31, 8, 59]": {
-            "[:then, 4, 8, 31, 8, 59]": 3,
-            "[:else, 5, 8, 31, 8, 59]": 0
-          },
-          "[:if, 6, 8, 4, 13, 7]": {
-            "[:then, 7, 9, 6, 12, 7]": 1,
-            "[:else, 8, 8, 4, 13, 7]": 3
-          },
-          "[:if, 9, 21, 19, 21, 47]": {
-            "[:then, 10, 21, 38, 21, 41]": 6,
-            "[:else, 11, 21, 44, 21, 47]": 8
-          },
-          "[:unless, 12, 28, 4, 28, 29]": {
-            "[:else, 13, 28, 4, 28, 29]": 0,
-            "[:then, 14, 28, 4, 28, 15]": 0
-          },
-          "[:case, 15, 56, 4, 73, 7]": {
-            "[:when, 16, 58, 6, 58, 104]": 5,
-            "[:when, 17, 60, 6, 60, 106]": 0,
-            "[:when, 18, 62, 6, 62, 112]": 0,
-            "[:when, 19, 64, 6, 64, 58]": 0,
-            "[:when, 20, 66, 6, 66, 82]": 0,
-            "[:when, 21, 68, 6, 68, 88]": 0,
-            "[:when, 22, 70, 6, 70, 80]": 0,
-            "[:else, 23, 72, 6, 72, 40]": 0
-          },
-          "[:case, 24, 77, 4, 88, 7]": {
-            "[:when, 25, 79, 6, 79, 64]": 10,
-            "[:when, 26, 81, 6, 81, 48]": 0,
-            "[:when, 27, 83, 6, 83, 69]": 0,
-            "[:when, 28, 85, 6, 85, 77]": 0,
-            "[:when, 29, 87, 6, 87, 53]": 0,
-            "[:else, 30, 77, 4, 88, 7]": 0
-          },
-          "[:case, 31, 92, 4, 100, 7]": {
-            "[:when, 32, 93, 30, 93, 41]": 10,
-            "[:when, 33, 94, 30, 94, 39]": 0,
-            "[:when, 34, 95, 32, 95, 43]": 0,
-            "[:when, 35, 96, 31, 96, 41]": 0,
-            "[:when, 36, 97, 31, 97, 41]": 0,
-            "[:when, 37, 98, 32, 98, 43]": 0,
-            "[:when, 38, 99, 32, 99, 43]": 0,
-            "[:else, 39, 92, 4, 100, 7]": 0
-          },
-          "[:case, 40, 104, 4, 111, 7]": {
-            "[:when, 41, 106, 6, 106, 42]": 0,
-            "[:when, 42, 108, 6, 108, 41]": 0,
-            "[:else, 43, 110, 6, 110, 39]": 5
-          },
-          "[:case, 44, 115, 4, 122, 7]": {
-            "[:when, 45, 117, 6, 117, 135]": 1,
-            "[:when, 46, 119, 6, 119, 130]": 0,
-            "[:else, 47, 121, 6, 121, 40]": 0
-          },
-          "[:if, 48, 126, 4, 126, 81]": {
-            "[:then, 49, 126, 4, 126, 36]": 2,
-            "[:else, 50, 126, 4, 126, 81]": 0
-          },
-          "[:if, 51, 127, 4, 127, 27]": {
-            "[:then, 52, 127, 4, 127, 10]": 0,
-            "[:else, 53, 127, 4, 127, 27]": 2
-          },
-          "[:case, 54, 129, 4, 134, 7]": {
-            "[:when, 55, 131, 6, 131, 41]": 2,
-            "[:when, 56, 133, 6, 133, 45]": 0,
-            "[:else, 57, 129, 4, 134, 7]": 0
-          },
-          "[:if, 58, 138, 4, 138, 70]": {
-            "[:then, 59, 138, 4, 138, 21]": 0,
-            "[:else, 60, 138, 4, 138, 70]": 0
-          },
-          "[:if, 61, 140, 4, 140, 81]": {
-            "[:then, 62, 140, 4, 140, 36]": 0,
-            "[:else, 63, 140, 4, 140, 81]": 0
-          },
-          "[:\"&.\", 64, 141, 73, 141, 90]": {
-            "[:then, 65, 141, 73, 141, 90]": 0,
-            "[:else, 66, 141, 73, 141, 90]": 0
-          },
-          "[:if, 67, 141, 4, 141, 90]": {
-            "[:then, 68, 141, 4, 141, 21]": 0,
-            "[:else, 69, 141, 4, 141, 90]": 0
-          },
-          "[:case, 70, 147, 4, 152, 7]": {
-            "[:when, 71, 149, 6, 149, 192]": 0,
-            "[:else, 72, 151, 6, 151, 8]": 0
-          },
-          "[:if, 73, 156, 4, 156, 81]": {
-            "[:then, 74, 156, 4, 156, 36]": 1,
-            "[:else, 75, 156, 4, 156, 81]": 5
-          },
-          "[:case, 76, 158, 4, 168, 7]": {
-            "[:when, 77, 161, 6, 161, 41]": 5,
-            "[:when, 78, 163, 6, 163, 69]": 1,
-            "[:when, 79, 165, 6, 165, 35]": 0,
-            "[:else, 80, 167, 6, 167, 20]": 0
-          },
-          "[:\"&.\", 81, 163, 6, 163, 18]": {
-            "[:then, 82, 163, 6, 163, 18]": 1,
-            "[:else, 83, 163, 6, 163, 18]": 0
-          },
-          "[:if, 84, 163, 6, 163, 69]": {
-            "[:then, 85, 163, 30, 163, 52]": 1,
-            "[:else, 86, 163, 55, 163, 69]": 0
-          },
-          "[:if, 87, 185, 4, 185, 36]": {
-            "[:then, 88, 185, 4, 185, 20]": 0,
-            "[:else, 89, 185, 4, 185, 36]": 6
-          },
-          "[:if, 90, 195, 4, 195, 37]": {
-            "[:then, 91, 195, 4, 195, 22]": 0,
-            "[:else, 92, 195, 4, 195, 37]": 6
-          },
-          "[:if, 93, 204, 4, 204, 79]": {
-            "[:then, 94, 204, 4, 204, 39]": 2,
-            "[:else, 95, 204, 4, 204, 79]": 4
-          },
-          "[:if, 96, 205, 4, 205, 84]": {
-            "[:then, 97, 205, 4, 205, 39]": 1,
-            "[:else, 98, 205, 4, 205, 84]": 3
-          },
-          "[:if, 99, 206, 4, 206, 73]": {
-            "[:then, 100, 206, 4, 206, 34]": 3,
-            "[:else, 101, 206, 4, 206, 73]": 0
-          },
-          "[:if, 102, 213, 6, 217, 9]": {
-            "[:then, 103, 214, 8, 214, 37]": 6,
-            "[:else, 104, 216, 8, 216, 33]": 9
-          },
-          "[:case, 105, 223, 4, 231, 7]": {
-            "[:when, 106, 225, 6, 225, 47]": 0,
-            "[:else, 107, 227, 6, 230, 46]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/item_reports_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/item_reports_controller.rb": {
         "lines": [
           1,
           1,
@@ -4476,7 +4887,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/errors_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/errors_controller.rb": {
         "lines": [
           1,
           1,
@@ -4489,7 +4900,7 @@
         ],
         "branches": {}
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/favorites_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/favorites_controller.rb": {
         "lines": [
           1,
           1,
@@ -4566,7 +4977,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/admin/item_reports_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/item_reports_controller.rb": {
         "lines": [
           1,
           1,
@@ -4618,7 +5029,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/controllers/search_controller.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/search_controller.rb": {
         "lines": [
           1,
           1,
@@ -4673,154 +5084,7 @@
           }
         }
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/helpers/search_helper.rb": {
-        "lines": [
-          1,
-          null,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          4,
-          null,
-          null,
-          1,
-          4,
-          4,
-          null,
-          4,
-          0,
-          0,
-          0,
-          null,
-          null,
-          4,
-          null,
-          null,
-          1,
-          30,
-          30,
-          30,
-          null,
-          null,
-          1,
-          7,
-          null,
-          null,
-          1,
-          4,
-          2,
-          2,
-          null,
-          0,
-          2,
-          2,
-          2,
-          null,
-          1,
-          null,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          4,
-          2,
-          1,
-          null,
-          1,
-          null,
-          2,
-          2,
-          null,
-          0,
-          null,
-          null,
-          null,
-          1,
-          null,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          4,
-          null,
-          null,
-          1,
-          8,
-          null,
-          null
-        ],
-        "branches": {
-          "[:if, 0, 15, 4, 15, 76]": {
-            "[:then, 1, 15, 4, 15, 46]": 3,
-            "[:else, 2, 15, 4, 15, 76]": 1
-          },
-          "[:if, 3, 17, 4, 21, 7]": {
-            "[:then, 4, 18, 6, 20, 35]": 0,
-            "[:else, 5, 17, 4, 21, 7]": 4
-          },
-          "[:if, 6, 28, 4, 28, 97]": {
-            "[:then, 7, 28, 4, 28, 31]": 4,
-            "[:else, 8, 28, 4, 28, 97]": 26
-          },
-          "[:if, 9, 37, 4, 52, 7]": {
-            "[:then, 10, 38, 6, 41, 49]": 2,
-            "[:else, 11, 42, 4, 51, 49]": 2
-          },
-          "[:if, 12, 38, 6, 38, 63]": {
-            "[:then, 13, 38, 6, 38, 41]": 0,
-            "[:else, 14, 38, 6, 38, 63]": 2
-          },
-          "[:if, 15, 39, 6, 39, 62]": {
-            "[:then, 16, 39, 6, 39, 41]": 2,
-            "[:else, 17, 39, 6, 39, 62]": 0
-          },
-          "[:if, 18, 42, 4, 51, 49]": {
-            "[:then, 19, 43, 6, 46, 63]": 2,
-            "[:else, 20, 48, 6, 51, 49]": 0
-          },
-          "[:if, 21, 43, 6, 43, 77]": {
-            "[:then, 22, 43, 6, 43, 55]": 0,
-            "[:else, 23, 43, 6, 43, 77]": 2
-          },
-          "[:if, 24, 44, 6, 44, 76]": {
-            "[:then, 25, 44, 6, 44, 55]": 1,
-            "[:else, 26, 44, 6, 44, 76]": 1
-          },
-          "[:if, 27, 48, 6, 48, 57]": {
-            "[:then, 28, 48, 6, 48, 35]": 0,
-            "[:else, 29, 48, 6, 48, 57]": 0
-          },
-          "[:if, 30, 49, 6, 49, 63]": {
-            "[:then, 31, 49, 6, 49, 42]": 0,
-            "[:else, 32, 49, 6, 49, 63]": 0
-          },
-          "[:if, 33, 56, 4, 66, 7]": {
-            "[:then, 34, 57, 6, 61, 9]": 2,
-            "[:else, 35, 62, 4, 65, 53]": 2
-          },
-          "[:if, 36, 57, 6, 61, 9]": {
-            "[:then, 37, 58, 8, 58, 90]": 1,
-            "[:else, 38, 60, 8, 60, 72]": 1
-          },
-          "[:if, 39, 62, 4, 65, 53]": {
-            "[:then, 40, 63, 6, 63, 64]": 2,
-            "[:else, 41, 65, 6, 65, 53]": 0
-          }
-        }
-      },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/jobs/application_job.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/jobs/application_job.rb": {
         "lines": [
           0,
           null,
@@ -4832,7 +5096,7 @@
         ],
         "branches": {}
       },
-      "C:/Users/hp/Desktop/CUHK/TERM 2/SWEN/CUHK-MARKTPLACE-V3/CUHK-Marketplace/app/mailers/application_mailer.rb": {
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/mailers/application_mailer.rb": {
         "lines": [
           0,
           0,
@@ -4842,7 +5106,7 @@
         "branches": {}
       }
     },
-    "timestamp": 1776077796
+    "timestamp": 1776083939
   },
   "Cucumber": {
     "coverage": {
@@ -4859,12 +5123,12 @@
           null,
           null,
           1,
-          126,
+          111,
           null,
           null,
           1,
-          66,
-          66,
+          51,
+          51,
           null,
           0,
           null,
@@ -4879,7 +5143,7 @@
         ],
         "branches": {
           "[:if, 0, 17, 4, 17, 63]": {
-            "[:then, 1, 17, 4, 17, 30]": 66,
+            "[:then, 1, 17, 4, 17, 30]": 51,
             "[:else, 2, 17, 4, 17, 63]": 0
           },
           "[:if, 3, 24, 4, 24, 56]": {
@@ -4903,9 +5167,25 @@
           1,
           null,
           1,
+          1,
+          null,
+          1,
           null,
           1,
           1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
           null,
           1,
           null,
@@ -4918,13 +5198,263 @@
           null
         ],
         "branches": {
-          "[:unless, 0, 13, 4, 13, 39]": {
-            "[:else, 1, 13, 4, 13, 39]": 20,
-            "[:then, 2, 13, 4, 13, 10]": 0
+          "[:unless, 0, 29, 4, 29, 39]": {
+            "[:else, 1, 29, 4, 29, 39]": 20,
+            "[:then, 2, 29, 4, 29, 10]": 0
           },
-          "[:if, 3, 14, 4, 14, 49]": {
-            "[:then, 4, 14, 4, 14, 10]": 20,
-            "[:else, 5, 14, 4, 14, 49]": 0
+          "[:if, 3, 30, 4, 30, 49]": {
+            "[:then, 4, 30, 4, 30, 10]": 20,
+            "[:else, 5, 30, 4, 30, 49]": 0
+          }
+        }
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/item.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          30,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          5,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          19,
+          null,
+          null,
+          1,
+          20,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          10,
+          10,
+          9,
+          9,
+          null,
+          9,
+          9,
+          null,
+          9,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          15,
+          null,
+          null,
+          1,
+          15,
+          null,
+          null,
+          1,
+          null,
+          1,
+          15,
+          null,
+          0,
+          null,
+          null
+        ],
+        "branches": {
+          "[:unless, 0, 55, 4, 55, 65]": {
+            "[:else, 1, 55, 4, 55, 65]": 0,
+            "[:then, 2, 55, 4, 55, 35]": 0
+          },
+          "[:unless, 3, 61, 4, 61, 52]": {
+            "[:else, 4, 61, 4, 61, 52]": 0,
+            "[:then, 5, 61, 4, 61, 14]": 0
+          },
+          "[:unless, 6, 62, 4, 62, 64]": {
+            "[:else, 7, 62, 4, 62, 64]": 0,
+            "[:then, 8, 62, 4, 62, 14]": 0
+          },
+          "[:unless, 9, 71, 4, 71, 52]": {
+            "[:else, 10, 71, 4, 71, 52]": 0,
+            "[:then, 11, 71, 4, 71, 14]": 0
+          },
+          "[:unless, 12, 72, 4, 72, 64]": {
+            "[:else, 13, 72, 4, 72, 64]": 0,
+            "[:then, 14, 72, 4, 72, 14]": 0
+          },
+          "[:if, 15, 96, 4, 96, 75]": {
+            "[:then, 16, 96, 4, 96, 36]": 0,
+            "[:else, 17, 96, 4, 96, 75]": 0
+          },
+          "[:if, 18, 99, 6, 101, 9]": {
+            "[:then, 19, 100, 8, 100, 71]": 0,
+            "[:else, 20, 99, 6, 101, 9]": 0
+          },
+          "[:\"&.\", 21, 105, 4, 105, 35]": {
+            "[:then, 22, 105, 4, 105, 35]": 0,
+            "[:else, 23, 105, 4, 105, 35]": 0
+          },
+          "[:if, 24, 109, 4, 109, 69]": {
+            "[:then, 25, 109, 4, 109, 40]": 0,
+            "[:else, 26, 109, 4, 109, 69]": 10
+          },
+          "[:if, 27, 110, 4, 110, 33]": {
+            "[:then, 28, 110, 4, 110, 15]": 1,
+            "[:else, 29, 110, 4, 110, 33]": 9
+          },
+          "[:\"&.\", 30, 111, 19, 111, 33]": {
+            "[:then, 31, 111, 19, 111, 33]": 9,
+            "[:else, 32, 111, 19, 111, 33]": 0
+          },
+          "[:if, 33, 111, 4, 111, 33]": {
+            "[:then, 34, 111, 4, 111, 15]": 0,
+            "[:else, 35, 111, 4, 111, 33]": 9
+          },
+          "[:\"&.\", 36, 112, 19, 112, 41]": {
+            "[:then, 37, 112, 19, 112, 41]": 9,
+            "[:else, 38, 112, 19, 112, 41]": 0
+          },
+          "[:if, 39, 112, 4, 112, 76]": {
+            "[:then, 40, 112, 4, 112, 15]": 0,
+            "[:else, 41, 112, 4, 112, 76]": 9
+          },
+          "[:\"&.\", 42, 114, 32, 114, 45]": {
+            "[:then, 43, 114, 32, 114, 45]": 9,
+            "[:else, 44, 114, 32, 114, 45]": 0
+          },
+          "[:if, 45, 114, 4, 114, 45]": {
+            "[:then, 46, 114, 4, 114, 16]": 0,
+            "[:else, 47, 114, 4, 114, 45]": 9
+          },
+          "[:if, 48, 115, 4, 115, 66]": {
+            "[:then, 49, 115, 4, 115, 21]": 0,
+            "[:else, 50, 115, 4, 115, 66]": 9
+          },
+          "[:if, 51, 121, 4, 121, 33]": {
+            "[:then, 52, 121, 4, 121, 15]": 0,
+            "[:else, 53, 121, 4, 121, 33]": 0
+          },
+          "[:if, 54, 122, 4, 122, 55]": {
+            "[:then, 55, 122, 4, 122, 15]": 0,
+            "[:else, 56, 122, 4, 122, 55]": 0
+          },
+          "[:\"&.\", 57, 123, 19, 123, 33]": {
+            "[:then, 58, 123, 19, 123, 33]": 0,
+            "[:else, 59, 123, 19, 123, 33]": 0
+          },
+          "[:if, 60, 123, 4, 123, 33]": {
+            "[:then, 61, 123, 4, 123, 15]": 0,
+            "[:else, 62, 123, 4, 123, 33]": 0
+          },
+          "[:\"&.\", 63, 124, 19, 124, 41]": {
+            "[:then, 64, 124, 19, 124, 41]": 0,
+            "[:else, 65, 124, 19, 124, 41]": 0
+          },
+          "[:if, 66, 124, 4, 124, 76]": {
+            "[:then, 67, 124, 4, 124, 15]": 0,
+            "[:else, 68, 124, 4, 124, 76]": 0
+          },
+          "[:\"&.\", 69, 130, 4, 130, 27]": {
+            "[:then, 70, 130, 4, 130, 27]": 15,
+            "[:else, 71, 130, 4, 130, 27]": 0
+          },
+          "[:unless, 72, 140, 4, 140, 47]": {
+            "[:else, 73, 140, 4, 140, 47]": 0,
+            "[:then, 74, 140, 4, 140, 10]": 15
           }
         }
       },
@@ -4932,9 +5462,14 @@
         "lines": [
           1,
           1,
+          1,
           null,
           1,
           null,
+          1,
+          null,
+          1,
+          1,
           1,
           1,
           1,
@@ -4952,9 +5487,17 @@
           null,
           30,
           1,
+          1,
+          0,
+          null,
+          null,
+          null,
+          null,
           null,
           1,
-          134,
+          null,
+          1,
+          130,
           null,
           null,
           1,
@@ -4988,36 +5531,108 @@
           null,
           1,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
           null,
+          0,
           null,
           null,
           1,
           0,
           0,
           null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          1,
+          8,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          null,
+          1,
+          3,
+          null,
           null
         ],
         "branches": {
-          "[:if, 0, 41, 4, 41, 29]": {
-            "[:then, 1, 41, 14, 41, 21]": 0,
-            "[:else, 2, 41, 24, 41, 29]": 0
+          "[:if, 0, 54, 4, 54, 29]": {
+            "[:then, 1, 54, 14, 54, 21]": 0,
+            "[:else, 2, 54, 24, 54, 29]": 0
           },
-          "[:unless, 3, 53, 4, 53, 62]": {
-            "[:else, 4, 53, 4, 53, 62]": 0,
-            "[:then, 5, 53, 4, 53, 29]": 0
+          "[:unless, 3, 66, 4, 66, 62]": {
+            "[:else, 4, 66, 4, 66, 62]": 0,
+            "[:then, 5, 66, 4, 66, 29]": 0
           },
-          "[:if, 6, 59, 4, 64, 7]": {
-            "[:then, 7, 60, 6, 63, 10]": 0,
-            "[:else, 8, 59, 4, 64, 7]": 0
+          "[:unless, 6, 71, 4, 71, 51]": {
+            "[:else, 7, 71, 4, 71, 51]": 0,
+            "[:then, 8, 71, 4, 71, 14]": 0
           },
-          "[:unless, 9, 68, 4, 68, 35]": {
-            "[:else, 10, 68, 4, 68, 35]": 0,
-            "[:then, 11, 68, 4, 68, 14]": 0
+          "[:unless, 9, 77, 4, 77, 35]": {
+            "[:else, 10, 77, 4, 77, 35]": 0,
+            "[:then, 11, 77, 4, 77, 14]": 0
+          },
+          "[:unless, 12, 83, 4, 83, 30]": {
+            "[:else, 13, 83, 4, 83, 30]": 0,
+            "[:then, 14, 83, 4, 83, 16]": 0
+          },
+          "[:if, 15, 92, 4, 92, 34]": {
+            "[:then, 16, 92, 4, 92, 16]": 0,
+            "[:else, 17, 92, 4, 92, 34]": 0
+          },
+          "[:if, 18, 93, 4, 93, 88]": {
+            "[:then, 19, 93, 4, 93, 16]": 0,
+            "[:else, 20, 93, 4, 93, 88]": 0
+          },
+          "[:if, 21, 116, 4, 116, 42]": {
+            "[:then, 22, 116, 4, 116, 10]": 0,
+            "[:else, 23, 116, 4, 116, 42]": 0
           }
         }
       },
@@ -5094,6 +5709,8 @@
           1,
           1,
           1,
+          1,
+          1,
           null,
           1,
           null,
@@ -5150,7 +5767,7 @@
           null,
           null,
           1,
-          248,
+          233,
           null,
           null,
           1,
@@ -5158,9 +5775,9 @@
           null,
           null,
           1,
-          32,
+          9,
           null,
-          32,
+          9,
           null,
           null,
           1,
@@ -5206,6 +5823,44 @@
           null,
           null,
           1,
+          16,
+          16,
+          16,
+          null,
+          16,
+          16,
+          16,
+          null,
+          16,
+          16,
+          null,
+          16,
+          16,
+          16,
+          16,
+          null,
+          null,
+          1,
+          null,
+          16,
+          null,
+          null,
+          null,
+          null,
+          9,
+          null,
+          16,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
           24,
           null,
           41,
@@ -5242,118 +5897,134 @@
           null
         ],
         "branches": {
-          "[:if, 0, 27, 4, 35, 7]": {
-            "[:then, 1, 28, 6, 32, 9]": 4,
-            "[:else, 2, 34, 6, 34, 11]": 10
+          "[:if, 0, 29, 4, 37, 7]": {
+            "[:then, 1, 30, 6, 34, 9]": 4,
+            "[:else, 2, 36, 6, 36, 11]": 10
           },
-          "[:if, 3, 28, 6, 32, 9]": {
-            "[:then, 4, 29, 8, 29, 17]": 3,
-            "[:else, 5, 31, 8, 31, 29]": 1
+          "[:if, 3, 30, 6, 34, 9]": {
+            "[:then, 4, 31, 8, 31, 17]": 3,
+            "[:else, 5, 33, 8, 33, 29]": 1
           },
-          "[:case, 6, 41, 4, 48, 7]": {
-            "[:when, 7, 43, 8, 43, 56]": 0,
-            "[:when, 8, 45, 8, 45, 56]": 0,
-            "[:else, 9, 47, 8, 47, 57]": 0
+          "[:case, 6, 43, 4, 50, 7]": {
+            "[:when, 7, 45, 8, 45, 56]": 0,
+            "[:when, 8, 47, 8, 47, 56]": 0,
+            "[:else, 9, 49, 8, 49, 57]": 0
           },
-          "[:\"&.\", 10, 54, 18, 54, 39]": {
-            "[:then, 11, 54, 18, 54, 39]": 44,
-            "[:else, 12, 54, 18, 54, 39]": 0
+          "[:\"&.\", 10, 56, 18, 56, 39]": {
+            "[:then, 11, 56, 18, 56, 39]": 44,
+            "[:else, 12, 56, 18, 56, 39]": 0
           },
-          "[:unless, 13, 54, 4, 54, 39]": {
-            "[:else, 14, 54, 4, 54, 39]": 0,
-            "[:then, 15, 54, 4, 54, 10]": 44
+          "[:unless, 13, 56, 4, 56, 39]": {
+            "[:else, 14, 56, 4, 56, 39]": 0,
+            "[:then, 15, 56, 4, 56, 10]": 44
           },
-          "[:if, 16, 69, 4, 69, 29]": {
-            "[:then, 17, 69, 4, 69, 10]": 0,
-            "[:else, 18, 69, 4, 69, 29]": 32
+          "[:if, 16, 71, 4, 71, 29]": {
+            "[:then, 17, 71, 4, 71, 10]": 0,
+            "[:else, 18, 71, 4, 71, 29]": 9
           },
-          "[:if, 19, 75, 4, 75, 25]": {
-            "[:then, 20, 75, 4, 75, 10]": 0,
-            "[:else, 21, 75, 4, 75, 25]": 32
+          "[:if, 19, 77, 4, 77, 25]": {
+            "[:then, 20, 77, 4, 77, 10]": 0,
+            "[:else, 21, 77, 4, 77, 25]": 32
           },
-          "[:if, 22, 81, 4, 81, 51]": {
-            "[:then, 23, 81, 34, 81, 43]": 0,
-            "[:else, 24, 81, 46, 81, 51]": 31
+          "[:if, 22, 83, 4, 83, 51]": {
+            "[:then, 23, 83, 34, 83, 43]": 0,
+            "[:else, 24, 83, 46, 83, 51]": 31
           },
-          "[:unless, 25, 86, 4, 86, 39]": {
-            "[:else, 26, 86, 4, 86, 39]": 16,
-            "[:then, 27, 86, 4, 86, 19]": 0
+          "[:unless, 25, 88, 4, 88, 39]": {
+            "[:else, 26, 88, 4, 88, 39]": 16,
+            "[:then, 27, 88, 4, 88, 19]": 0
           },
-          "[:\"&.\", 28, 92, 18, 92, 38]": {
-            "[:then, 29, 92, 18, 92, 38]": 5,
-            "[:else, 30, 92, 18, 92, 38]": 0
+          "[:\"&.\", 28, 94, 18, 94, 38]": {
+            "[:then, 29, 94, 18, 94, 38]": 5,
+            "[:else, 30, 94, 18, 94, 38]": 0
           },
-          "[:unless, 31, 92, 4, 92, 38]": {
-            "[:else, 32, 92, 4, 92, 38]": 5,
-            "[:then, 33, 92, 4, 92, 10]": 0
+          "[:unless, 31, 94, 4, 94, 38]": {
+            "[:else, 32, 94, 4, 94, 38]": 5,
+            "[:then, 33, 94, 4, 94, 10]": 0
           },
-          "[:if, 34, 93, 4, 93, 46]": {
-            "[:then, 35, 93, 4, 93, 10]": 5,
-            "[:else, 36, 93, 4, 93, 46]": 0
+          "[:if, 34, 95, 4, 95, 46]": {
+            "[:then, 35, 95, 4, 95, 10]": 5,
+            "[:else, 36, 95, 4, 95, 46]": 0
           },
-          "[:\"&.\", 37, 99, 7, 99, 27]": {
-            "[:then, 38, 99, 7, 99, 27]": 16,
-            "[:else, 39, 99, 7, 99, 27]": 0
+          "[:\"&.\", 37, 101, 7, 101, 27]": {
+            "[:then, 38, 101, 7, 101, 27]": 16,
+            "[:else, 39, 101, 7, 101, 27]": 0
           },
-          "[:if, 40, 99, 4, 102, 7]": {
-            "[:then, 41, 100, 6, 101, 21]": 1,
-            "[:else, 42, 99, 4, 102, 7]": 15
+          "[:if, 40, 101, 4, 104, 7]": {
+            "[:then, 41, 102, 6, 103, 21]": 1,
+            "[:else, 42, 101, 4, 104, 7]": 15
           },
-          "[:if, 43, 100, 6, 100, 113]": {
-            "[:then, 44, 100, 6, 100, 72]": 0,
-            "[:else, 45, 100, 6, 100, 113]": 1
+          "[:if, 43, 102, 6, 102, 113]": {
+            "[:then, 44, 102, 6, 102, 72]": 0,
+            "[:else, 45, 102, 6, 102, 113]": 1
           },
-          "[:if, 46, 104, 4, 107, 7]": {
-            "[:then, 47, 105, 6, 106, 64]": 0,
-            "[:else, 48, 104, 4, 107, 7]": 15
+          "[:if, 46, 106, 4, 109, 7]": {
+            "[:then, 47, 107, 6, 108, 64]": 0,
+            "[:else, 48, 106, 4, 109, 7]": 15
           },
-          "[:\"&.\", 49, 105, 34, 105, 58]": {
-            "[:then, 50, 105, 34, 105, 58]": 0,
-            "[:else, 51, 105, 34, 105, 58]": 0
+          "[:\"&.\", 49, 107, 34, 107, 58]": {
+            "[:then, 50, 107, 34, 107, 58]": 0,
+            "[:else, 51, 107, 34, 107, 58]": 0
           },
-          "[:unless, 52, 105, 6, 105, 67]": {
-            "[:else, 53, 105, 6, 105, 67]": 0,
-            "[:then, 54, 105, 6, 105, 26]": 0
+          "[:unless, 52, 107, 6, 107, 67]": {
+            "[:else, 53, 107, 6, 107, 67]": 0,
+            "[:then, 54, 107, 6, 107, 26]": 0
           },
-          "[:\"&.\", 55, 109, 50, 109, 74]": {
-            "[:then, 56, 109, 50, 109, 74]": 15,
-            "[:else, 57, 109, 50, 109, 74]": 0
+          "[:\"&.\", 55, 111, 50, 111, 74]": {
+            "[:then, 56, 111, 50, 111, 74]": 15,
+            "[:else, 57, 111, 50, 111, 74]": 0
           },
-          "[:unless, 58, 109, 4, 109, 83]": {
-            "[:else, 59, 109, 4, 109, 83]": 15,
-            "[:then, 60, 109, 4, 109, 42]": 0
+          "[:unless, 58, 111, 4, 111, 83]": {
+            "[:else, 59, 111, 4, 111, 83]": 15,
+            "[:then, 60, 111, 4, 111, 42]": 0
           },
-          "[:unless, 61, 117, 4, 117, 58]": {
-            "[:else, 62, 117, 4, 117, 58]": 24,
-            "[:then, 63, 117, 4, 117, 35]": 0
+          "[:if, 61, 124, 20, 124, 112]": {
+            "[:then, 62, 124, 83, 124, 106]": 0,
+            "[:else, 63, 124, 109, 124, 112]": 16
           },
-          "[:if, 64, 119, 57, 119, 95]": {
-            "[:then, 65, 119, 81, 119, 88]": 17,
-            "[:else, 66, 119, 91, 119, 95]": 0
+          "[:if, 64, 125, 20, 125, 112]": {
+            "[:then, 65, 125, 83, 125, 106]": 0,
+            "[:else, 66, 125, 109, 125, 112]": 16
           },
-          "[:if, 67, 120, 4, 120, 54]": {
-            "[:then, 68, 120, 4, 120, 35]": 10,
-            "[:else, 69, 120, 4, 120, 54]": 14
+          "[:if, 67, 127, 17, 127, 88]": {
+            "[:then, 68, 127, 42, 127, 73]": 0,
+            "[:else, 69, 127, 76, 127, 88]": 16
           },
-          "[:\"&.\", 70, 134, 18, 134, 42]": {
-            "[:then, 71, 134, 18, 134, 42]": 44,
-            "[:else, 72, 134, 18, 134, 42]": 0
+          "[:if, 70, 128, 17, 128, 92]": {
+            "[:then, 71, 128, 42, 128, 75]": 0,
+            "[:else, 72, 128, 78, 128, 92]": 16
           },
-          "[:unless, 73, 134, 4, 134, 42]": {
-            "[:else, 74, 134, 4, 134, 42]": 44,
-            "[:then, 75, 134, 4, 134, 10]": 0
+          "[:unless, 73, 157, 4, 157, 58]": {
+            "[:else, 74, 157, 4, 157, 58]": 24,
+            "[:then, 75, 157, 4, 157, 35]": 0
           },
-          "[:unless, 76, 135, 4, 135, 68]": {
-            "[:else, 77, 135, 4, 135, 68]": 13,
-            "[:then, 78, 135, 4, 135, 10]": 31
+          "[:if, 76, 159, 57, 159, 95]": {
+            "[:then, 77, 159, 81, 159, 88]": 17,
+            "[:else, 78, 159, 91, 159, 95]": 0
           },
-          "[:if, 79, 136, 4, 136, 43]": {
-            "[:then, 80, 136, 4, 136, 10]": 10,
-            "[:else, 81, 136, 4, 136, 43]": 3
+          "[:if, 79, 160, 4, 160, 54]": {
+            "[:then, 80, 160, 4, 160, 35]": 10,
+            "[:else, 81, 160, 4, 160, 54]": 14
           },
-          "[:if, 82, 137, 4, 137, 47]": {
-            "[:then, 83, 137, 4, 137, 10]": 2,
-            "[:else, 84, 137, 4, 137, 47]": 1
+          "[:\"&.\", 82, 174, 18, 174, 42]": {
+            "[:then, 83, 174, 18, 174, 42]": 44,
+            "[:else, 84, 174, 18, 174, 42]": 0
+          },
+          "[:unless, 85, 174, 4, 174, 42]": {
+            "[:else, 86, 174, 4, 174, 42]": 44,
+            "[:then, 87, 174, 4, 174, 10]": 0
+          },
+          "[:unless, 88, 175, 4, 175, 68]": {
+            "[:else, 89, 175, 4, 175, 68]": 13,
+            "[:then, 90, 175, 4, 175, 10]": 31
+          },
+          "[:if, 91, 176, 4, 176, 43]": {
+            "[:then, 92, 176, 4, 176, 10]": 10,
+            "[:else, 93, 176, 4, 176, 43]": 3
+          },
+          "[:if, 94, 177, 4, 177, 47]": {
+            "[:then, 95, 177, 4, 177, 10]": 2,
+            "[:else, 96, 177, 4, 177, 47]": 1
           }
         }
       },
@@ -5415,46 +6086,74 @@
           null,
           null,
           1,
-          296,
+          243,
           null,
           null,
           1,
-          43,
-          43,
+          30,
+          30,
           null,
-          43,
+          30,
           null,
           null,
           1,
-          105,
+          92,
           7,
           null,
           null,
-          98,
+          85,
           null,
           null,
           1,
-          102,
+          76,
           null,
-          101,
+          75,
           null,
-          1,
-          null,
-          15,
           null,
           1,
+          0,
           null,
-          14,
+          0,
+          null,
+          0,
           null,
           0,
           null,
           null,
-          15,
           null,
-          15,
           1,
           null,
-          14,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          0,
+          null,
+          null,
+          1,
+          2,
+          null,
+          1,
+          null,
+          1,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          2,
+          1,
+          1,
+          0,
+          null,
+          1,
           null,
           null,
           null,
@@ -5584,125 +6283,139 @@
             "[:else, 46, 36, 81, 36, 93]": 0
           },
           "[:if, 47, 57, 4, 57, 51]": {
-            "[:then, 48, 57, 34, 57, 43]": 58,
-            "[:else, 49, 57, 46, 57, 51]": 238
+            "[:then, 48, 57, 34, 57, 43]": 32,
+            "[:else, 49, 57, 46, 57, 51]": 211
           },
           "[:\"&.\", 50, 61, 11, 61, 32]": {
-            "[:then, 51, 61, 11, 61, 32]": 43,
+            "[:then, 51, 61, 11, 61, 32]": 30,
             "[:else, 52, 61, 11, 61, 32]": 0
           },
           "[:\"&.\", 53, 61, 11, 61, 38]": {
-            "[:then, 54, 61, 11, 61, 38]": 43,
+            "[:then, 54, 61, 11, 61, 38]": 30,
             "[:else, 55, 61, 11, 61, 38]": 0
           },
           "[:if, 56, 62, 4, 62, 38]": {
             "[:then, 57, 62, 4, 62, 23]": 0,
-            "[:else, 58, 62, 4, 62, 38]": 43
+            "[:else, 58, 62, 4, 62, 38]": 30
           },
           "[:\"&.\", 59, 68, 7, 68, 27]": {
-            "[:then, 60, 68, 7, 68, 27]": 105,
+            "[:then, 60, 68, 7, 68, 27]": 92,
             "[:else, 61, 68, 7, 68, 27]": 0
           },
           "[:if, 62, 68, 4, 70, 7]": {
             "[:then, 63, 69, 6, 69, 102]": 7,
-            "[:else, 64, 68, 4, 70, 7]": 98
+            "[:else, 64, 68, 4, 70, 7]": 85
           },
           "[:if, 65, 69, 13, 69, 102]": {
             "[:then, 66, 69, 50, 69, 97]": 0,
             "[:else, 67, 69, 100, 69, 102]": 7
           },
           "[:\"&.\", 68, 76, 66, 76, 86]": {
-            "[:then, 69, 76, 66, 76, 86]": 102,
+            "[:then, 69, 76, 66, 76, 86]": 76,
             "[:else, 70, 76, 66, 76, 86]": 0
           },
           "[:if, 71, 76, 4, 76, 86]": {
             "[:then, 72, 76, 4, 76, 62]": 1,
-            "[:else, 73, 76, 4, 76, 86]": 101
+            "[:else, 73, 76, 4, 76, 86]": 75
           },
           "[:\"&.\", 74, 76, 11, 76, 45]": {
             "[:then, 75, 76, 11, 76, 45]": 0,
             "[:else, 76, 76, 11, 76, 45]": 1
           },
           "[:if, 77, 78, 4, 78, 78]": {
-            "[:then, 78, 78, 44, 78, 69]": 43,
-            "[:else, 79, 78, 72, 78, 78]": 58
+            "[:then, 78, 78, 44, 78, 69]": 30,
+            "[:else, 79, 78, 72, 78, 78]": 45
           },
-          "[:case, 80, 82, 6, 89, 9]": {
-            "[:when, 81, 84, 8, 84, 107]": 1,
-            "[:when, 82, 86, 8, 86, 82]": 14,
-            "[:else, 83, 88, 8, 88, 10]": 0
+          "[:case, 80, 82, 4, 89, 7]": {
+            "[:when, 81, 84, 6, 84, 17]": 0,
+            "[:when, 82, 86, 6, 86, 20]": 0,
+            "[:else, 83, 88, 6, 88, 16]": 0
           },
-          "[:if, 84, 93, 4, 97, 7]": {
-            "[:then, 85, 94, 6, 94, 31]": 1,
-            "[:else, 86, 96, 6, 96, 30]": 14
+          "[:if, 84, 94, 6, 98, 9]": {
+            "[:then, 85, 95, 8, 95, 22]": 0,
+            "[:else, 86, 97, 8, 97, 21]": 0
           },
-          "[:if, 87, 101, 4, 103, 7]": {
-            "[:then, 88, 102, 6, 102, 51]": 5,
-            "[:else, 89, 101, 4, 103, 7]": 42
+          "[:case, 87, 104, 4, 113, 7]": {
+            "[:when, 88, 106, 6, 106, 105]": 1,
+            "[:when, 89, 108, 6, 108, 80]": 1,
+            "[:when, 90, 110, 6, 110, 94]": 0,
+            "[:else, 91, 112, 6, 112, 8]": 0
           },
-          "[:\"&.\", 90, 102, 36, 102, 50]": {
-            "[:then, 91, 102, 36, 102, 50]": 5,
-            "[:else, 92, 102, 36, 102, 50]": 0
+          "[:if, 92, 119, 4, 125, 7]": {
+            "[:then, 93, 120, 6, 120, 31]": 1,
+            "[:else, 94, 121, 4, 124, 30]": 1
           },
-          "[:\"&.\", 93, 105, 7, 105, 27]": {
-            "[:then, 94, 105, 7, 105, 27]": 28,
-            "[:else, 95, 105, 7, 105, 27]": 14
+          "[:if, 95, 121, 4, 124, 30]": {
+            "[:then, 96, 122, 6, 122, 34]": 0,
+            "[:else, 97, 124, 6, 124, 30]": 1
           },
-          "[:if, 96, 105, 4, 109, 7]": {
-            "[:then, 97, 106, 6, 108, 21]": 3,
-            "[:else, 98, 105, 4, 109, 7]": 39
+          "[:if, 98, 129, 4, 131, 7]": {
+            "[:then, 99, 130, 6, 130, 51]": 5,
+            "[:else, 100, 129, 4, 131, 7]": 42
           },
-          "[:if, 99, 106, 6, 106, 106]": {
-            "[:then, 100, 106, 6, 106, 65]": 0,
-            "[:else, 101, 106, 6, 106, 106]": 3
+          "[:\"&.\", 101, 130, 36, 130, 50]": {
+            "[:then, 102, 130, 36, 130, 50]": 5,
+            "[:else, 103, 130, 36, 130, 50]": 0
           },
-          "[:if, 102, 111, 4, 113, 7]": {
-            "[:then, 103, 112, 6, 112, 21]": 15,
-            "[:else, 104, 111, 4, 113, 7]": 24
+          "[:\"&.\", 104, 133, 7, 133, 27]": {
+            "[:then, 105, 133, 7, 133, 27]": 28,
+            "[:else, 106, 133, 7, 133, 27]": 14
           },
-          "[:\"&.\", 105, 115, 27, 115, 48]": {
-            "[:then, 106, 115, 27, 115, 48]": 10,
-            "[:else, 107, 115, 27, 115, 48]": 14
+          "[:if, 107, 133, 4, 137, 7]": {
+            "[:then, 108, 134, 6, 136, 21]": 3,
+            "[:else, 109, 133, 4, 137, 7]": 39
           },
-          "[:if, 108, 120, 4, 120, 59]": {
-            "[:then, 109, 120, 4, 120, 15]": 15,
-            "[:else, 110, 120, 4, 120, 59]": 14
+          "[:if, 110, 134, 6, 134, 106]": {
+            "[:then, 111, 134, 6, 134, 65]": 0,
+            "[:else, 112, 134, 6, 134, 106]": 3
           },
-          "[:if, 111, 126, 4, 126, 28]": {
-            "[:then, 112, 126, 4, 126, 10]": 14,
-            "[:else, 113, 126, 4, 126, 28]": 15
+          "[:if, 113, 139, 4, 141, 7]": {
+            "[:then, 114, 140, 6, 140, 21]": 15,
+            "[:else, 115, 139, 4, 141, 7]": 24
           },
-          "[:\"&.\", 114, 136, 7, 136, 27]": {
-            "[:then, 115, 136, 7, 136, 27]": 15,
-            "[:else, 116, 136, 7, 136, 27]": 0
+          "[:\"&.\", 116, 143, 27, 143, 48]": {
+            "[:then, 117, 143, 27, 143, 48]": 10,
+            "[:else, 118, 143, 27, 143, 48]": 14
           },
-          "[:if, 117, 136, 4, 139, 7]": {
-            "[:then, 118, 137, 6, 138, 88]": 0,
-            "[:else, 119, 136, 4, 139, 7]": 15
+          "[:if, 119, 148, 4, 148, 59]": {
+            "[:then, 120, 148, 4, 148, 15]": 15,
+            "[:else, 121, 148, 4, 148, 59]": 14
           },
-          "[:if, 120, 138, 6, 138, 88]": {
-            "[:then, 121, 138, 6, 138, 68]": 0,
-            "[:else, 122, 138, 6, 138, 88]": 0
+          "[:if, 122, 154, 4, 154, 28]": {
+            "[:then, 123, 154, 4, 154, 10]": 14,
+            "[:else, 124, 154, 4, 154, 28]": 15
           },
-          "[:if, 123, 141, 4, 143, 7]": {
-            "[:then, 124, 142, 6, 142, 81]": 0,
-            "[:else, 125, 141, 4, 143, 7]": 15
+          "[:\"&.\", 125, 164, 7, 164, 27]": {
+            "[:then, 126, 164, 7, 164, 27]": 15,
+            "[:else, 127, 164, 7, 164, 27]": 0
           },
-          "[:\"&.\", 126, 153, 7, 153, 27]": {
-            "[:then, 127, 153, 7, 153, 27]": 15,
-            "[:else, 128, 153, 7, 153, 27]": 0
+          "[:if, 128, 164, 4, 167, 7]": {
+            "[:then, 129, 165, 6, 166, 88]": 0,
+            "[:else, 130, 164, 4, 167, 7]": 15
           },
-          "[:if, 129, 153, 4, 156, 7]": {
-            "[:then, 130, 154, 6, 155, 71]": 0,
-            "[:else, 131, 153, 4, 156, 7]": 15
+          "[:if, 131, 166, 6, 166, 88]": {
+            "[:then, 132, 166, 6, 166, 68]": 0,
+            "[:else, 133, 166, 6, 166, 88]": 0
           },
-          "[:if, 132, 155, 6, 155, 71]": {
-            "[:then, 133, 155, 6, 155, 51]": 0,
-            "[:else, 134, 155, 6, 155, 71]": 0
+          "[:if, 134, 169, 4, 171, 7]": {
+            "[:then, 135, 170, 6, 170, 81]": 0,
+            "[:else, 136, 169, 4, 171, 7]": 15
           },
-          "[:if, 135, 158, 4, 158, 119]": {
-            "[:then, 136, 158, 4, 158, 36]": 0,
-            "[:else, 137, 158, 4, 158, 119]": 15
+          "[:\"&.\", 137, 181, 7, 181, 27]": {
+            "[:then, 138, 181, 7, 181, 27]": 15,
+            "[:else, 139, 181, 7, 181, 27]": 0
+          },
+          "[:if, 140, 181, 4, 184, 7]": {
+            "[:then, 141, 182, 6, 183, 71]": 0,
+            "[:else, 142, 181, 4, 184, 7]": 15
+          },
+          "[:if, 143, 183, 6, 183, 71]": {
+            "[:then, 144, 183, 6, 183, 51]": 0,
+            "[:else, 145, 183, 6, 183, 71]": 0
+          },
+          "[:if, 146, 186, 4, 186, 119]": {
+            "[:then, 147, 186, 4, 186, 36]": 0,
+            "[:else, 148, 186, 4, 186, 119]": 15
           }
         }
       },
@@ -5710,37 +6423,41 @@
         "lines": [
           1,
           1,
+          2,
+          2,
+          null,
+          1,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
           4,
-          4,
-          null,
-          1,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
           null,
           null
         ],
         "branches": {
           "[:if, 0, 3, 4, 3, 40]": {
             "[:then, 1, 3, 4, 3, 16]": 0,
-            "[:else, 2, 3, 4, 3, 40]": 4
+            "[:else, 2, 3, 4, 3, 40]": 2
           },
           "[:if, 3, 4, 4, 4, 38]": {
-            "[:then, 4, 4, 4, 4, 15]": 3,
+            "[:then, 4, 4, 4, 4, 15]": 1,
             "[:else, 5, 4, 4, 4, 38]": 1
           },
           "[:if, 6, 10, 4, 10, 35]": {
@@ -6422,9 +7139,9 @@
           null,
           null,
           1,
-          14,
-          14,
-          14,
+          8,
+          8,
+          8,
           null,
           null,
           1,
@@ -6493,7 +7210,7 @@
           },
           "[:if, 6, 28, 4, 28, 97]": {
             "[:then, 7, 28, 4, 28, 31]": 1,
-            "[:else, 8, 28, 4, 28, 97]": 13
+            "[:else, 8, 28, 4, 28, 97]": 7
           },
           "[:if, 9, 37, 4, 52, 7]": {
             "[:then, 10, 38, 6, 41, 49]": 1,
@@ -6620,6 +7337,7 @@
           2,
           2,
           2,
+          2,
           null,
           2,
           null,
@@ -6627,6 +7345,11 @@
           4,
           4,
           4,
+          4,
+          4,
+          4,
+          null,
+          4,
           null,
           null,
           1,
@@ -6653,32 +7376,114 @@
           1,
           null,
           1,
+          1,
           null,
           0,
           null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          0,
+          null,
+          null,
+          1,
+          null,
+          1,
+          4,
+          null,
+          2,
+          2,
+          null,
+          1,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          null,
+          1,
+          3,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          1,
+          null,
+          1,
           null,
           null
         ],
         "branches": {
-          "[:if, 0, 3, 4, 15, 7]": {
-            "[:then, 1, 4, 6, 8, 63]": 2,
-            "[:else, 2, 9, 4, 14, 87]": 2
+          "[:if, 0, 3, 4, 16, 7]": {
+            "[:then, 1, 4, 6, 9, 63]": 2,
+            "[:else, 2, 10, 4, 15, 87]": 2
           },
-          "[:if, 3, 9, 4, 14, 87]": {
-            "[:then, 4, 10, 6, 14, 87]": 2,
-            "[:else, 5, 9, 4, 14, 87]": 0
+          "[:if, 3, 10, 4, 15, 87]": {
+            "[:then, 4, 11, 6, 15, 87]": 2,
+            "[:else, 5, 10, 4, 15, 87]": 0
           },
-          "[:if, 6, 25, 4, 28, 7]": {
-            "[:then, 7, 26, 6, 27, 12]": 0,
-            "[:else, 8, 25, 4, 28, 7]": 1
+          "[:if, 6, 23, 24, 23, 79]": {
+            "[:then, 7, 23, 50, 23, 74]": 0,
+            "[:else, 8, 23, 77, 23, 79]": 4
           },
-          "[:if, 9, 30, 26, 30, 108]": {
-            "[:then, 10, 30, 56, 30, 79]": 0,
-            "[:else, 11, 30, 82, 30, 108]": 1
+          "[:if, 9, 25, 4, 25, 61]": {
+            "[:then, 10, 25, 4, 25, 34]": 0,
+            "[:else, 11, 25, 4, 25, 61]": 4
           },
-          "[:if, 12, 43, 4, 48, 7]": {
-            "[:then, 13, 45, 6, 45, 134]": 1,
-            "[:else, 14, 47, 6, 47, 111]": 0
+          "[:if, 12, 31, 4, 34, 7]": {
+            "[:then, 13, 32, 6, 33, 12]": 0,
+            "[:else, 14, 31, 4, 34, 7]": 1
+          },
+          "[:if, 15, 36, 26, 36, 108]": {
+            "[:then, 16, 36, 56, 36, 79]": 0,
+            "[:else, 17, 36, 82, 36, 108]": 1
+          },
+          "[:if, 18, 51, 4, 55, 7]": {
+            "[:then, 19, 52, 6, 52, 166]": 1,
+            "[:else, 20, 54, 6, 54, 134]": 0
+          },
+          "[:unless, 21, 59, 4, 62, 7]": {
+            "[:else, 22, 59, 4, 62, 7]": 0,
+            "[:then, 23, 60, 6, 61, 12]": 0
+          },
+          "[:if, 24, 70, 4, 70, 62]": {
+            "[:then, 25, 70, 4, 70, 31]": 2,
+            "[:else, 26, 70, 4, 70, 62]": 2
+          },
+          "[:if, 27, 73, 4, 73, 60]": {
+            "[:then, 28, 73, 4, 73, 25]": 1,
+            "[:else, 29, 73, 4, 73, 60]": 1
+          },
+          "[:if, 30, 81, 6, 81, 30]": {
+            "[:then, 31, 81, 6, 81, 10]": 0,
+            "[:else, 32, 81, 6, 81, 30]": 0
+          },
+          "[:\"&.\", 33, 83, 36, 83, 56]": {
+            "[:then, 34, 83, 36, 83, 56]": 0,
+            "[:else, 35, 83, 36, 83, 56]": 0
+          },
+          "[:unless, 36, 102, 4, 102, 77]": {
+            "[:else, 37, 102, 4, 102, 77]": 1,
+            "[:then, 38, 102, 4, 102, 13]": 0
           }
         }
       },
@@ -6690,25 +7495,10 @@
           1,
           1,
           1,
+          1,
           null,
           1,
           15,
-          15,
-          15,
-          null,
-          15,
-          15,
-          null,
-          15,
-          15,
-          null,
-          15,
-          15,
-          15,
-          null,
-          15,
-          15,
-          null,
           15,
           15,
           15,
@@ -6751,16 +7541,14 @@
           null,
           1,
           0,
-          null,
-          null,
-          1,
+          0,
           null,
           null,
           1,
           0,
           null,
-          0,
-          0,
+          null,
+          1,
           0,
           null,
           0,
@@ -6769,6 +7557,14 @@
           0,
           null,
           0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
           0,
           null,
           null,
@@ -6777,13 +7573,17 @@
           1,
           0,
           0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
           null,
           0,
           0,
           0,
-          0,
           null,
-          0,
           0,
           null,
           null,
@@ -6854,6 +7654,43 @@
           1,
           0,
           null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
           0,
           null,
           null,
@@ -6875,109 +7712,133 @@
           null
         ],
         "branches": {
-          "[:\"&.\", 0, 13, 22, 13, 48]": {
-            "[:then, 1, 13, 22, 13, 48]": 12,
-            "[:else, 2, 13, 22, 13, 48]": 3
+          "[:if, 0, 22, 4, 22, 97]": {
+            "[:then, 1, 22, 4, 22, 62]": 0,
+            "[:else, 2, 22, 4, 22, 97]": 5
           },
-          "[:\"&.\", 3, 14, 24, 14, 50]": {
-            "[:then, 4, 14, 24, 14, 50]": 12,
-            "[:else, 5, 14, 24, 14, 50]": 3
+          "[:if, 3, 23, 4, 23, 129]": {
+            "[:then, 4, 23, 4, 23, 80]": 5,
+            "[:else, 5, 23, 4, 23, 129]": 0
           },
-          "[:if, 6, 20, 20, 20, 112]": {
-            "[:then, 7, 20, 83, 20, 106]": 0,
-            "[:else, 8, 20, 109, 20, 112]": 15
+          "[:if, 6, 26, 4, 32, 7]": {
+            "[:then, 7, 27, 6, 31, 55]": 0,
+            "[:else, 8, 26, 4, 32, 7]": 5
           },
-          "[:if, 9, 21, 20, 21, 112]": {
-            "[:then, 10, 21, 83, 21, 106]": 0,
-            "[:else, 11, 21, 109, 21, 112]": 15
+          "[:if, 9, 35, 4, 46, 7]": {
+            "[:then, 10, 36, 6, 45, 34]": 0,
+            "[:else, 11, 35, 4, 46, 7]": 5
           },
-          "[:if, 12, 37, 4, 37, 97]": {
-            "[:then, 13, 37, 4, 37, 62]": 0,
-            "[:else, 14, 37, 4, 37, 97]": 5
+          "[:unless, 12, 64, 4, 64, 67]": {
+            "[:else, 13, 64, 4, 64, 67]": 0,
+            "[:then, 14, 64, 4, 64, 40]": 0
           },
-          "[:if, 15, 38, 4, 38, 129]": {
-            "[:then, 16, 38, 4, 38, 80]": 5,
-            "[:else, 17, 38, 4, 38, 129]": 0
+          "[:if, 15, 69, 6, 78, 9]": {
+            "[:then, 16, 70, 8, 71, 71]": 0,
+            "[:else, 17, 73, 8, 77, 80]": 0
           },
-          "[:if, 18, 41, 4, 47, 7]": {
-            "[:then, 19, 42, 6, 46, 55]": 0,
-            "[:else, 20, 41, 4, 47, 7]": 5
+          "[:if, 18, 88, 6, 97, 9]": {
+            "[:then, 19, 89, 8, 90, 66]": 0,
+            "[:else, 20, 92, 8, 96, 80]": 0
           },
-          "[:if, 21, 50, 4, 61, 7]": {
-            "[:then, 22, 51, 6, 60, 34]": 0,
-            "[:else, 23, 50, 4, 61, 7]": 5
+          "[:if, 21, 103, 22, 103, 85]": {
+            "[:then, 22, 103, 58, 103, 72]": 0,
+            "[:else, 23, 103, 75, 103, 85]": 0
           },
-          "[:unless, 24, 77, 4, 77, 67]": {
-            "[:else, 25, 77, 4, 77, 67]": 0,
-            "[:then, 26, 77, 4, 77, 40]": 0
+          "[:\"&.\", 24, 119, 53, 119, 73]": {
+            "[:then, 25, 119, 53, 119, 73]": 0,
+            "[:else, 26, 119, 53, 119, 73]": 0
           },
-          "[:if, 27, 81, 6, 87, 9]": {
-            "[:then, 28, 82, 8, 83, 71]": 0,
-            "[:else, 29, 85, 8, 86, 80]": 0
+          "[:if, 27, 119, 6, 119, 73]": {
+            "[:then, 28, 119, 6, 119, 49]": 0,
+            "[:else, 29, 119, 6, 119, 73]": 0
           },
-          "[:if, 30, 96, 6, 102, 9]": {
-            "[:then, 31, 97, 8, 98, 66]": 0,
-            "[:else, 32, 100, 8, 101, 80]": 0
+          "[:if, 30, 125, 6, 128, 9]": {
+            "[:then, 31, 126, 8, 127, 14]": 0,
+            "[:else, 32, 125, 6, 128, 9]": 0
           },
-          "[:if, 33, 108, 22, 108, 85]": {
-            "[:then, 34, 108, 58, 108, 72]": 0,
-            "[:else, 35, 108, 75, 108, 85]": 0
+          "[:if, 33, 130, 6, 130, 27]": {
+            "[:then, 34, 130, 6, 130, 12]": 0,
+            "[:else, 35, 130, 6, 130, 27]": 0
           },
-          "[:\"&.\", 36, 124, 53, 124, 73]": {
-            "[:then, 37, 124, 53, 124, 73]": 0,
-            "[:else, 38, 124, 53, 124, 73]": 0
+          "[:if, 36, 136, 6, 136, 32]": {
+            "[:then, 37, 136, 6, 136, 12]": 0,
+            "[:else, 38, 136, 6, 136, 32]": 0
           },
-          "[:if, 39, 124, 6, 124, 73]": {
-            "[:then, 40, 124, 6, 124, 49]": 0,
-            "[:else, 41, 124, 6, 124, 73]": 0
+          "[:if, 39, 152, 6, 152, 47]": {
+            "[:then, 40, 152, 6, 152, 12]": 5,
+            "[:else, 41, 152, 6, 152, 47]": 0
           },
-          "[:if, 42, 130, 6, 133, 9]": {
-            "[:then, 43, 131, 8, 132, 14]": 0,
-            "[:else, 44, 130, 6, 133, 9]": 0
+          "[:\"&.\", 42, 158, 70, 158, 89]": {
+            "[:then, 43, 158, 70, 158, 89]": 0,
+            "[:else, 44, 158, 70, 158, 89]": 0
           },
-          "[:if, 45, 135, 6, 135, 27]": {
-            "[:then, 46, 135, 6, 135, 12]": 0,
-            "[:else, 47, 135, 6, 135, 27]": 0
+          "[:if, 45, 158, 6, 158, 89]": {
+            "[:then, 46, 158, 6, 158, 48]": 0,
+            "[:else, 47, 158, 6, 158, 89]": 0
           },
-          "[:if, 48, 141, 6, 141, 32]": {
-            "[:then, 49, 141, 6, 141, 12]": 0,
-            "[:else, 50, 141, 6, 141, 32]": 0
+          "[:if, 48, 164, 6, 164, 33]": {
+            "[:then, 49, 164, 6, 164, 12]": 0,
+            "[:else, 50, 164, 6, 164, 33]": 0
           },
-          "[:if, 51, 157, 6, 157, 47]": {
-            "[:then, 52, 157, 6, 157, 12]": 5,
-            "[:else, 53, 157, 6, 157, 47]": 0
+          "[:\"&.\", 51, 170, 20, 170, 61]": {
+            "[:then, 52, 170, 20, 170, 61]": 0,
+            "[:else, 53, 170, 20, 170, 61]": 0
           },
-          "[:\"&.\", 54, 163, 70, 163, 89]": {
-            "[:then, 55, 163, 70, 163, 89]": 0,
-            "[:else, 56, 163, 70, 163, 89]": 0
+          "[:unless, 54, 170, 6, 170, 61]": {
+            "[:else, 55, 170, 6, 170, 61]": 0,
+            "[:then, 56, 170, 6, 170, 12]": 0
           },
-          "[:if, 57, 163, 6, 163, 89]": {
-            "[:then, 58, 163, 6, 163, 48]": 0,
-            "[:else, 59, 163, 6, 163, 89]": 0
+          "[:\"&.\", 57, 176, 20, 176, 56]": {
+            "[:then, 58, 176, 20, 176, 56]": 0,
+            "[:else, 59, 176, 20, 176, 56]": 0
           },
-          "[:if, 60, 169, 6, 169, 33]": {
-            "[:then, 61, 169, 6, 169, 12]": 0,
-            "[:else, 62, 169, 6, 169, 33]": 0
+          "[:unless, 60, 176, 6, 176, 56]": {
+            "[:else, 61, 176, 6, 176, 56]": 0,
+            "[:then, 62, 176, 6, 176, 12]": 0
           },
-          "[:unless, 63, 175, 6, 175, 32]": {
-            "[:else, 64, 175, 6, 175, 32]": 0,
-            "[:then, 65, 175, 6, 175, 16]": 0
+          "[:\"&.\", 63, 186, 41, 186, 61]": {
+            "[:then, 64, 186, 41, 186, 61]": 0,
+            "[:else, 65, 186, 41, 186, 61]": 0
           },
-          "[:if, 66, 177, 6, 187, 9]": {
-            "[:then, 67, 178, 8, 178, 32]": 0,
-            "[:else, 68, 179, 6, 186, 37]": 0
+          "[:unless, 66, 186, 6, 186, 61]": {
+            "[:else, 67, 186, 6, 186, 61]": 0,
+            "[:then, 68, 186, 6, 186, 33]": 0
           },
-          "[:if, 69, 179, 6, 186, 37]": {
-            "[:then, 70, 180, 8, 180, 38]": 0,
-            "[:else, 71, 181, 6, 186, 37]": 0
+          "[:unless, 69, 192, 6, 192, 48]": {
+            "[:else, 70, 192, 6, 192, 48]": 0,
+            "[:then, 71, 192, 6, 192, 12]": 0
           },
-          "[:if, 72, 181, 6, 186, 37]": {
-            "[:then, 73, 182, 8, 182, 41]": 0,
-            "[:else, 74, 183, 6, 186, 37]": 0
+          "[:unless, 72, 193, 6, 193, 94]": {
+            "[:else, 73, 193, 6, 193, 94]": 0,
+            "[:then, 74, 193, 6, 193, 12]": 0
           },
-          "[:if, 75, 183, 6, 186, 37]": {
-            "[:then, 76, 184, 8, 184, 26]": 0,
-            "[:else, 77, 186, 8, 186, 37]": 0
+          "[:\"&.\", 75, 203, 6, 203, 36]": {
+            "[:then, 76, 203, 6, 203, 36]": 0,
+            "[:else, 77, 203, 6, 203, 36]": 0
+          },
+          "[:\"&.\", 78, 203, 49, 203, 76]": {
+            "[:then, 79, 203, 49, 203, 76]": 0,
+            "[:else, 80, 203, 49, 203, 76]": 0
+          },
+          "[:unless, 81, 207, 6, 207, 32]": {
+            "[:else, 82, 207, 6, 207, 32]": 0,
+            "[:then, 83, 207, 6, 207, 16]": 0
+          },
+          "[:if, 84, 209, 6, 219, 9]": {
+            "[:then, 85, 210, 8, 210, 32]": 0,
+            "[:else, 86, 211, 6, 218, 37]": 0
+          },
+          "[:if, 87, 211, 6, 218, 37]": {
+            "[:then, 88, 212, 8, 212, 38]": 0,
+            "[:else, 89, 213, 6, 218, 37]": 0
+          },
+          "[:if, 90, 213, 6, 218, 37]": {
+            "[:then, 91, 214, 8, 214, 41]": 0,
+            "[:else, 92, 215, 6, 218, 37]": 0
+          },
+          "[:if, 93, 215, 6, 218, 37]": {
+            "[:then, 94, 216, 8, 216, 26]": 0,
+            "[:else, 95, 218, 8, 218, 37]": 0
           }
         }
       },
@@ -6990,7 +7851,7 @@
           1,
           16,
           null,
-          116,
+          20,
           null,
           null
         ],
@@ -7000,233 +7861,8 @@
             "[:then, 2, 6, 4, 6, 15]": 0
           },
           "[:if, 3, 8, 31, 8, 63]": {
-            "[:then, 4, 8, 58, 8, 59]": 16,
-            "[:else, 5, 8, 62, 8, 63]": 84
-          }
-        }
-      },
-      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/models/item.rb": {
-        "lines": [
-          1,
-          1,
-          1,
-          null,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          null,
-          1,
-          null,
-          1,
-          1,
-          1,
-          null,
-          null,
-          null,
-          null,
-          30,
-          null,
-          1,
-          null,
-          1,
-          1,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          5,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          19,
-          null,
-          null,
-          1,
-          20,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          0,
-          null,
-          null,
-          1,
-          10,
-          10,
-          9,
-          9,
-          null,
-          9,
-          9,
-          null,
-          9,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null
-        ],
-        "branches": {
-          "[:unless, 0, 54, 4, 54, 65]": {
-            "[:else, 1, 54, 4, 54, 65]": 0,
-            "[:then, 2, 54, 4, 54, 35]": 0
-          },
-          "[:unless, 3, 60, 4, 60, 52]": {
-            "[:else, 4, 60, 4, 60, 52]": 0,
-            "[:then, 5, 60, 4, 60, 14]": 0
-          },
-          "[:unless, 6, 61, 4, 61, 64]": {
-            "[:else, 7, 61, 4, 61, 64]": 0,
-            "[:then, 8, 61, 4, 61, 14]": 0
-          },
-          "[:unless, 9, 70, 4, 70, 52]": {
-            "[:else, 10, 70, 4, 70, 52]": 0,
-            "[:then, 11, 70, 4, 70, 14]": 0
-          },
-          "[:unless, 12, 71, 4, 71, 64]": {
-            "[:else, 13, 71, 4, 71, 64]": 0,
-            "[:then, 14, 71, 4, 71, 14]": 0
-          },
-          "[:if, 15, 95, 4, 95, 75]": {
-            "[:then, 16, 95, 4, 95, 36]": 0,
-            "[:else, 17, 95, 4, 95, 75]": 0
-          },
-          "[:if, 18, 98, 6, 100, 9]": {
-            "[:then, 19, 99, 8, 99, 71]": 0,
-            "[:else, 20, 98, 6, 100, 9]": 0
-          },
-          "[:\"&.\", 21, 104, 4, 104, 35]": {
-            "[:then, 22, 104, 4, 104, 35]": 0,
-            "[:else, 23, 104, 4, 104, 35]": 0
-          },
-          "[:if, 24, 108, 4, 108, 69]": {
-            "[:then, 25, 108, 4, 108, 40]": 0,
-            "[:else, 26, 108, 4, 108, 69]": 10
-          },
-          "[:if, 27, 109, 4, 109, 33]": {
-            "[:then, 28, 109, 4, 109, 15]": 1,
-            "[:else, 29, 109, 4, 109, 33]": 9
-          },
-          "[:\"&.\", 30, 110, 19, 110, 33]": {
-            "[:then, 31, 110, 19, 110, 33]": 9,
-            "[:else, 32, 110, 19, 110, 33]": 0
-          },
-          "[:if, 33, 110, 4, 110, 33]": {
-            "[:then, 34, 110, 4, 110, 15]": 0,
-            "[:else, 35, 110, 4, 110, 33]": 9
-          },
-          "[:\"&.\", 36, 111, 19, 111, 41]": {
-            "[:then, 37, 111, 19, 111, 41]": 9,
-            "[:else, 38, 111, 19, 111, 41]": 0
-          },
-          "[:if, 39, 111, 4, 111, 76]": {
-            "[:then, 40, 111, 4, 111, 15]": 0,
-            "[:else, 41, 111, 4, 111, 76]": 9
-          },
-          "[:\"&.\", 42, 113, 32, 113, 45]": {
-            "[:then, 43, 113, 32, 113, 45]": 9,
-            "[:else, 44, 113, 32, 113, 45]": 0
-          },
-          "[:if, 45, 113, 4, 113, 45]": {
-            "[:then, 46, 113, 4, 113, 16]": 0,
-            "[:else, 47, 113, 4, 113, 45]": 9
-          },
-          "[:if, 48, 114, 4, 114, 66]": {
-            "[:then, 49, 114, 4, 114, 21]": 0,
-            "[:else, 50, 114, 4, 114, 66]": 9
-          },
-          "[:if, 51, 120, 4, 120, 33]": {
-            "[:then, 52, 120, 4, 120, 15]": 0,
-            "[:else, 53, 120, 4, 120, 33]": 0
-          },
-          "[:if, 54, 121, 4, 121, 55]": {
-            "[:then, 55, 121, 4, 121, 15]": 0,
-            "[:else, 56, 121, 4, 121, 55]": 0
-          },
-          "[:\"&.\", 57, 122, 19, 122, 33]": {
-            "[:then, 58, 122, 19, 122, 33]": 0,
-            "[:else, 59, 122, 19, 122, 33]": 0
-          },
-          "[:if, 60, 122, 4, 122, 33]": {
-            "[:then, 61, 122, 4, 122, 15]": 0,
-            "[:else, 62, 122, 4, 122, 33]": 0
-          },
-          "[:\"&.\", 63, 123, 19, 123, 41]": {
-            "[:then, 64, 123, 19, 123, 41]": 0,
-            "[:else, 65, 123, 19, 123, 41]": 0
-          },
-          "[:if, 66, 123, 4, 123, 76]": {
-            "[:then, 67, 123, 4, 123, 15]": 0,
-            "[:else, 68, 123, 4, 123, 76]": 0
+            "[:then, 4, 8, 58, 8, 59]": 0,
+            "[:else, 5, 8, 62, 8, 63]": 4
           }
         }
       },
@@ -8643,29 +9279,10 @@
           0,
           0,
           0,
-          null,
-          null,
-          1,
-          null,
-          1,
           0,
           null,
           null,
           1,
-          0,
-          0,
-          0,
-          null,
-          null,
-          1,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
           null,
           1,
           0,
@@ -8674,47 +9291,12 @@
           1,
           0,
           0,
-          null,
           0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          null,
-          null,
-          null,
-          0,
-          null,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
           null,
           null,
           1,
           0,
           null,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
           0,
           0,
           0,
@@ -8724,15 +9306,35 @@
           null,
           1,
           0,
+          null,
+          null,
+          1,
           0,
           0,
+          null,
           0,
           null,
           0,
           0,
           0,
+          0,
+          null,
           null,
           0,
+          null,
+          null,
+          null,
+          0,
+          null,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
           null,
           null,
           null,
@@ -8745,11 +9347,50 @@
           0,
           null,
           0,
+          0,
+          null,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          1,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          0,
           null,
           0,
           null,
           0,
           null,
+          null,
+          null,
+          1,
+          0,
           null,
           null,
           1,
@@ -8803,38 +9444,38 @@
             "[:then, 1, 23, 6, 23, 70]": 0,
             "[:else, 2, 25, 6, 25, 56]": 0
           },
-          "[:if, 3, 76, 4, 76, 51]": {
-            "[:then, 4, 76, 4, 76, 35]": 0,
-            "[:else, 5, 76, 4, 76, 51]": 0
+          "[:if, 3, 77, 4, 77, 51]": {
+            "[:then, 4, 77, 4, 77, 35]": 0,
+            "[:else, 5, 77, 4, 77, 51]": 0
           },
-          "[:if, 6, 77, 4, 77, 36]": {
-            "[:then, 7, 77, 4, 77, 22]": 0,
-            "[:else, 8, 77, 4, 77, 36]": 0
+          "[:if, 6, 78, 4, 78, 36]": {
+            "[:then, 7, 78, 4, 78, 22]": 0,
+            "[:else, 8, 78, 4, 78, 36]": 0
           },
-          "[:if, 9, 78, 4, 78, 46]": {
-            "[:then, 10, 78, 4, 78, 27]": 0,
-            "[:else, 11, 78, 4, 78, 46]": 0
+          "[:if, 9, 79, 4, 79, 46]": {
+            "[:then, 10, 79, 4, 79, 27]": 0,
+            "[:else, 11, 79, 4, 79, 46]": 0
           },
-          "[:if, 12, 84, 4, 84, 87]": {
-            "[:then, 13, 84, 55, 84, 74]": 0,
-            "[:else, 14, 84, 77, 84, 87]": 0
+          "[:if, 12, 85, 4, 85, 87]": {
+            "[:then, 13, 85, 55, 85, 74]": 0,
+            "[:else, 14, 85, 77, 85, 87]": 0
           },
-          "[:if, 15, 91, 4, 91, 132]": {
-            "[:then, 16, 91, 4, 91, 109]": 0,
-            "[:else, 17, 91, 4, 91, 132]": 0
+          "[:if, 15, 92, 4, 92, 132]": {
+            "[:then, 16, 92, 4, 92, 109]": 0,
+            "[:else, 17, 92, 4, 92, 132]": 0
           },
-          "[:if, 18, 132, 4, 132, 54]": {
-            "[:then, 19, 132, 4, 132, 41]": 0,
-            "[:else, 20, 132, 4, 132, 54]": 0
+          "[:if, 18, 133, 4, 133, 54]": {
+            "[:then, 19, 133, 4, 133, 41]": 0,
+            "[:else, 20, 133, 4, 133, 54]": 0
           },
-          "[:if, 21, 141, 4, 141, 54]": {
-            "[:then, 22, 141, 4, 141, 41]": 0,
-            "[:else, 23, 141, 4, 141, 54]": 0
+          "[:if, 21, 142, 4, 142, 54]": {
+            "[:then, 22, 142, 4, 142, 41]": 0,
+            "[:else, 23, 142, 4, 142, 54]": 0
           },
-          "[:case, 24, 158, 4, 165, 7]": {
-            "[:when, 25, 160, 6, 160, 34]": 0,
-            "[:when, 26, 162, 6, 162, 31]": 0,
-            "[:else, 27, 164, 6, 164, 68]": 0
+          "[:case, 24, 159, 4, 166, 7]": {
+            "[:when, 25, 161, 6, 161, 34]": 0,
+            "[:when, 26, 163, 6, 163, 31]": 0,
+            "[:else, 27, 165, 6, 165, 68]": 0
           }
         }
       },
@@ -8931,34 +9572,10 @@
           null,
           1,
           1,
-          1,
-          null,
-          1,
-          1,
           null,
           1,
           1,
           1,
-          null,
-          1,
-          1,
-          null,
-          1,
-          1,
-          1,
-          1,
-          1,
-          null,
-          1,
-          1,
-          1,
-          null,
-          null,
-          1,
-          1,
-          null,
-          0,
-          null,
           null,
           null,
           1,
@@ -8982,31 +9599,15 @@
             "[:then, 1, 11, 4, 11, 57]": 0,
             "[:else, 2, 11, 4, 11, 88]": 1
           },
-          "[:\"&.\", 3, 14, 24, 14, 50]": {
-            "[:then, 4, 14, 24, 14, 50]": 1,
-            "[:else, 5, 14, 24, 14, 50]": 0
+          "[:if, 3, 13, 18, 13, 74]": {
+            "[:then, 4, 13, 36, 13, 67]": 1,
+            "[:else, 5, 13, 70, 13, 74]": 0
           },
-          "[:if, 6, 15, 4, 15, 70]": {
-            "[:then, 7, 15, 4, 15, 30]": 0,
-            "[:else, 8, 15, 4, 15, 70]": 1
-          },
-          "[:if, 9, 21, 20, 21, 112]": {
-            "[:then, 10, 21, 83, 21, 106]": 0,
-            "[:else, 11, 21, 109, 21, 112]": 1
-          },
-          "[:if, 12, 22, 20, 22, 112]": {
-            "[:then, 13, 22, 83, 22, 106]": 0,
-            "[:else, 14, 22, 109, 22, 112]": 1
-          },
-          "[:if, 15, 38, 6, 42, 9]": {
-            "[:then, 16, 39, 8, 39, 62]": 1,
-            "[:else, 17, 41, 8, 41, 35]": 0
-          },
-          "[:case, 18, 48, 4, 57, 7]": {
-            "[:when, 19, 50, 6, 50, 35]": 0,
-            "[:when, 20, 52, 6, 52, 49]": 0,
-            "[:when, 21, 54, 6, 54, 50]": 0,
-            "[:else, 22, 56, 6, 56, 36]": 1
+          "[:case, 6, 24, 4, 33, 7]": {
+            "[:when, 7, 26, 6, 26, 35]": 0,
+            "[:when, 8, 28, 6, 28, 49]": 0,
+            "[:when, 9, 30, 6, 30, 50]": 0,
+            "[:else, 10, 32, 6, 32, 36]": 1
           }
         }
       },
@@ -9054,6 +9655,53 @@
           null,
           0,
           null,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/admin/college_rules_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
           0,
           0
         ],
@@ -9257,6 +9905,46 @@
         ],
         "branches": {}
       },
+      "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/users/registrations_controller.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
       "D:/Users/Houssam/CUHK 2026/CUHK courses Term2/Software Engineering/SwenCode/cuhk_marketplace/app/controllers/users_controller.rb": {
         "lines": [
           0,
@@ -9367,11 +10055,27 @@
           0,
           0,
           0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
           0
         ],
         "branches": {}
       }
     },
-    "timestamp": 1776072517
+    "timestamp": 1776083986
   }
 }

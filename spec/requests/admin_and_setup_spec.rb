@@ -72,6 +72,11 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(invited.role).to eq("college_admin")
     expect(invited.college_id).to eq(target_college.id)
     expect(invited.setup_completed).to be(false)
+    expect(invited.invited_by).to eq(super_admin)
+    expect(invited.invite_pin_ciphertext).to be_present
+    expect(invited.reveal_admin_invite_pin).to match(/\A[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}\z/)
+    expect(flash[:notice]).to include("Use Manage invite")
+    expect(flash[:notice]).not_to include(invited.reveal_admin_invite_pin)
   end
 
   it "shows system-wide users to a super admin" do
@@ -94,6 +99,135 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     expect(response.body).to include("Assign to college")
   end
 
+  it "shows the manage invite access panel on the admin dashboard" do
+    super_admin = create_user(email: "manage_invite_panel@cuhk.edu.hk", role: :admin)
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    get admin_root_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Manage invite")
+    expect(response.body).to include("Enter your password to see invites")
+  end
+
+  it "reveals pending invite setup pins for one page load after password confirmation" do
+    target_college = create_college(name: "Reveal Invite College")
+    super_admin = create_user(email: "reveal_invites_admin@cuhk.edu.hk", role: :admin, password: "password123")
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    post admin_invite_path, params: {
+      user: {
+        email: "pending_reveal_admin@cuhk.edu.hk",
+        role: "college_admin",
+        college_id: target_college.id
+      }
+    }
+
+    invited = User.find_by!(email: "pending_reveal_admin@cuhk.edu.hk")
+    setup_pin = invited.reveal_admin_invite_pin
+
+    post admin_reveal_invites_path, params: { invite_access: { password: "password123" } }
+
+    expect(response).to redirect_to(admin_root_path(anchor: "admin-pending-invites"))
+
+    follow_redirect!
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["Cache-Control"]).to include("no-store")
+    expect(response.body).to include("Setup pins")
+    expect(response.body).to include(invited.email)
+    expect(response.body).to include(setup_pin)
+
+    get admin_root_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).not_to include("Setup pins")
+    expect(response.body).not_to include(setup_pin)
+  end
+
+  it "keeps invite setup pins hidden when the password check fails" do
+    target_college = create_college(name: "Hidden Invite College")
+    super_admin = create_user(email: "hidden_invites_admin@cuhk.edu.hk", role: :admin, password: "password123")
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    post admin_invite_path, params: {
+      user: {
+        email: "hidden_pending_admin@cuhk.edu.hk",
+        role: "college_admin",
+        college_id: target_college.id
+      }
+    }
+
+    setup_pin = User.find_by!(email: "hidden_pending_admin@cuhk.edu.hk").reveal_admin_invite_pin
+
+    post admin_reveal_invites_path, params: { invite_access: { password: "wrong-password" } }
+
+    expect(response).to redirect_to(admin_root_path(anchor: "admin-invite-access"))
+
+    follow_redirect!
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Incorrect password")
+    expect(response.body).not_to include(setup_pin)
+  end
+
+  it "only reveals pending setup pins created by the current admin" do
+    target_college = create_college(name: "Scoped Reveal College")
+    owner_admin = create_user(email: "owner_invites_admin@cuhk.edu.hk", role: :admin, password: "password123")
+    owner_admin.update!(setup_completed: true)
+    other_admin = create_user(email: "other_invites_admin@cuhk.edu.hk", role: :admin, password: "password123")
+    other_admin.update!(setup_completed: true)
+
+    sign_in other_admin
+    post admin_invite_path, params: {
+      user: {
+        email: "other_admin_invite@cuhk.edu.hk",
+        role: "college_admin",
+        college_id: target_college.id
+      }
+    }
+
+    hidden_pin = User.find_by!(email: "other_admin_invite@cuhk.edu.hk").reveal_admin_invite_pin
+
+    sign_out other_admin
+    sign_in owner_admin
+    post admin_reveal_invites_path, params: { invite_access: { password: "password123" } }
+    follow_redirect!
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("No unfinished invites are assigned to you right now.")
+    expect(response.body).not_to include(hidden_pin)
+  end
+
+  it "does not show completed invites in the revealed setup pin list" do
+    target_college = create_college(name: "Completed Invite College")
+    super_admin = create_user(email: "completed_invites_admin@cuhk.edu.hk", role: :admin, password: "password123")
+    super_admin.update!(setup_completed: true)
+
+    sign_in super_admin
+    post admin_invite_path, params: {
+      user: {
+        email: "completed_pending_admin@cuhk.edu.hk",
+        role: "college_admin",
+        college_id: target_college.id
+      }
+    }
+
+    invited = User.find_by!(email: "completed_pending_admin@cuhk.edu.hk")
+    setup_pin = invited.reveal_admin_invite_pin
+    invited.update!(setup_completed: true)
+
+    post admin_reveal_invites_path, params: { invite_access: { password: "password123" } }
+    follow_redirect!
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("No unfinished invites are assigned to you right now.")
+    expect(response.body).not_to include(setup_pin)
+  end
+
   it "shows the college rules manager with the first college selected by default for super admins" do
     first_college = create_college(name: "First Rules College")
     second_college = create_college(name: "Second Rules College")
@@ -107,7 +241,8 @@ RSpec.describe "Admin and Setup Flows", type: :request do
     selector = document.at_css("select[name='rule_college_id']")
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Manage college rules")
+    expect(response.body).to include("College Management")
+    expect(response.body).to include("College rules")
     expect(selector).to be_present
     expect(selector.at_css("option[selected]")["value"]).to eq(first_college.id.to_s)
     expect(selector.text).to include(second_college.name)
