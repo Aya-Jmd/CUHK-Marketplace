@@ -10820,7 +10820,6 @@ body a {
   align-self: start;
   width: max-content;
   gap: 0.6rem;
-  min-width: 15rem;
   max-width: min(100%, 37rem);
   padding: 1rem 1.1rem;
   background:

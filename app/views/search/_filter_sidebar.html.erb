@@ -51,20 +51,6 @@
         </div>
       </details>
 
-      <details class="search-results-page__filter-group" data-filter-state-target="group" data-filter-state-key="category">
-        <summary class="search-results-page__filter-summary">Category</summary>
-        <div class="search-results-page__filter-list">
-          <%= link_to "All categories",
-              search_state_path(base_state, category_id: nil),
-              class: class_names("search-results-page__filter-link", { "is-active" => selected_category.blank? }) %>
-
-          <% categories.each do |category| %>
-            <%= link_to category.name,
-                search_state_path(base_state, category_id: category.id),
-                class: class_names("search-results-page__filter-link", { "is-active" => selected_category&.id == category.id }) %>
-          <% end %>
-        </div>
-      </details>
     </div>
 
     <div class="search-results-page__custom-scrollbar"

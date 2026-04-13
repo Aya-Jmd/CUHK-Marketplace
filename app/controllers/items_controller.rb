@@ -34,6 +34,7 @@ class ItemsController < ApplicationController
     # Nearby listings make the item page feel more complete without extra queries in the view.
     if @item.has_location?
       @nearby_items = Item.available.where.not(id: @item.id)
+                          .where.not(user_id: current_user.id) # does not display current user's other items as nearby
                          .where.not(latitude: nil, longitude: nil)
                          .select do |item|
                            distance = LocationService.calculate_distance(
