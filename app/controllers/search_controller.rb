@@ -23,13 +23,13 @@ class SearchController < ApplicationController
   def apply_sort(scope)
     case @sort
     when "oldest"
-      scope.order(created_at: :asc)
+      scope.reorder(created_at: :asc)
     when "price_low"
-      scope.order(price: :asc, updated_at: :desc)
+      scope.reorder(price: :asc, updated_at: :desc)
     when "price_high"
-      scope.order(price: :desc, updated_at: :desc)
+      scope.reorder(price: :desc, updated_at: :desc)
     else
-      scope.order(updated_at: :desc)
+      scope.reorder(updated_at: :desc)
     end
   end
 end

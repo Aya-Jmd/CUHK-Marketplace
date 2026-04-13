@@ -412,6 +412,36 @@ RSpec.describe "Items and Search", type: :request do
       expect(response.body).to include("Guest Search Result")
     end
 
+    it "lets guests sort search results by price" do
+      seller = create_user(email: "guest_search_sort_seller@cuhk.edu.hk")
+      category = Category.create!(name: "Guest Search Sort Category")
+      create_item(user: seller, title: "Expensive Lamp", category:, price: 180)
+      create_item(user: seller, title: "Budget Lamp", category:, price: 80)
+
+      get search_path, params: { category_id: category.id, sort: "price_low" }
+
+      document = Nokogiri::HTML.parse(response.body)
+      titles = document.css(".market-card__title").map { |node| node.text.strip }
+
+      expect(response).to have_http_status(:ok)
+      expect(titles.first(2)).to eq([ "Budget Lamp", "Expensive Lamp" ])
+    end
+
+    it "applies sorting even when the search query is present" do
+      seller = create_user(email: "guest_search_query_sort_seller@cuhk.edu.hk")
+      category = Category.create!(name: "Guest Search Query Sort Category")
+      create_item(user: seller, title: "Orange Lamp Premium", category:, price: 180)
+      create_item(user: seller, title: "Orange Lamp Budget", category:, price: 80)
+
+      get search_path, params: { q: "orange lamp", category_id: category.id, sort: "price_low" }
+
+      document = Nokogiri::HTML.parse(response.body)
+      titles = document.css(".market-card__title").map { |node| node.text.strip }
+
+      expect(response).to have_http_status(:ok)
+      expect(titles.first(2)).to eq([ "Orange Lamp Budget", "Orange Lamp Premium" ])
+    end
+
     it "filters by keyword and category" do
       college = create_college(name: "Shaw")
       buyer = create_user(email: "searcher@cuhk.edu.hk", college:)
