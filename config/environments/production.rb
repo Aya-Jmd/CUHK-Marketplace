@@ -21,10 +21,8 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files on the local file system. On Heroku this is ephemeral,
-  # so files may disappear after dyno restarts until a durable storage service
-  # is configured.
-  config.active_storage.service = ENV["CLOUDINARY_URL"].present? ? :cloudinary : :local
+  # Use Cloudinary in production so uploads survive Heroku dyno restarts.
+  config.active_storage.service = :cloudinary
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -64,11 +62,10 @@ Rails.application.configure do
     begin
       heroku_app_name = ENV["HEROKU_APP_NAME"].presence
       "#{heroku_app_name}.herokuapp.com" if heroku_app_name
-    end ||
-    "example.com"
+    end
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: app_host, protocol: "https" }
+  # Set host to be used by links generated in mailer templates when configured.
+  config.action_mailer.default_url_options = { host: app_host, protocol: "https" } if app_host.present?
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
