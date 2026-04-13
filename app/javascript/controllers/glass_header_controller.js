@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// LOGIC FOR GLASS HEADERS
-// Shrinks the floating pill header width on scroll (items index glass nav).
+// Collapse the floating header on downward scroll and restore it when the user scrolls back up.
 export default class extends Controller {
   connect() {
     this.lastScrollY = window.scrollY || document.documentElement.scrollTop || 0

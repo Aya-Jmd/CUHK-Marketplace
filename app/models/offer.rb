@@ -6,7 +6,6 @@ class Offer < ApplicationRecord
 
   scope :not_declined, -> { where.not(status: "declined") }
 
-  # ADD THIS EXACT LINE: It tells Rails about our state machine!
   enum :status, { pending: "pending", accepted: "accepted", declined: "declined", completed: "completed", failed: "failed" }
 
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -15,10 +14,8 @@ class Offer < ApplicationRecord
   validate :buyer_cannot_be_seller
   validate :item_must_accept_offers, on: :create
 
-  # Automatically create the anti-scam code right before saving to the DB
   before_create :generate_meetup_code
 
-  # Trigger the notification AFTER saving to the DB
   after_create_commit :notify_seller
 
   def editable_by_buyer?(user)
@@ -49,12 +46,10 @@ class Offer < ApplicationRecord
   end
 
   def generate_meetup_code
-    # Generates a random 4-digit string
     self.meetup_code = format("%04d", rand(10000))
   end
 
   def notify_seller
-    # Don't notify if the user is somehow making an offer on their own item
     return if buyer == seller
 
     Notification.create(

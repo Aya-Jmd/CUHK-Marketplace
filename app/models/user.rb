@@ -1,9 +1,6 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  # Roles engine
   enum :role, { student: 0, admin: 1, college_admin: 2 }
 
   belongs_to :college, optional: true
@@ -48,7 +45,6 @@ class User < ApplicationRecord
     email.to_s.split("@").first
   end
 
-  # Location methods
   def has_location?
     latitude.present? && longitude.present?
   end

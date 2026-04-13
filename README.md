@@ -135,7 +135,7 @@ bundle exec cucumber
 After the suite finishes, open:
 
 ```bash
-coverage/all_files_simplecov_report/index.html
+coverage/index.html
 ```
 
 This report is generated with `SimpleCov` and can be screenshotted for submission evidence.
@@ -143,8 +143,10 @@ The configured report merges `RSpec` and `Cucumber` into the same SimpleCov outp
 
 Latest local run:
 
-* **Line coverage:** `83.61%` (`1250 / 1495`)
-* **Branch coverage:** `62.90%` (`473 / 752`)
+* **Line coverage:** `82.52%`
+* **Branch coverage:** `63.96%`
+
+If Windows keeps old coverage assets locked, close any open `coverage/index.html` tab before rerunning the suite so SimpleCov can refresh the single report cleanly.
 
 ![SimpleCov report screenshot]()
 

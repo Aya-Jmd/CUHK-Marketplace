@@ -5,23 +5,16 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :rsrc_not_found
 
-
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  # The UI depends on modern browser features used by Rails 8 and the map/chat flows.
   allow_browser versions: :modern
 
-
-  # Changes to the importmap will invalidate the etag for HTML responses
+  # Bust stale HTML when the import map changes.
   stale_when_importmap_changes
 
-
-  # --- DEVISE CONFIGURATION START ---
-  # Tells Devise to run this extra method before checking security
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
-
-  # Adds college_id to the allowed list for signing up and updating accounts
   def configure_permitted_parameters
     sign_up_keys = [ :college_id, :default_location, :latitude, :longitude ]
     account_update_keys = [ :default_location, :latitude, :longitude ]
@@ -29,24 +22,18 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: sign_up_keys)
     devise_parameter_sanitizer.permit(:account_update, keys: account_update_keys)
   end
-  # Devise looks for this method to know where to send a user after login
-  def after_sign_in_path_for(resource)
-    # Check if the user logging in is an admin (or college_admin)
-    if resource.admin? || resource.college_admin?
 
-      # If they are an admin, check our setup flag
+  def after_sign_in_path_for(resource)
+    if resource.admin? || resource.college_admin?
       if resource.setup_completed?
-        root_path       # Setup is done, go to home page
+        root_path
       else
         edit_admin_setup_path
       end
-
     else
-      # If they are just a regular student, do the normal Devise behavior (go to homepage)
       super
     end
   end
-  # --- DEVISE CONFIGURATION END ---
 
   private
 
@@ -101,15 +88,12 @@ class ApplicationController < ActionController::Base
     relation.where.not(user_id: current_user.id)
   end
 
-
-  # add this private method
   def selected_marketplace_college
     return unless current_user&.admin?
     return if params[:college_scope_id].blank?
 
     @selected_marketplace_college ||= College.find_by(id: params[:college_scope_id])
   end
-
 
   def apply_marketplace_scope(scope, relation)
     if current_user&.admin?

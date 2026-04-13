@@ -9,7 +9,6 @@ class Message < ApplicationRecord
 
   validates :content, presence: true
 
-  # The Turbo Streams Magic
   after_create_commit -> { broadcast_append_to self.conversation, target: "messages" }
   after_create_commit :broadcast_inbox_updates
 

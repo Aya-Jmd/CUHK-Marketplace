@@ -1,24 +1,15 @@
 Rails.application.routes.draw do
-  # Reveal health status on /up
+  # Health check for container and deployment probes.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # -----------------------------------------------------------------------
-  # 1. AUTHENTICATION & PROFILES
-  # -----------------------------------------------------------------------
+  # Authentication and user-facing profile pages.
   devise_for :users, controllers: { sessions: "users/sessions" }
-
-  # Public user profiles (e.g., viewing a seller's rating/items)
   resources :users, only: [ :show ]
-
-  # Private user dashboard (The logged-in user's management area)
   get "/dashboard", to: "dashboards#show", as: :dashboard
   get "/profile", to: "dashboards#edit", as: :profile
   patch "/profile", to: "dashboards#update"
 
-  # -----------------------------------------------------------------------
-  # 2. PUBLIC MARKETPLACE & TENANCY
-  # -----------------------------------------------------------------------
-  # Defines the root path route ("/")
+  # Marketplace browsing, search, and listing creation.
   root "items#index"
 
   get "/search", to: "search#index", as: :search
@@ -26,54 +17,40 @@ Rails.application.routes.draw do
 
   get "analytics", to: "dashboards#category_prices", as: :analytics
 
-  # Items and the initial Offer creation are deeply nested.
-  # This ensures an offer is always tied to an item.
   resources :items do
     resources :offers, only: [ :new, :create ]
     resources :item_reports, only: [ :create ]
     resource :favorite, only: [ :create, :destroy ]
   end
 
-  # -----------------------------------------------------------------------
-  # 3. TRANSACTION HUB (The Lifecycle)
-  # -----------------------------------------------------------------------
-  # Once an offer exists, we use "Shallow Routing" to manage its state.
-  # We don't need the item_id in the URL to accept/decline an offer.
+  # Offer lifecycle after a listing thread has been created.
   resources :offers, only: [ :index, :show, :update, :destroy ] do
     member do
       patch :accept
       patch :decline
       patch :complete
-      patch :cancel # For when the buyer ghosts!
+      patch :cancel
     end
   end
 
-  # -----------------------------------------------------------------------
-  # 4. N-1 FEATURES (Communication & Alerts)
-  # -----------------------------------------------------------------------
+  # Messaging and notification flows.
   resources :conversations, only: [ :index, :show, :create ] do
     resources :messages, only: [ :create ]
   end
 
-  # Preparing for the Real-Time Notification system from the proposal
   resources :notifications, only: [ :index ] do
-    # for a specific item in notification table
     member do
       patch :mark_as_read
     end
 
-    # for all items in notifications table
     collection do
       patch :mark_all_as_read
     end
   end
 
-  # -----------------------------------------------------------------------
-  # 5. ADMIN & ANALYTICS ZONE
-  # -----------------------------------------------------------------------
-  # Groups all admin features cleanly under the /admin/ path
+  # Admin management and setup flows.
   namespace :admin do
-    root to: "dashboard#index" # Renders at /admin
+    root to: "dashboard#index"
 
     post "invite", to: "dashboard#invite", as: :invite
 
@@ -94,17 +71,14 @@ Rails.application.routes.draw do
     resource :setup, only: [ :edit, :update ]
   end
 
-  # -----------------------------------------------------------------------
-  # 6. INTERNAL APIs (AJAX & Maps)
-  # -----------------------------------------------------------------------
+  # Lightweight JSON endpoints used by the frontend.
   namespace :api do
     get "locations/all", to: "locations#all"
     get "locations/closest", to: "locations#closest"
     get "locations/:key", to: "locations#show"
   end
 
-  # Keep the custom 404 page for app routes, but do not swallow Active Storage
-  # requests that Rails mounts after this file is evaluated.
+  # Keep the custom 404 page for app routes without intercepting Active Storage.
   match "*unmatched",
     to: "errors#not_found",
     via: :all,

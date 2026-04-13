@@ -12,7 +12,6 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    # finds item from which the conversation was started
     @item = Item.find(params[:item_id])
 
     unless @item.visible_to?(current_user)
@@ -36,7 +35,7 @@ class ConversationsController < ApplicationController
       return
     end
 
-    # msg not blank, user is not seller ==> we can create conversation OR if convo with this seller and this item exists, then add new msg
+    # Reuse the existing thread for the buyer/item/seller trio to keep negotiation history in one place.
     @conversation = Conversation.find_or_create_by(item: @item, buyer: current_user, seller: @item.user)
     @message = @conversation.messages.build(user: current_user, content: content)
 
@@ -50,21 +49,17 @@ class ConversationsController < ApplicationController
   private
 
   def load_inbox
-    # from Convrsation table, ldads every conversation instances that include the current user (is either a seller or buyer)
     @conversations = Conversation
       .for_user(current_user)
-      .includes(:item, :buyer, :seller, messages: :user) # loads for each item the following info, and with each messages loads its attached user
-      .order(updated_at: :desc) # sorts conversations, 1st is most recently updated
+      .includes(:item, :buyer, :seller, messages: :user)
+      .order(updated_at: :desc)
 
-    # current conversation is either the one specified by conversation_id or the most recent one
     @current_conversation = if params[:conversation_id].present?
-      @conversations.find { |conversation| conversation.id == params[:conversation_id].to_i } || @conversations.first # tries getting convo with id, defaults to most recent one
+      @conversations.find { |conversation| conversation.id == params[:conversation_id].to_i } || @conversations.first
     else
       @conversations.first
     end
 
-
-    # messages
     @messages = @current_conversation ? @current_conversation.messages.sort_by(&:created_at) : []
     @current_offer = current_offer_for(@current_conversation)
     @message = Message.new

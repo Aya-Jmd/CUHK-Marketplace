@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # Configure 'rails notes' to inspect Cucumber files
+  # Let `rails notes` include feature files in development.
   config.annotations.register_directories("features")
   config.annotations.register_extensions("feature") { |tag| /#\s*(#{tag}):?\s*(.*)$/ }
 
@@ -35,7 +35,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # for IMAGE WINDOWS MAGICKK (dev only)
+  # MiniMagick is the most reliable variant processor on this Windows setup.
   config.active_storage.variant_processor = :mini_magick
 
   # Don't care if the mailer can't send.

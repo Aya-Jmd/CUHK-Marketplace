@@ -14,7 +14,6 @@ class Item < ApplicationRecord
 
   has_many_attached :images
 
-  # We can add validations later to make sure items always have a title and price!
   validates :title, :price, presence: true
   validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
   validates :price, numericality: {
@@ -22,10 +21,8 @@ class Item < ApplicationRecord
     less_than_or_equal_to: MAX_PRICE_HKD
   }
 
-  # Add this scope so Ben's controller knows how to find available items!
   scope :available, -> { joins(:user).merge(User.active).where(status: "available") }
 
-  # fuzzy search
   include PgSearch::Model
 
   DICTIONARY = "simple"
@@ -40,25 +37,22 @@ class Item < ApplicationRecord
     using: {
       tsearch: {
         dictionary: DICTIONARY,
-        prefix: true,     # "calc" => "calculus"
+        prefix: true,
         any_word: true
       },
       trigram: {
-        threshold: 0.2    # typo tolerance: lower threshold => fuzzier
+        threshold: 0.2
       }
     },
     ignoring: :accents
 
-
-    # Location feature
-
-    def has_location?
+  def has_location?
     latitude.present? && longitude.present?
   end
 
   def location_display_name
     return "Location not specified" unless location_name.present?
-    # Convert "shaw" to "Shaw College", "new_asia" to "New Asia College", etc.
+
     location_name.split("_").map(&:capitalize).join(" ")
   end
 
@@ -82,7 +76,6 @@ class Item < ApplicationRecord
     )
   end
 
-  # Class method to find nearby items
   def self.nearby(lat, lng, radius_km = 2)
     where.not(latitude: nil, longitude: nil).select do |item|
       distance = LocationService.calculate_distance(lat, lng, item.latitude, item.longitude)

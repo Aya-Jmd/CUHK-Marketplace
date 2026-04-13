@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-// Use the mapped name 'channels/consumer' instead of the relative path '../channels/consumer'
 import consumer from "channels/consumer"
 
 export default class extends Controller {

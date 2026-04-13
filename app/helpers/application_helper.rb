@@ -11,7 +11,6 @@ module ApplicationHelper
     lee-woo-sing
   ].freeze
 
-  # amount_hkd is a numeric value stored in DB in HKD
   def display_price(amount_hkd)
     return "" if amount_hkd.nil?
 
@@ -78,8 +77,6 @@ module ApplicationHelper
 
     marketplace_scope(scope) == "college" ? marketplace_college_label : "CUHK"
   end
-
-
   def marketplace_scope_switch_path(target_scope)
     preserved_params =
       case [ controller.controller_name, controller.action_name ]
@@ -131,7 +128,6 @@ module ApplicationHelper
     college.try(:slug).presence || college.name.to_s.parameterize.delete_suffix("-college")
   end
 
-  # Hero title that changes based on selected college
   def marketplace_hero_title
     if current_user&.admin? && params[:college_scope_id].present?
       college = College.find_by(id: params[:college_scope_id])

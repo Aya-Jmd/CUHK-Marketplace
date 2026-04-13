@@ -35,7 +35,6 @@ class OffersController < ApplicationController
     @offer.seller = @item.user
     @offer.status = "pending" if reopened_declined_offer
 
-    # for an offer, convert to hkd from the current selected currency
     submitted_currency = params[:offer_currency].presence || current_currency_code
     @offer.price = Currency.convert_to_hkd(@offer.price.to_d, submitted_currency)
 

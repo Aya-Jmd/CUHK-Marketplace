@@ -1,5 +1,5 @@
 class DashboardsController < ApplicationController
-  before_action :authenticate_user! # Security first!
+  before_action :authenticate_user!
 
   def show
     @user = current_user
@@ -26,7 +26,6 @@ class DashboardsController < ApplicationController
     end
   end
 
-  # colors for the category
   CATEGORY_COLORS = [
     "#94a3b8",
     "#23d2ff",
@@ -43,7 +42,6 @@ class DashboardsController < ApplicationController
     "#f97316",
     "#ec4899"
   ].freeze
-  # freeze means the array can't be modified (for fixed colors)
 
   DATASET_OPACITY = 0.6
 

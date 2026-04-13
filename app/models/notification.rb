@@ -3,10 +3,8 @@ class Notification < ApplicationRecord
   belongs_to :actor, class_name: "User"
   belongs_to :notifiable, polymorphic: true
 
-  # Default to unread notifications first
   scope :unread, -> { where(read_at: nil) }
 
-  # After saving to the DB, broadcast to the user's specific channel
   after_create_commit :broadcast_to_recipient
 
   private

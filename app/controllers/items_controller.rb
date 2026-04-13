@@ -5,7 +5,6 @@ class ItemsController < ApplicationController
   before_action :authorize_item_editor!, only: %i[ edit update ]
   before_action :authorize_item_deletion!, only: :destroy
 
-  # GET /items or /items.json
   def index
     @scope = normalized_marketplace_scope(params[:scope])
     @categories = Category.sorted_for_dropdown
@@ -21,11 +20,9 @@ class ItemsController < ApplicationController
     requested_min = submitted_in_current_currency && params[:min_price].present? ? params[:min_price].to_d : nil
     requested_max = submitted_in_current_currency && params[:max_price].present? ? params[:max_price].to_d : nil
 
-    # Handle nil values - if requested_min is nil, use price_floor
     @min_price = requested_min || @price_floor
     @max_price = requested_max || @price_ceiling
 
-    # Ensure min_price is not greater than max_price
     @min_price = [ @min_price, @max_price ].min
     @max_price = [ @min_price, @max_price ].max
     @price_filter_active = (@min_price != @price_floor || @max_price != @price_ceiling)
@@ -36,13 +33,11 @@ class ItemsController < ApplicationController
     preload_favorited_item_ids(@items)
   end
 
-  # GET /items/1 or /items/1.json
   def show
     @active_transaction_offer = @item.active_transaction_offer if @item.reserved_for_transaction?
     @existing_offer = current_user.offers_made.not_declined.find_by(item: @item) if user_signed_in? && current_user != @item.user
     @seller_live_items_count = @item.user.items.available.count
 
-    # Calculate distance if user is signed in and has location
     if user_signed_in? && current_user.has_location? && @item.has_location?
       user_location = current_user.location_coordinates
       @distance = @item.distance_from(user_location)
@@ -51,7 +46,7 @@ class ItemsController < ApplicationController
       @distance_text = distance_text(@walking_distance)
     end
 
-    # Find nearby items (within 1.5km)
+    # Nearby listings make the item page feel more complete without extra queries in the view.
     if @item.has_location?
       @nearby_items = Item.available.where.not(id: @item.id)
                          .where.not(latitude: nil, longitude: nil)
@@ -68,16 +63,13 @@ class ItemsController < ApplicationController
     preload_favorited_item_ids([ @item, *@nearby_items.to_a ])
   end
 
-  # GET /items/new
   def new
     @item = Item.new
   end
 
-  # GET /items/1/edit
   def edit
   end
 
-  # POST /items or /items.json
   def create
     @item = Item.new(item_params)
 
@@ -96,7 +88,6 @@ class ItemsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /items/1 or /items/1.json
   def update
     @item.assign_attributes(item_params)
     normalize_price_to_hkd(@item)
@@ -112,7 +103,6 @@ class ItemsController < ApplicationController
     end
   end
 
-  # DELETE /items/1 or /items/1.json
   def destroy
     @item.destroy!
     redirect_target = params[:return_to] == "dashboard" ? dashboard_path : items_path
@@ -124,12 +114,11 @@ class ItemsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_item
       @item = Item.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
     def item_params
       permitted_attributes = [ :title, :price, :description, :category_id, :is_global, :latitude, :longitude, :location_name, images: [] ]
       permitted_attributes.insert(4, :college_id) if current_user&.admin?
@@ -176,14 +165,12 @@ class ItemsController < ApplicationController
       "This item is not available."
     end
 
-    # PRIVATE METHOD FOR PRICE NORMALIZATION
     def normalize_price_to_hkd(item)
       return if item.price.blank?
 
       item.price = convert_price_to_hkd(item.price)
     end
 
-    # Location distance helper
     def distance_text(distance)
       return nil unless distance
 
