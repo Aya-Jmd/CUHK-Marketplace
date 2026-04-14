@@ -99,6 +99,7 @@
 
             </div>
           <% end %>
+
         </section>
 
         <section class="item-show__surface">
@@ -301,7 +302,7 @@
                           local: true,
                           html: { id: offer_form_dom_id },
                           class: "item-show__offer-form item-show__offer-form--inline" do |form| %>
-                      <%= hidden_field_tag :offer_currency, current_currency_code %>
+                        <%= hidden_field_tag :offer_currency, current_currency_code %>
 
                         <div class="item-show__form-field item-show__offer-field">
                           <%= form.label :price, "Offer amount (#{current_currency_code})", class: "item-show__screen-reader" %>
@@ -312,21 +313,19 @@
                               value: existing_offer_price,
                               class: "item-show__input" %>
                         </div>
+
+                        <%= form.submit @existing_offer.present? ? "Update" : "Make offer",
+                            class: "item-show__primary-button item-show__offer-action-button" %>
                       <% end %>
 
-                      <div class="item-show__offer-actions <%= "item-show__offer-actions--single" unless offer_withdrawable %>">
-                        <%= button_tag @existing_offer.present? ? "Update" : "Make offer",
-                            type: :submit,
-                            form: offer_form_dom_id,
-                            class: "item-show__primary-button item-show__offer-action-button" %>
-
-                        <% if offer_withdrawable %>
+                      <% if offer_withdrawable %>
+                        <div class="item-show__offer-actions">
                           <%= button_to "Cancel", offer_path(@existing_offer), method: :delete,
                               data: { turbo_confirm: "Withdraw this offer?" },
                               form: { class: "item-show__button-form item-show__offer-action-form" },
                               class: "item-show__danger-button item-show__offer-action-button" %>
-                        <% end %>
-                      </div>
+                        </div>
+                      <% end %>
                     </div>
                   <% end %>
                 </section>

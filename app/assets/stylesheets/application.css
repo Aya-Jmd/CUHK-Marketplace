@@ -1327,6 +1327,25 @@ body[data-theme="chung-chi"] {
   display: block;
 }
 
+.site-header__hamburger {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.site-header__hamburger-bar {
+  flex: 0 0 auto;
+  display: block;
+  width: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
 .site-header__account-actions {
   display: inline-flex;
   align-items: center;
@@ -11067,13 +11086,14 @@ body a {
 
 .item-show-page .item-show__offer-inline-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
 
 .item-show-page .item-show__offer-form--inline {
-  gap: 0;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .item-show-page .item-show__offer-field {
@@ -11089,7 +11109,7 @@ body a {
 
 .item-show-page .item-show__offer-actions {
   display: grid;
-  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr;
   gap: 0.5rem;
 }
 
@@ -12376,7 +12396,15 @@ body a {
 }
 
 .profile-item-row__action-bar--inventory {
+  flex-direction: row;
+  align-items: center;
   justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.profile-item-row__action-bar--inventory > .market-button,
+.profile-item-row__action-bar--inventory > form {
+  width: auto;
 }
 
 .profile-item-row__action-bar--tracking {
@@ -13577,7 +13605,8 @@ body a {
 }
 
 .profile-show-page--dashboard .profile-item-row__action-bar--inventory {
-  width: 100%;
+  width: auto;
+  align-items: flex-end;
   justify-content: flex-end;
 }
 

@@ -30,7 +30,7 @@ class Admin::CollegeRulesController < Admin::BaseController
   def managed_college
     return current_user.college if current_user.college_admin?
 
-    colleges = College.order(:id)
+    colleges = College.order(:name)
     colleges.find_by(id: params[:college_id]) || colleges.first
   end
 

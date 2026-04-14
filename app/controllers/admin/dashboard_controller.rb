@@ -4,7 +4,7 @@ class Admin::DashboardController < Admin::BaseController
       @total_users = User.count
       @total_items = Item.available.count
       @colleges = College.order(:name)
-      @rule_college_options = College.order(:id)
+      @rule_college_options = College.order(:name)
       @report_scope = ItemReport.includes(:item)
       @users = User.includes(:college).order(created_at: :desc)
     elsif current_user.college_admin?
@@ -75,7 +75,7 @@ class Admin::DashboardController < Admin::BaseController
   def selected_rule_college
     return current_user.college if current_user.college_admin?
 
-    colleges = College.order(:id)
+    colleges = College.order(:name)
     return colleges.first if params[:rule_college_id].blank?
 
     colleges.find_by(id: params[:rule_college_id]) || colleges.first

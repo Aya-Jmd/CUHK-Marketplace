@@ -34,7 +34,7 @@
           <div class="auth-form__field">
             <%= f.label :college_id, "College" %>
             <span class="auth-form__hint auth-form__hint--placeholder" aria-hidden="true">&nbsp;</span>
-            <%= f.collection_select :college_id, College.all, :id, :name, { prompt: "Choose a college..." }, { class: "auth-form__select", data: { controller: "enhanced-select" } } %>
+            <%= f.collection_select :college_id, College.order(:name), :id, :name, { prompt: "Choose a college..." }, { class: "auth-form__select", data: { controller: "enhanced-select" } } %>
           </div>
         </div>
 
