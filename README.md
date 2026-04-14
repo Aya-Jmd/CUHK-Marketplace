@@ -16,7 +16,7 @@ A centralized, multi-tenant SaaS marketplace tailored specifically for the CUHK 
 
 - **Deployed Application:** [CUHK Marketplace on Heroku](https://cuhk-marketplace-group-21-217132cb7477.herokuapp.com/)
 - **Repository:** [CUHK-Marketplace GitHub Repository](https://github.com/Aya-Jmd/CUHK-Marketplace)
-- **Demo Video:** TODO
+- **Demo Video:** Provided in the final project submission materials.
 
 ---
 
@@ -93,8 +93,8 @@ We propose a centralized, **multi-tenant SaaS marketplace**. Following the SaaS 
 | Admin Governance and Moderation | Housameddine | Aya | Administrators can manage users and listings based on role scope. |
 | Report and Item Management | Aya | Housameddine | Report workflows allow moderation and item review by administrators. |
 | Secure Transactions | Housameddine, Aya | Vincent, Ben | Meetup PIN flow secures the final handoff step for accepted offers. |
-| Favorite Items List | Housameddine | x | Users can save and revisit favorite listings from their profile. |
-| Currency Conversion Mechanism | Aya | x | Prices can be displayed in the user's selected currency. |
+| Favorite Items List | Housameddine | N/A | Users can save and revisit favorite listings from their profile. |
+| Currency Conversion Mechanism | Aya | N/A | Prices can be displayed in the user's selected currency. |
 
 
 
